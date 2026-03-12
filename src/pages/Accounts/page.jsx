@@ -8,10 +8,10 @@ import AboutPoliciesPage from "../about/page";
 const AccountPage = () => {
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col  bg-gray-50">
 
       {/* Top Back Button & Title */}
-      <div className="px-4  fixed top-0 w-full pt-6 pb-4 bg-green-100 flex items-center gap-4">
+      <div className="px-4  fixed top-0 w-full pt-6 pb-4 z-50 bg-green-100 flex items-center gap-4">
         <button
           onClick={() => window.history.back()}
           className="p-2 rounded-full bg-white shadow-md hover:bg-gray-100 transition"

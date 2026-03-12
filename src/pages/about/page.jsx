@@ -17,7 +17,7 @@ const AboutPoliciesPage = () => {
       content: (
         <>
           <p>
-            Welcome to <span className="font-semibold">YourWebsiteName</span>,
+            Welcome to <span className="font-semibold">WWW.TECHBY.IN</span>,
             your trusted online marketplace for pre-owned products. Our platform
             connects verified dealers directly to customers, offering
             high-quality products at competitive prices.
@@ -78,7 +78,7 @@ const AboutPoliciesPage = () => {
       content: (
         <>
           <p>
-            <span className="font-semibold">YourWebsiteName</span> is a
+            <span className="font-semibold">WWW.TECHBY.IN</span> is a
             marketplace that connects buyers with verified dealers. We do not
             own the listed products.
           </p>

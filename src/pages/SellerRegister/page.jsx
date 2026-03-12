@@ -201,7 +201,6 @@
 
 
 
-
 import React, { useState } from "react";
 import { Mail, Lock, User, Phone, Store, Image } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -243,6 +242,7 @@ const SellerRegisterPage = () => {
       return alert("Passwords do not match");
     }
 
+    // Prepare FormData for file upload
     const data = new FormData();
     data.append("name", formData.fullName);
     data.append("shopName", formData.shopName);
@@ -250,22 +250,28 @@ const SellerRegisterPage = () => {
     data.append("email", formData.email);
     data.append("password", formData.password);
 
-    if (logoFile) data.append("logo", logoFile);
+    if (logoFile) {
+      data.append("logo", logoFile); // must match backend multer field name
+    }
 
-    const result = await dispatch(register(data));
+    try {
+      const result = await dispatch(register(data));
 
-    if (register.fulfilled.match(result)) {
-      alert("Registration successful!");
-      navigate("/seller-login");
-    } else {
-      alert(result.payload?.message || "Registration failed");
+      if (register.fulfilled.match(result)) {
+        alert("Registration successful!");
+        navigate("/seller-login");
+      } else {
+        alert(result.payload?.message || "Registration failed");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("Registration failed");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-
         <h2 className="text-3xl font-bold text-center text-green-700 mb-2">
           Seller Registration
         </h2>
@@ -275,9 +281,9 @@ const SellerRegisterPage = () => {
         </p>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-
+          {/* Full Name */}
           <div className="relative">
-            <User className="absolute top-3 left-3 text-green-600" size={18}/>
+            <User className="absolute top-3 left-3 text-green-600" size={18} />
             <input
               type="text"
               name="fullName"
@@ -289,8 +295,9 @@ const SellerRegisterPage = () => {
             />
           </div>
 
+          {/* Shop Name */}
           <div className="relative">
-            <Store className="absolute top-3 left-3 text-green-600" size={18}/>
+            <Store className="absolute top-3 left-3 text-green-600" size={18} />
             <input
               type="text"
               name="shopName"
@@ -302,18 +309,22 @@ const SellerRegisterPage = () => {
             />
           </div>
 
+          {/* Logo Upload */}
           <div className="relative">
-            <Image className="absolute top-3 left-3 text-green-600" size={18}/>
+            <Image className="absolute top-3 left-3 text-green-600" size={18} />
             <input
               type="file"
+              name="logo"
               accept="image/*"
               onChange={handleLogoChange}
+              required
               className="w-full pl-10 p-2 border rounded-lg"
             />
           </div>
 
+          {/* Phone */}
           <div className="relative">
-            <Phone className="absolute top-3 left-3 text-green-600" size={18}/>
+            <Phone className="absolute top-3 left-3 text-green-600" size={18} />
             <input
               type="text"
               name="phone"
@@ -325,8 +336,9 @@ const SellerRegisterPage = () => {
             />
           </div>
 
+          {/* Email */}
           <div className="relative">
-            <Mail className="absolute top-3 left-3 text-green-600" size={18}/>
+            <Mail className="absolute top-3 left-3 text-green-600" size={18} />
             <input
               type="email"
               name="email"
@@ -338,8 +350,9 @@ const SellerRegisterPage = () => {
             />
           </div>
 
+          {/* Password */}
           <div className="relative">
-            <Lock className="absolute top-3 left-3 text-green-600" size={18}/>
+            <Lock className="absolute top-3 left-3 text-green-600" size={18} />
             <input
               type="password"
               name="password"
@@ -351,8 +364,9 @@ const SellerRegisterPage = () => {
             />
           </div>
 
+          {/* Confirm Password */}
           <div className="relative">
-            <Lock className="absolute top-3 left-3 text-green-600" size={18}/>
+            <Lock className="absolute top-3 left-3 text-green-600" size={18} />
             <input
               type="password"
               name="confirmPassword"
@@ -371,7 +385,6 @@ const SellerRegisterPage = () => {
           >
             {loading ? "Please wait..." : "Register"}
           </button>
-
         </form>
 
         <p className="text-center mt-6 text-gray-600">
@@ -383,7 +396,6 @@ const SellerRegisterPage = () => {
             Login
           </button>
         </p>
-
       </div>
     </div>
   );

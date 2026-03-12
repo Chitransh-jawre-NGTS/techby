@@ -15,6 +15,9 @@ const SearchPage = () => {
   const query = searchParams.get("q") || "";
   const category = searchParams.get("category") || "";
 
+  // Normalize strings: lowercase, remove spaces and hyphens
+  // const normalize = (text) => (text || "").toLowerCase().replace(/[\s-]+/g, "");
+
   useEffect(() => {
     fetchProducts();
   }, [query, category]);
@@ -22,9 +25,7 @@ const SearchPage = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-
-      const response = await getAllProducts();
-
+      const response = await getAllProducts(); // fetch all products from backend
       setProducts(response.data);
       setError("");
     } catch (err) {
@@ -35,30 +36,34 @@ const SearchPage = () => {
     }
   };
 
-  const filteredProducts = products.filter((product) => {
-    const queryWords = query.toLowerCase().split(" ").filter(Boolean);
-    const categoryWords = category.toLowerCase().split("-").filter(Boolean);
+  // Filter products based on normalized query and category
+const normalize = (str) => {
+  return str
+    .toLowerCase()
+    .replace(/-/g, " ")      // replace hyphens with space
+    .replace(/s$/g, "");     // remove trailing 's' for plurals
+};
 
-    const categoryMatch =
-      categoryWords.length === 0
-        ? true
-        : categoryWords.some((word) =>
-            product.category?.toLowerCase().includes(word)
-          );
+const filteredProducts = products.filter((product) => {
+  const queryWords = query
+    .toLowerCase()
+    .split(" ")
+    .filter(Boolean)
+    .map(normalize);
 
-    const searchMatch =
-      queryWords.length === 0
-        ? true
-        : queryWords.some(
-            (word) =>
-              product.name?.toLowerCase().includes(word) ||
-              product.attributes?.brand?.toLowerCase().includes(word) ||
-              product.attributes?.model?.toLowerCase().includes(word) ||
-              product.desc?.toLowerCase().includes(word)
-          );
+  const productFields = [
+    product.name,
+    product.category,
+    product.desc,
+    product.attributes?.brand,
+    product.attributes?.model,
+  ]
+    .filter(Boolean)
+    .map(normalize)
+    .join(" "); // combine all searchable fields
 
-    return categoryMatch && searchMatch;
-  });
+  return queryWords.every((word) => productFields.includes(word));
+});
 
   return (
     <>
@@ -71,7 +76,6 @@ const SearchPage = () => {
           <FaChevronRight className="mx-2" size={12} />
           <span>Shop</span>
           <FaChevronRight className="mx-2" size={12} />
-
           <span className="font-medium text-gray-900">
             {category
               ? category.replace("-", " ").toUpperCase()
@@ -113,22 +117,18 @@ const SearchPage = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 md:gap-5 lg:gap-6">
-
           {!loading &&
             !error &&
             filteredProducts.map((product) => (
               <div
                 key={product._id}
                 onClick={() => navigate(`/product/${product._id}`)}
-                className="bg-white border border-gray-200  overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
+                className="bg-white border border-gray-200 overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
               >
                 {/* Product Image */}
                 <div className="relative w-full h-48">
                   <img
-                    src={
-                      product.imageUrls?.[0] ||
-                      "/default-product-image.png"
-                    }
+                    src={product.imageUrls?.[0] || "/default-product-image.png"}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
@@ -153,10 +153,6 @@ const SearchPage = () => {
                     {product.name}
                   </h3>
 
-                  {/* <p className="text-gray-500 text-sm mt-1 line-clamp-2">
-                    {product.desc}
-                  </p> */}
-
                   {/* Price */}
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-green-600 font-bold text-lg">
@@ -174,10 +170,7 @@ const SearchPage = () => {
                   {product.sellerId && (
                     <div className="flex items-center gap-2 mt-2">
                       <img
-                        src={
-                          product.sellerId.logo ||
-                          "/default-shop-logo.png"
-                        }
+                        src={product.sellerId.logo || "/default-shop-logo.png"}
                         alt={product.sellerId.shopName}
                         className="w-8 h-8 rounded-full object-cover"
                       />

@@ -150,7 +150,7 @@ You can view it here: ${productUrl}
         {/* LEFT: Sticky Images */}
         <div className="w-full md:w-1/2">
           <div className="sticky top-30 flex flex-col gap-4 md:max-h-[calc(100vh-5rem)] overflow-auto">
-            <div className="relative rounded-lg overflow-hidden h-96">
+            <div className="relative rounded-lg overflow-hidden h-66  md:h-96">
               <img
                 src={selectedImage}
                 alt={product.name}
@@ -189,7 +189,7 @@ You can view it here: ${productUrl}
         {/* RIGHT: Scrollable Content */}
         <div className="w-full md:w-1/2 flex flex-col gap-6">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{product.name}</h1>
+            <h1 className="text-3xl md:text-4xl  md:mt-10 font-bold text-gray-900">{product.name}</h1>
             <div className="flex items-center gap-4 mt-2">
               <span className="text-3xl md:text-4xl text-green-600 font-bold">
                 ₹{product.discountPrice || product.totalPrice}
@@ -211,7 +211,7 @@ You can view it here: ${productUrl}
     className="w-full md:w-3/5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 rounded-full flex items-center justify-center gap-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95"
   >
     <FaWhatsapp className="text-white text-lg md:text-xl animate-bounce-slow" /> 
-    Chat on WhatsApp
+    Chat With Seller on WhatsApp
   </button>
 </div>
 
@@ -222,7 +222,7 @@ You can view it here: ${productUrl}
     className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 rounded-full flex items-center justify-center gap-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95"
   >
     <FaWhatsapp className="text-white text-lg animate-bounce-slow" /> 
-    Chat on WhatsApp
+    Chat with seller on WhatsApp
   </button>
 </div>
 
@@ -243,32 +243,48 @@ You can view it here: ${productUrl}
               </div>
             </div>
 
-            {product.sellerId && (
-              <div className="flex-1 p-6 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <h2 className="font-bold text-xl mb-4 text-green-800 border-b pb-2">Seller Details</h2>
-                <div className="flex items-center gap-5">
-                  <img
-                    src={product.sellerId.logo || "/default-shop-logo.png"}
-                    alt={product.sellerId.shopName}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
-                  />
-                  <div className="flex flex-col gap-1">
-                    <span className="text-gray-900 font-semibold text-lg">{product.sellerId.shopName}</span>
-                    {product.sellerPhone && (
-                      <span className="flex items-center gap-2 text-gray-600 text-sm hover:text-blue-600 transition-colors">
-                        <FaPhoneAlt className="text-gray-500" /> {product.sellerPhone}
-                      </span>
-                    )}
-                    {product.sellerEmail && (
-                      <span className="flex items-center gap-2 text-gray-600 text-sm hover:text-blue-600 transition-colors">
-                        <FaEnvelope className="text-gray-500" /> {product.sellerEmail}
-                      </span>
-                    )}
-                    
-                  </div>
-                </div>
-              </div>
-            )}
+          {product.sellerId && (
+  <div className="flex-1 p-6 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl border border-gray-100">
+    <h2 className="font-bold text-xl mb-4 text-green-800 border-b pb-2">
+      Seller Details
+    </h2>
+
+    <div className="flex items-center gap-4">
+      {/* Seller Logo */}
+      <div className="relative">
+        <img
+          src={product.sellerId.logo || "/default-shop-logo.png"}
+          alt={product.sellerId.shopName}
+          className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+        />
+        {/* Verified Badge */}
+        {product.sellerId.verified && (
+          <span className="absolute bottom-0 right-0 bg-blue-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow">
+            ✔
+          </span>
+        )}
+      </div>
+
+      {/* Seller Info */}
+      <div className="flex flex-col">
+        <span className="font-semibold text-gray-800 text-lg flex items-center gap-2">
+          {product.sellerId.shopName}
+          
+            <span className="bg-blue-600 text-white text-xs font-semibold px-2 py-0.5 rounded">
+              Verified
+            </span>
+          
+        </span>
+        {product.sellerId.email && (
+          <span className="text-gray-500 text-sm">{product.sellerId.email}</span>
+        )}
+        {product.sellerId.phone && (
+          <span className="text-gray-500 text-sm">{product.sellerId.phone}</span>
+        )}
+      </div>
+    </div>
+  </div>
+)}
 
 
 <div className="max-w-6xl border border-gray-200 py-3 mx-auto px-3">

@@ -25,28 +25,6 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
     }
   };
 
-
-//   const fetchProducts = async () => {
-//   try {
-//     const response = await getAllProducts();
-
-//     // Multiply the response array to simulate 40 products
-//     const multipliedData = Array(40)
-//       .fill(response.data)
-//       .flat()
-//       .map((product, index) => ({
-//         ...product,
-//         _id: product._id + "_" + index, // Ensure unique IDs
-//       }));
-
-//     setProductsData(multipliedData);
-//   } catch (error) {
-//     console.error(error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
   const totalPages = Math.ceil(productsData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const displayedProducts = productsData.slice(
@@ -65,7 +43,7 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
     <div className="max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-semibold mb-8 text-gray-800">{heading}</h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
         {loading
           ? skeletonArray.map((_, index) => (
               <div
@@ -91,7 +69,7 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                   <img
                     src={product.imageUrls?.[0] || "/default-product-image.png"}
                     alt={product.name}
-                    className="w-full h-full object-fit"
+                    className="w-full h-full object-cover"
                   />
 
                   {product.featured && (
@@ -112,39 +90,50 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                   <h3 className="font-semibold text-lg text-gray-800 truncate">
                     {product.name}
                   </h3>
-                  <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+                  {/* <p className="text-gray-500 text-sm mt-1 line-clamp-2">
                     {product.desc}
-                  </p>
+                  </p> */}
 
-                  <div className="flex items-center gap-2 mt-3">
+                  {/* Price & Discount */}
+                  <div className="flex flex-wrap items-center gap-2 mt-3">
                     <span className="text-green-600 font-bold text-lg">
                       ₹{product.discountPrice || product.totalPrice}
                     </span>
+
                     {product.discountPrice && (
                       <>
-                        <span className="line-through text-gray-400">
-                          ₹{product.totalPrice}
-                        </span>
-                        <span className="text-red-500 text-xs font-semibold ml-1">
+                        
+                       <div className=" bg-red-50">
+                         <span className="text-red-500 text-xs font-semibold ml-1">
                           {getDiscountPercent(
                             product.totalPrice,
                             product.discountPrice
                           )}
                           % OFF
                         </span>
+                       </div>
+                       <span className="line-through text-gray-400 text-sm">
+                          ₹{product.totalPrice}
+                        </span>
                       </>
                     )}
                   </div>
 
+                  {/* Seller Info */}
                   {product.sellerId && (
-                    <div className="flex items-center gap-2 mt-4">
+                    <div className="flex items-center gap-2 mt-4 flex-wrap">
                       <img
                         src={product.sellerId.logo || "/default-shop-logo.png"}
                         alt={product.sellerId.shopName}
                         className="w-8 h-8 rounded-full object-cover"
                       />
-                      <span className="text-gray-700 font-medium text-sm">
+                      <span className="text-gray-700 font-medium text-sm flex items-center gap-1">
                         {product.sellerId.shopName}
+                        {product.sellerId.verified && (
+                          <span className="bg-blue-600 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                            Verified
+                          </span>
+                        )}
                       </span>
                     </div>
                   )}
@@ -155,42 +144,41 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
 
       {/* Pagination */}
       {totalPages > 1 && !loading && (
-        <div className="flex justify-center items-center gap-3 mt-8">
-  {/* Prev Button */}
-  <button
-    disabled={currentPage === 1}
-    onClick={() => setCurrentPage((prev) => prev - 1)}
-    className="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-  >
-    Prev
-  </button>
+        <div className="flex justify-center items-center gap-3 mt-8 flex-wrap">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            Prev
+          </button>
 
-  {/* Page Indicators */}
-  <div className="flex items-center gap-2">
-    {Array.from({ length: totalPages }).map((_, index) => {
-      const pageNum = index + 1;
-      return (
-        <button
-          key={pageNum}
-          onClick={() => setCurrentPage(pageNum)}
-          className={`w-8 h-8 flex items-center justify-center rounded-full transition 
-            ${currentPage === pageNum ? "bg-green-600 text-white font-semibold shadow" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
-        >
-          {pageNum}
-        </button>
-      );
-    })}
-  </div>
+          {Array.from({ length: totalPages }).map((_, index) => {
+            const pageNum = index + 1;
+            return (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`w-8 h-8 flex items-center justify-center rounded-full transition 
+                  ${
+                    currentPage === pageNum
+                      ? "bg-green-600 text-white font-semibold shadow"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
 
-  {/* Next Button */}
-  <button
-    disabled={currentPage === totalPages}
-    onClick={() => setCurrentPage((prev) => prev + 1)}
-    className="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-  >
-    Next
-  </button>
-</div>
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );
