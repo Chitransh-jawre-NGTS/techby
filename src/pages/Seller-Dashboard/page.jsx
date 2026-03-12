@@ -47,7 +47,7 @@ const SellerDashboard = () => {
 
       setStoreProfile({
         name: res.data.shopName || res.data.name,
-        shopLogo: res.data.shopLogo || "https://i.pravatar.cc/100",
+        shopLogo: res.data.logo || "https://i.pravatar.cc/100",
       });
 
     } catch (error) {
