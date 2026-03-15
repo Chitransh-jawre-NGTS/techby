@@ -14,8 +14,8 @@ const SellerProtectedRoute = ({ children }) => {
   if (authenticated === null) return <div>Loading...</div>;
 
   if (!authenticated) {
-    // return <Navigate to="/seller-login" replace />;
-    return "SellerProtectedRoute: Access denied. Please log in as a seller to view this page.";
+    return <Navigate to="/seller-login" replace />;
+    // return "SellerProtectedRoute: Access denied. Please log in as a seller to view this page.";
   }
 
   return children;

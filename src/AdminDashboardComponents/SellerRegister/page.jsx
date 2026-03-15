@@ -213,14 +213,15 @@ const SellerRegisterPage = () => {
 
   const { loading } = useSelector((state) => state.auth);
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    shopName: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+const [formData, setFormData] = useState({
+  fullName: "",
+  shopName: "",
+  phone: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  location: "Indore", // default value
+});
 
   const [logoFile, setLogoFile] = useState(null);
 
@@ -249,6 +250,7 @@ const SellerRegisterPage = () => {
     data.append("phone", formData.phone);
     data.append("email", formData.email);
     data.append("password", formData.password);
+    data.append("location", formData.location);
 
     if (logoFile) {
       data.append("logo", logoFile); // must match backend multer field name
@@ -271,7 +273,7 @@ const SellerRegisterPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+      <div className="w-full  bg-white rounded-2xl shadow-xl p-8">
         <h2 className="text-3xl font-bold text-center text-green-700 mb-2">
           Seller Registration
         </h2>
@@ -321,6 +323,32 @@ const SellerRegisterPage = () => {
               className="w-full pl-10 p-2 border rounded-lg"
             />
           </div>
+{/* Location */}
+<div className="relative">
+  <select
+    name="location"
+    value={formData.location}
+    onChange={handleChange}
+    required
+    className="w-full pl-3 p-3 border rounded-lg focus:ring-2 focus:ring-green-500"
+  >
+    <option value="Indore">Indore</option>
+    <option value="Bhopal">Bhopal</option>
+    <option value="Gwalior">Gwalior</option>
+    <option value="Jabalpur">Jabalpur</option>
+    <option value="Ujjain">Ujjain</option>
+    <option value="Sagar">Sagar</option>
+    <option value="Satna">Satna</option>
+    <option value="Rewa">Rewa</option>
+    <option value="Ratlam">Ratlam</option>
+    <option value="Khandwa">Khandwa</option>
+    <option value="Dewas">Dewas</option>
+    <option value="Chhindwara">Chhindwara</option>
+    <option value="Seoni">Seoni</option>
+    <option value="Betul">Betul</option>
+    <option value="Shivpuri">Shivpuri</option>
+  </select>
+</div>
 
           {/* Phone */}
           <div className="relative">

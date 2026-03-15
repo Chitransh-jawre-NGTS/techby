@@ -4,13 +4,14 @@ import "./App.css";
 import AppRoutes from "./routes/Routing";
 import { useAutoLogout } from "../hooks/TokenExpire";
 import ScrollToTop from "./components/ScrollToTop";
-
+import { Toaster } from "react-hot-toast";
 
 
 function App() {
   return (
     <Router>
       {/* hook must run inside Router context */}
+       <Toaster position="top-right" />
       <AutoLogout />
       <ScrollToTop />
       <div className="min-h-screen flex flex-col ">

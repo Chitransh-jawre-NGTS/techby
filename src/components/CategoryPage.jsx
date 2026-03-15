@@ -76,7 +76,7 @@ const CategoryPage = () => {
   };
 
   const handleCategoryClick = (slug) => {
-    navigate(`/search?category=${slug}`);
+    navigate(`/search?q=${slug}`);
   };
 
   return (

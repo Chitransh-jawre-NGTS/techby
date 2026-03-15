@@ -80,32 +80,33 @@ const ProductDetails = () => {
       ? Math.round(((product.totalPrice - product.discountPrice) / product.totalPrice) * 100)
       : 0;
 
-  const handleWhatsAppChat = () => {
-  const sellerPhone = product.sellerPhone || "917879746796";
+ const handleWhatsAppChat = () => {
 
-  // Construct product URL dynamically
+  const sellerPhone = product?.sellerId?.phone;
+
+  if (!sellerPhone) {
+    alert("Seller contact not available");
+    return;
+  }
+
   const productUrl = window.location.href;
 
-  // Prepare message with product details
   const message = `
-Hello! I am interested in this product:
+Hello! I am interested in this product.
 
 Name: ${product.name}
 Price: ₹${product.discountPrice || product.totalPrice}
 Category: ${product.category}
 Condition: ${product.attributes?.condition || "N/A"}
-Description: ${product.desc}
 
-You can view it here: ${productUrl}
+Product Link: ${productUrl}
+
+Please provide more details.
 `;
 
-  // Encode message for WhatsApp URL
-  const url = `https://wa.me/${sellerPhone}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${sellerPhone}?text=${encodeURIComponent(message)}`;
 
- 
-
-  // Open WhatsApp chat
-  window.open(url, "_blank");
+  window.open(whatsappUrl, "_blank");
 };
 
    const services = [

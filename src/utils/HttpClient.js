@@ -44,37 +44,83 @@
 // export default httpClient;
 
 // utils/HttpClient.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import axios from "axios";
+
+// const httpClient = axios.create({
+//   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+//   withCredentials: true,
+//   headers: {},
+// });
+
+// httpClient.interceptors.request.use((config) => {
+//   const stored = JSON.parse(localStorage.getItem("sellerToken") || "{}");
+
+//   if (stored.token) {
+//     // Check if expired
+//     if (Date.now() > stored.expiry) {
+//       localStorage.removeItem("sellerToken"); // remove expired token
+//       return Promise.reject({ message: "Token expired" });
+//     }
+
+//     config.headers.Authorization = `Bearer ${stored.token}`;
+//   }
+//   if (config.data instanceof FormData) {
+//     delete config.headers["Content-Type"];
+//   }
+
+//   return config;
+// });
+
+// export default httpClient;
+
 import axios from "axios";
 
 const httpClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
   withCredentials: true,
-  // do not hardcode Content-Type here; let individual requests
-  // specify it or allow axios to infer (needed for FormData uploads)
   headers: {},
 });
 
 httpClient.interceptors.request.use((config) => {
-  const stored = JSON.parse(localStorage.getItem("sellerToken") || "{}");
+  // Get both tokens
+  const storedSeller = JSON.parse(localStorage.getItem("sellerToken") || "{}");
+  const storedAdmin = JSON.parse(localStorage.getItem("adminToken") || "{}");
 
-  if (stored.token) {
-    // Check if expired
-    if (Date.now() > stored.expiry) {
-      localStorage.removeItem("sellerToken"); // remove expired token
-      return Promise.reject({ message: "Token expired" });
-    }
+  let token;
 
-    config.headers.Authorization = `Bearer ${stored.token}`;
+  if (storedAdmin.token && Date.now() <= storedAdmin.expiry) {
+    token = storedAdmin.token;
+  } else if (storedSeller.token && Date.now() <= storedSeller.expiry) {
+    token = storedSeller.token;
   }
 
-  // when sending FormData we must not specify application/json;
-  // delete any existing Content-Type so axios will set the proper
-  // multipart/form-data header including the boundary
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  // Remove Content-Type if sending FormData
   if (config.data instanceof FormData) {
     delete config.headers["Content-Type"];
   }
 
   return config;
-});
+}, (error) => Promise.reject(error));
 
 export default httpClient;

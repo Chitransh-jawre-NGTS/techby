@@ -7,6 +7,9 @@ export const ENDPOINTS = {
     VERIFY: "/auth/sellers/verify",
     DASHBOARD: "/auth/sellers/dashboard",
   },
+   ADMIN: {
+    LOGIN: "/auth/admin/login",
+  },
 
   CODE: {
     GENERATE: "/code/generate-code",

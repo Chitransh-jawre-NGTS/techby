@@ -11,17 +11,18 @@ const categories = [
 ];
 
 const bannerItems = [
-  "📍 Currently Available in Indore",
-  "🚚 Free Delivery on Selected Products",
-  "🎉 We have completed 155 orders",
-  "📦 Hurry! Limited Stock Available",
+  " Currently Available in Indore",
+  " Free Delivery Available Soon",
+  " Get Exclusive Deals",
+  " Hurry! Limited Stock Available",
 ];
 
 const CategoryMenu = () => {
   const navigate = useNavigate();
 
   const handleCategoryClick = (slug) => {
-    navigate(`/search?category=${slug}`);
+    // navigate(`/search?category=${slug}`);
+    navigate(`/search?q=${slug}`);
   };
 
   // Framer Motion animation variant

@@ -50,12 +50,15 @@ const GreenGiftList = () => {
 
       {/* Title */}
       <h2 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-3">
-        Buy & Get Surprise Gifts
+        Surprise Gifts from Sellers 🎁
       </h2>
 
-      <p className="text-center text-gray-500 text-sm md:text-base mb-10">
-        Purchase selected products and receive a surprise gift like headphones,
-        speakers, gift cards and more.
+      <p className="text-center text-gray-500 text-sm md:text-base mb-3">
+        Some sellers offer surprise gifts along with selected products. TechBy is only a platform and does not provide the gifts.
+      </p>
+
+      <p className="text-center text-gray-400 text-xs md:text-sm mb-10">
+        Gift availability depends on individual sellers. Please check product details for eligibility.
       </p>
 
       {/* Desktop Grid */}
@@ -79,7 +82,7 @@ const GreenGiftList = () => {
             </h3>
 
             <span className="mt-3 text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
-              Get a Surprise Gift 🎁
+              Gift from Seller
             </span>
           </div>
         ))}
@@ -105,7 +108,7 @@ const GreenGiftList = () => {
                 </h3>
 
                 <span className="mt-3 text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
-                  Get Surprise Gift 🎁
+                  Gift from Seller
                 </span>
 
               </div>

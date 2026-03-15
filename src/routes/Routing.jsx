@@ -93,10 +93,11 @@ import SellerLogin from "../pages/sellerLogin/Page";
 import AllProductsPage from "../pages/AllProducts/page";
 import AboutUs from "../pages/about/page";
 import GenerateCodePage from "../components/GenrateCodePage";
-import SellerRegisterPage from "../pages/SellerRegister/page";
-
+import SellerRegisterPage from "../AdminDashboardComponents/SellerRegister/page";
+import AdminProtectedRoute from "./AdminProtectedRoutes";
 import SellerProtectedRoute from "./StoreRoutes";
 import WinnerCheckPage from "../components/WinnerCheckPage";
+import AdminDashboard from "../pages/AdminDashboard/page";
 
 const Routing = () => {
   return (
@@ -109,6 +110,16 @@ const Routing = () => {
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/all-products" element={<AllProductsPage />} />
       <Route path="/winner-check" element={<WinnerCheckPage />} />
+
+      <Route
+          path="/admin-dashboard"
+          element={
+            <AdminProtectedRoute>
+              <AdminDashboard />
+            </AdminProtectedRoute>
+          }
+        />
+
 
       {/* Seller Auth */}
       <Route path="/seller-login" element={<SellerLogin />} />

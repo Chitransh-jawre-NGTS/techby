@@ -15,9 +15,6 @@ const SearchPage = () => {
   const query = searchParams.get("q") || "";
   const category = searchParams.get("category") || "";
 
-  // Normalize strings: lowercase, remove spaces and hyphens
-  // const normalize = (text) => (text || "").toLowerCase().replace(/[\s-]+/g, "");
-
   useEffect(() => {
     fetchProducts();
   }, [query, category]);
@@ -25,7 +22,7 @@ const SearchPage = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await getAllProducts(); // fetch all products from backend
+      const response = await getAllProducts();
       setProducts(response.data);
       setError("");
     } catch (err) {
@@ -36,46 +33,51 @@ const SearchPage = () => {
     }
   };
 
-  // Filter products based on normalized query and category
-const normalize = (str) => {
-  return str
-    .toLowerCase()
-    .replace(/-/g, " ")      // replace hyphens with space
-    .replace(/s$/g, "");     // remove trailing 's' for plurals
-};
+  // Normalize text for better matching
+  const normalize = (str) => {
+    return (str || "")
+      .toLowerCase()
+      .replace(/-/g, " ")
+      .replace(/s$/g, "")
+      .trim();
+  };
 
-const filteredProducts = products.filter((product) => {
-  const queryWords = query
-    .toLowerCase()
-    .split(" ")
-    .filter(Boolean)
-    .map(normalize);
+  // Filter products
+  const filteredProducts = products.filter((product) => {
+    const queryWords = query
+      .toLowerCase()
+      .split(" ")
+      .filter(Boolean)
+      .map(normalize);
 
-  const productFields = [
-    product.name,
-    product.category,
-    product.desc,
-    product.attributes?.brand,
-    product.attributes?.model,
-  ]
-    .filter(Boolean)
-    .map(normalize)
-    .join(" "); // combine all searchable fields
+    const productFields = [
+      product.name,
+      product.category,
+      product.desc,
+      product.attributes?.brand,
+      product.attributes?.model,
+      product.sellerId?.shopName, // ✅ STORE SEARCH ENABLED
+    ]
+      .filter(Boolean)
+      .map(normalize)
+      .join(" ");
 
-  return queryWords.every((word) => productFields.includes(word));
-});
+    return queryWords.every((word) => productFields.includes(word));
+  });
 
   return (
     <>
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+
         {/* Breadcrumb */}
         <div className="flex items-center text-sm text-gray-500 mb-6 flex-wrap">
           <span>Home</span>
           <FaChevronRight className="mx-2" size={12} />
           <span>Shop</span>
           <FaChevronRight className="mx-2" size={12} />
+
           <span className="font-medium text-gray-900">
             {category
               ? category.replace("-", " ").toUpperCase()
@@ -116,7 +118,7 @@ const filteredProducts = products.filter((product) => {
         )}
 
         {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 md:gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-5 lg:gap-6">
           {!loading &&
             !error &&
             filteredProducts.map((product) => (
@@ -125,6 +127,7 @@ const filteredProducts = products.filter((product) => {
                 onClick={() => navigate(`/product/${product._id}`)}
                 className="bg-white border border-gray-200 overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
               >
+
                 {/* Product Image */}
                 <div className="relative w-full h-48">
                   <img
@@ -133,18 +136,7 @@ const filteredProducts = products.filter((product) => {
                     className="w-full h-full object-cover"
                   />
 
-                  {/* Tags */}
-                  {product.featured && (
-                    <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">
-                      Featured
-                    </span>
-                  )}
-
-                  {product.deliveryAvailable && (
-                    <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                      Free Delivery
-                    </span>
-                  )}
+                 
                 </div>
 
                 {/* Product Info */}
@@ -181,6 +173,7 @@ const filteredProducts = products.filter((product) => {
                     </div>
                   )}
                 </div>
+
               </div>
             ))}
         </div>
@@ -190,3 +183,26 @@ const filteredProducts = products.filter((product) => {
 };
 
 export default SearchPage;
+
+
+
+
+
+
+
+
+
+
+
+
+//  {product.featured && (
+//                     <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">
+//                       Featured
+//                     </span>
+//                   )}
+
+//                   {product.deliveryAvailable && (
+//                     <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
+//                       Free Delivery
+//                     </span>
+//                   )}

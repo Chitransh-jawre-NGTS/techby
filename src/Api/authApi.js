@@ -3,6 +3,9 @@
 import httpClient from "../utils/HttpClient";
 import { ENDPOINTS } from "../utils/endpoints";
 
+export const loginAdmin = (data) => {
+  return httpClient.post(ENDPOINTS.ADMIN.LOGIN, data);
+};
 export const registerSeller = (data) => {
   return httpClient.post(ENDPOINTS.AUTH.REGISTER, data);
 };

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Upload, CheckCircle } from "lucide-react";
 import { itemFields } from "../../data/itemFields";
-import { createProduct } from "../../Api/ProductApi"; // ✅ centralized API
+import { createProduct } from "../../Api/ProductApi";
+import toast from "react-hot-toast";
 
 const UploadProduct = () => {
+  const { seller } = useSelector((state) => state.auth); // ✅ get seller from Redux
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -32,13 +35,12 @@ const UploadProduct = () => {
     const { name, value, files, type, checked } = e.target;
 
     if (name === "images" && files) {
-      const selectedFiles = Array.from(files).slice(0, 4); // limit 4 images
+      const selectedFiles = Array.from(files).slice(0, 4);
       setFormData((prev) => ({ ...prev, images: selectedFiles }));
     } else {
       setFormData((prev) => ({
         ...prev,
         [name]: type === "checkbox" ? checked : value,
-        ...(name === "brand" && { model: "" }),
       }));
     }
   };
@@ -60,15 +62,14 @@ const UploadProduct = () => {
       formData.images.forEach((img) => data.append("images", img));
 
       dynamicFields.forEach((field) => {
-        if (formData[field.name]) {
-          data.append(field.name, formData[field.name]);
-        }
+        if (formData[field.name]) data.append(field.name, formData[field.name]);
       });
 
-      const response = await createProduct(data); // ✅ API file
+      const response = await createProduct(data);
 
       if (response.status === 201 || response.status === 200) {
         setSubmitted(true);
+        toast.success("Product uploaded successfully!");
         setFormData({
           title: "",
           description: "",
@@ -81,11 +82,11 @@ const UploadProduct = () => {
         });
         setTimeout(() => setSubmitted(false), 3000);
       } else {
-        alert(response.data.message || "Upload failed");
+         toast.error(response.data.message || "Upload failed");
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -227,23 +228,24 @@ const UploadProduct = () => {
 
         {/* Discount Display */}
         {discountPercent > 0 && (
-          <div className="text-green-600 font-semibold">
-            Discount: {discountPercent}% OFF
-          </div>
+          <div className="text-green-600 font-semibold">Discount: {discountPercent}% OFF</div>
         )}
 
         {/* Checkboxes */}
         <div className="flex gap-6 items-center mb-4">
-          <label className="flex items-center gap-2">
+          {/* <label className="flex items-center gap-2">
             <input
               type="checkbox"
               name="featured"
               checked={formData.featured}
+              disabled={seller?.location !== "Indore"} // ✅ fix
               onChange={handleChange}
               className="w-4 h-4 text-green-600"
             />
-            <span className="text-gray-700">Featured Product</span>
-          </label>
+            <span className="text-gray-700">
+              Featured Product {seller?.location !== "Indore" && "(Indore sellers only)"}
+            </span>
+          </label> */}
 
           <label className="flex items-center gap-2">
             <input
@@ -256,6 +258,53 @@ const UploadProduct = () => {
             <span className="text-gray-700">Delivery Available</span>
           </label>
         </div>
+       {/* Product Image Guidelines */}
+<div className="bg-white rounded-2xl shadow-md mt-10 p-6 mb-10 border-l-4 border-green-500">
+  <h3 className="text-xl font-bold text-green-700 mb-4">
+    Product Image Guidelines for Sellers 📸
+  </h3>
+
+  <ul className="text-gray-700 text-sm sm:text-base list-disc pl-5 space-y-3 leading-relaxed">
+    <li>
+      Please upload{" "}
+      <span className="font-semibold text-green-600">white background images</span>{" "}
+      or{" "}
+      <span className="font-semibold text-green-600">
+        background removed images
+      </span>{" "}
+      for better visibility.
+    </li>
+
+    <li>
+      Do{" "}
+      <span className="font-semibold text-red-600">
+        not add your shop name, phone number, or promotional text
+      </span>{" "}
+      directly on the product image.
+    </li>
+
+    <li>
+      Images with{" "}
+      <span className="font-semibold text-red-600">
+        direct promotion or contact details
+      </span>{" "}
+      may be rejected by some advertising platforms.
+    </li>
+
+    <li>
+      Clean and professional product images help us{" "}
+      <span className="font-semibold text-green-600">
+        promote your products more effectively.
+      </span>
+    </li>
+  </ul>
+
+  <p className="text-gray-600 text-sm mt-4 leading-relaxed">
+    Following these guidelines helps TechBy advertise your products across
+    different platforms without any issues and improves product visibility
+    for buyers.
+  </p>
+</div>
 
         {/* Image Upload */}
         <div>
@@ -300,6 +349,43 @@ const UploadProduct = () => {
           {loading ? "Uploading..." : "Upload Product"}
         </button>
       </form>
+      {/* Seller Rules & Important Notes */}
+<div className="bg-red-50 rounded-2xl shadow-md p-6 mt-10 mb-10 border-l-4 border-red-500">
+  <h3 className="text-xl font-bold text-red-700 mb-4">
+    Seller Rules & Important Notes ⚠️
+  </h3>
+
+  <ul className="text-gray-700 text-sm sm:text-base list-disc pl-5 space-y-3 leading-relaxed">
+    
+    <li>
+      Please upload images that match the <span className="font-semibold text-red-600">selected product category</span>. 
+      Any unrelated images may be <span className="font-semibold text-red-600">automatically removed</span> from the platform.
+    </li>
+
+    <li>
+      Sellers can upload a maximum of 
+      <span className="font-semibold text-red-600"> 5 products per day</span>.
+      This helps us maintain quality and fair usage of the platform.
+    </li>
+
+    <li>
+      Write a <span className="font-semibold text-green-600">catchy product title and clear description</span> 
+      so that users are more likely to click and buy your product.
+    </li>
+
+    <li>
+      Good titles and descriptions help us 
+      <span className="font-semibold text-green-600"> promote your products better</span> 
+      across the TechBy platform and other promotional channels.
+    </li>
+
+  </ul>
+
+  <p className="text-gray-600 text-sm mt-4 leading-relaxed">
+    Following these rules helps maintain product quality on TechBy and increases the chances 
+    of your products being promoted and discovered by more buyers.
+  </p>
+</div>
     </div>
   );
 };

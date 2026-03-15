@@ -18,10 +18,10 @@ const Home = () => {
                <Navbar/>
                <CategoryMenu/>
             <HeroSection />
-            <WinnerBanner/>
+            {/* <WinnerBanner/> */}
             <PrizeCarouselPage/>
             <CategoryPage/>
-            <FeaturedProducts /> 
+            {/* <FeaturedProducts />  */}
             <ProductsPage/>
             <SaleBannerCarousel/>
             <FeaturesSection />
