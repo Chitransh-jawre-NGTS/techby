@@ -12,6 +12,8 @@ import Dashboard from "../../DashboardComponents/Dashboard/page";
 import SellerRegisterPage from "../../AdminDashboardComponents/SellerRegister/page";
 
 import logo from "../../assets/logo/logo.png";
+import AllSellers from "../../AdminDashboardComponents/Allsellers/page";
+import ComingSoon from "../../components/ComingSoon";
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -30,6 +32,8 @@ const SellerDashboard = () => {
   const menuItems = [
     { name: "Dashboard", icon: <FaTachometerAlt /> },
     { name: "Register Seller", icon: <FaMobileAlt /> },
+    { name: "All Sellers", icon: <FaMobileAlt /> },
+    { name: "Delivery Orders", icon: <FaMobileAlt /> },
   ];
 
   const handleMenuClick = (menuName) => {
@@ -38,10 +42,16 @@ const SellerDashboard = () => {
     setSidebarOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("activeMenu");
-    navigate("/");
-  };
+const handleLogout = () => {
+  // Remove active menu
+  localStorage.removeItem("activeMenu");
+
+  // Remove auth token
+  localStorage.removeItem("adminToken"); // <-- change this to whatever key you use for the token
+
+  // Redirect to home or login page
+  navigate("/");
+};
 
   return (
     <div className="flex h-screen bg-red-50 overflow-hidden font-sans">
@@ -182,6 +192,8 @@ const SellerDashboard = () => {
           {activeMenu === "Dashboard" && <Dashboard />}
 
           {activeMenu === "Register Seller" && <SellerRegisterPage />}
+          {activeMenu === "Delivery Orders" && <ComingSoon />}
+          {activeMenu === "All Sellers" && <AllSellers />}
 
         </main>
 
