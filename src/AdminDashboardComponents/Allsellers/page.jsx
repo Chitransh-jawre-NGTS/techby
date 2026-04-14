@@ -1,25 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaTrashAlt } from "react-icons/fa";
-
-const initialSellers = [
-  { id: 1, name: "Rahul Sharma", email: "rahul@example.com", phone: "9876543210" },
-  { id: 2, name: "Sneha Meena", email: "sneha@example.com", phone: "9123456780" },
-  { id: 3, name: "Amit Singh", email: "amit@example.com", phone: "9988776655" },
-  { id: 4, name: "Pooja Patel", email: "pooja@example.com", phone: "9876123456" },
-  { id: 5, name: "Vikram Joshi", email: "vikram@example.com", phone: "9012345678" },
-];
+import { getAllSellers, deleteSeller } from "../../Api/authApi";
 
 const AllSellers = () => {
-  const [sellers, setSellers] = useState(initialSellers);
+  const [sellers, setSellers] = useState([]);
   const [deletingId, setDeletingId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = (id) => {
+  // ✅ FETCH SELLERS
+  const fetchSellers = async () => {
+    try {
+      const res = await getAllSellers();
+      setSellers(res.data);
+    } catch (error) {
+      console.error("Error fetching sellers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSellers();
+  }, []);
+
+  // ✅ DELETE SELLER
+  const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this seller?")) return;
-    setDeletingId(id);
-    setTimeout(() => {
-      setSellers(sellers.filter((s) => s.id !== id));
+
+    try {
+      setDeletingId(id);
+
+      await deleteSeller(id);
+
+      setSellers((prev) => prev.filter((s) => s._id !== id));
+    } catch (error) {
+      console.error("Delete failed:", error);
+    } finally {
       setDeletingId(null);
-    }, 500); // simulate deletion delay
+    }
   };
 
   return (
@@ -29,26 +47,28 @@ const AllSellers = () => {
         Total Sellers: <span className="font-semibold">{sellers.length}</span>
       </p>
 
-      {sellers.length === 0 ? (
+      {loading ? (
+        <p className="text-gray-500">Loading sellers...</p>
+      ) : sellers.length === 0 ? (
         <p className="text-gray-500">No sellers found.</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white shadow rounded-lg">
             <thead>
               <tr className="bg-green-100 text-left">
-                <th className="px-6 py-3 text-gray-700">#</th>
-                <th className="px-6 py-3 text-gray-700">Name</th>
-                <th className="px-6 py-3 text-gray-700">Email</th>
-                <th className="px-6 py-3 text-gray-700">Phone</th>
-                <th className="px-6 py-3 text-gray-700">Actions</th>
+                <th className="px-6 py-3">#</th>
+                <th className="px-6 py-3">Name</th>
+                <th className="px-6 py-3">Email</th>
+                <th className="px-6 py-3">Phone</th>
+                <th className="px-6 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               {sellers.map((seller, index) => (
                 <tr
-                  key={seller.id}
+                  key={seller._id}
                   className={`border-b hover:bg-green-50 ${
-                    deletingId === seller.id ? "opacity-50" : ""
+                    deletingId === seller._id ? "opacity-50" : ""
                   }`}
                 >
                   <td className="px-6 py-3">{index + 1}</td>
@@ -57,8 +77,8 @@ const AllSellers = () => {
                   <td className="px-6 py-3">{seller.phone}</td>
                   <td className="px-6 py-3">
                     <button
-                      onClick={() => handleDelete(seller.id)}
-                      disabled={deletingId === seller.id}
+                      onClick={() => handleDelete(seller._id)}
+                      disabled={deletingId === seller._id}
                       className="text-red-600 hover:text-red-800 flex items-center gap-1"
                     >
                       <FaTrashAlt /> Delete

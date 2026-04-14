@@ -7,6 +7,7 @@ import {
   FaUserCircle,
   FaClipboardList,
   FaSignOutAlt,
+  FaStore
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +21,7 @@ import logo from "../../assets/logo/logo.png";
 import { Link } from "react-router-dom";
 import ComingSoon from "../../components/ComingSoon";
 import Help from "../../DashboardComponents/Help/page";
+import BookDelivery from "../../DashboardComponents/BookDilivery/page";
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -95,9 +97,36 @@ const SellerDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen text-xl font-semibold">
-        Loading Dashboard...
+       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      
+      {/* Animated Spinner */}
+      <div className="relative mb-6">
+        <div className="w-20 h-20 border-4 border-blue-200 rounded-full animate-spin border-t-blue-600"></div>
+        
+        {/* Center Icon */}
+        <FaStore className="absolute text-blue-600 text-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
       </div>
+
+      {/* Title */}
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">
+        Setting up your Seller Dashboard
+      </h1>
+
+      {/* Subtitle */}
+      <p className="text-gray-600 text-sm mb-4 text-center max-w-md">
+        Please wait while we fetch your data, products, and analytics. This will just take a moment.
+      </p>
+
+      {/* Progress Bar */}
+      <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-full bg-blue-600 animate-pulse w-3/4"></div>
+      </div>
+
+      {/* Optional Tip */}
+      <p className="text-xs text-gray-500 mt-4">
+        Tip: You can manage products, orders, and earnings here.
+      </p>
+    </div>
     );
   }
 
@@ -132,7 +161,7 @@ const SellerDashboard = () => {
 
           <div className="flex items-center space-x-2">
 
-           <Link to="/" className="flex items-center space-x-2">
+           <Link to="" className="flex items-center space-x-2">
        <img src={logo} alt="TechBy Logo" className="h-12 md:h-18" />
         </Link>
           </div>
@@ -274,7 +303,7 @@ const SellerDashboard = () => {
 
           {activeMenu === "My Listings" && <MyListings />}
 
-          {activeMenu === "Book Delivery" && <ComingSoon />}
+          {activeMenu === "Book Delivery" && <BookDelivery />}
 
           {activeMenu === "Help & Support" && <ComingSoon/>}
 

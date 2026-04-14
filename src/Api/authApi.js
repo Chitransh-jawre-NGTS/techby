@@ -18,8 +18,16 @@ export const logoutSeller = () => {
   localStorage.removeItem("sellerToken");
   // reset auth state in Redux
 };
+// ✅ GET ALL SELLERS (Admin)
+export const getAllSellers = () => {
+  return httpClient.get(ENDPOINTS.ADMIN.GET_ALL_SELLERS);
+};
+
 export const getSellerProfile = () => {
   return httpClient.get(ENDPOINTS.AUTH.PROFILE);
+};
+export const deleteSeller = (id) => {
+  return httpClient.delete(`${ENDPOINTS.ADMIN.DELETE_SELLER}/${id}`);
 };
 
 export const verifySeller = () => {

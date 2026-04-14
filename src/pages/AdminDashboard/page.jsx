@@ -14,6 +14,7 @@ import SellerRegisterPage from "../../AdminDashboardComponents/SellerRegister/pa
 import logo from "../../assets/logo/logo.png";
 import AllSellers from "../../AdminDashboardComponents/Allsellers/page";
 import ComingSoon from "../../components/ComingSoon";
+import AdminDeliveryPage from "../../AdminDashboardComponents/AcceptDilivery/page";
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const SellerDashboard = () => {
   );
 
   const storeProfile = {
-    name: "Demo Store",
+    name: "Chitransh jawre",
     shopLogo: "https://i.pravatar.cc/100",
   };
 
@@ -192,7 +193,7 @@ const handleLogout = () => {
           {activeMenu === "Dashboard" && <Dashboard />}
 
           {activeMenu === "Register Seller" && <SellerRegisterPage />}
-          {activeMenu === "Delivery Orders" && <ComingSoon />}
+          {activeMenu === "Delivery Orders" && <AdminDeliveryPage />}
           {activeMenu === "All Sellers" && <AllSellers />}
 
         </main>

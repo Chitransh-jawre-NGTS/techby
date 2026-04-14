@@ -6,9 +6,13 @@ export const ENDPOINTS = {
     PROFILE: "/auth/sellers/profile",
     VERIFY: "/auth/sellers/verify",
     DASHBOARD: "/auth/sellers/dashboard",
+   
   },
    ADMIN: {
     LOGIN: "/auth/admin/login",
+        // ✅ FIXED HERE
+    GET_ALL_SELLERS: "/auth/admin/sellers",
+    DELETE_SELLER: "/auth/admin/sellers",
   },
 
   CODE: {

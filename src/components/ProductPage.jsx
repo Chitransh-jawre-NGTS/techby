@@ -233,7 +233,7 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
     <div className="max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-semibold mb-8 text-gray-800">{heading}</h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-6">
         {loading
           ? skeletonArray.map((_, index) => (
               <div
@@ -265,6 +265,9 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
 
                 {/* Info */}
                 <div className="p-4 flex flex-col flex-grow">
+                   <h3 className="font-semibold text-sm text-gray-400 truncate">
+                    {product.desc}
+                  </h3>
                   <h3 className="font-semibold text-lg text-gray-800 truncate">
                     {product.name}
                   </h3>
@@ -294,7 +297,7 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                   </div>
 
                   {/* Seller Info */}
-                  {product.sellerId && (
+                  {/* {product.sellerId && (
                     <div className="flex items-center gap-2 mt-4 flex-wrap">
                       <img
                         src={product.sellerId.logo || "/default-shop-logo.png"}
@@ -310,7 +313,7 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                         )}
                       </span>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             ))}

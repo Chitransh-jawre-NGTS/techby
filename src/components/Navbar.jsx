@@ -232,14 +232,6 @@ const Navbar = () => {
   const cities = [
     "Indore",
     "Bhopal",
-    "Gwalior",
-    "Jabalpur",
-    "Ujjain",
-    "Sagar",
-    "Satna",
-    "Rewa",
-    "Ratlam",
-    "Dewas",
     "Chhindwara",
     "Seoni"
   ];

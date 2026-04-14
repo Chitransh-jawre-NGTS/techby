@@ -90,6 +90,15 @@
 
 // export default httpClient;
 
+
+
+
+
+
+
+
+
+
 import axios from "axios";
 
 const httpClient = axios.create({
@@ -120,6 +129,8 @@ httpClient.interceptors.request.use((config) => {
     delete config.headers["Content-Type"];
   }
 
+  console.log("ADMIN TOKEN:", storedAdmin);
+console.log("SENDING TOKEN:", token);
   return config;
 }, (error) => Promise.reject(error));
 

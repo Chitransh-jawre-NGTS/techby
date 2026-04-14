@@ -43,6 +43,32 @@ const ComingSoon = () => {
           <div className="bg-green-600 h-2 rounded-full w-2/3 animate-pulse"></div>
         </div>
 
+<div className="mt-6 flex flex-col items-center gap-3">
+
+  <p className="text-sm text-gray-500">
+    Need help? Contact us instantly
+  </p>
+
+  <div className="flex gap-3">
+    
+    <a
+      href="tel:7879746796"
+      className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-full"
+    >
+      📞 Call
+    </a>
+
+    <a
+      href="https://wa.me/917879746796"
+      target="_blank"
+      rel="noreferrer"
+      className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-full"
+    >
+      💬 WhatsApp
+    </a>
+
+  </div>
+</div>
         {/* Footer */}
         <p className="text-sm text-gray-400">
           Launching very soon. Stay tuned.
