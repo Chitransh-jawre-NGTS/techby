@@ -15,6 +15,7 @@ import logo from "../../assets/logo/logo.png";
 import AllSellers from "../../AdminDashboardComponents/Allsellers/page";
 import ComingSoon from "../../components/ComingSoon";
 import AdminDeliveryPage from "../../AdminDashboardComponents/AcceptDilivery/page";
+import AdminDashboard from "../../AdminDashboardComponents/Dashboard/page";
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -190,7 +191,7 @@ const handleLogout = () => {
         {/* Page Content */}
         <main className="flex-1 p-6 overflow-auto">
 
-          {activeMenu === "Dashboard" && <Dashboard />}
+          {activeMenu === "Dashboard" && <AdminDashboard />}
 
           {activeMenu === "Register Seller" && <SellerRegisterPage />}
           {activeMenu === "Delivery Orders" && <AdminDeliveryPage />}

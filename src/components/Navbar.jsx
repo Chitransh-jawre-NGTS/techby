@@ -231,9 +231,6 @@ const Navbar = () => {
 
   const cities = [
     "Indore",
-    "Bhopal",
-    "Chhindwara",
-    "Seoni"
   ];
 
   return (

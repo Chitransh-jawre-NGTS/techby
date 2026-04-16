@@ -11,6 +11,12 @@ export const createProduct = (formData) => {
   });
 };
 
+// ---------------- GET SELLER LIMIT ----------------
+export const getSellerLimit = () => {
+  return httpClient.get(ENDPOINTS.PRODUCTS.LIMIT);
+};
+
+
 export const updateProduct = (id, formData) => {
   return httpClient.put(ENDPOINTS.PRODUCTS.UPDATE(id), formData, {
     headers: {

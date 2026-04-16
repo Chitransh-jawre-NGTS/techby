@@ -255,13 +255,13 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                 className="bg-white border border-gray-200 overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
               >
                 {/* Image */}
-                <div className="relative w-full h-48">
-                  <img
-                    src={product.imageUrls?.[0] || "/default-product-image.png"}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <div className="relative w-full h-48">
+  <img
+    src={product.imageUrls?.[0]?.url || "/default-product-image.png"}
+    alt={product.name}
+    className="w-full h-full object-cover"
+  />
+</div>
 
                 {/* Info */}
                 <div className="p-4 flex flex-col flex-grow">

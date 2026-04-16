@@ -28,5 +28,7 @@ export const ENDPOINTS = {
     GET_ALL: "/products",
     GET_ONE: (id) => `/products/${id}`,
     GET_SELLER_PRODUCTS: "/products/seller",
+       // ✅ NEW: Seller daily limit API
+    LIMIT: "/products/limit",
   },
 };

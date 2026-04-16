@@ -8,17 +8,25 @@ import {
   Smartphone,
   PlusCircle,
 } from "lucide-react";
-import { getSellerProducts, deleteProduct } from "../../Api/ProductApi"; // centralized API
+
+import {
+  getSellerProducts,
+  deleteProduct,
+  getSellerLimit, // ✅ ADD THIS
+} from "../../Api/ProductApi";
 
 const MyListings = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ LIMIT STATE
+  const [limitData, setLimitData] = useState(null);
+
   // ---------------- FETCH SELLER PRODUCTS ----------------
   const fetchProducts = async () => {
     try {
       const res = await getSellerProducts();
-      setProducts(res.data);
+      setProducts(res.data || []);
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
@@ -26,8 +34,19 @@ const MyListings = () => {
     }
   };
 
+  // ---------------- FETCH LIMIT ----------------
+  const fetchLimit = async () => {
+    try {
+      const res = await getSellerLimit();
+      setLimitData(res.data || res);
+    } catch (err) {
+      console.error("Limit fetch failed:", err);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchLimit();
   }, []);
 
   // ---------------- DELETE PRODUCT ----------------
@@ -54,18 +73,70 @@ const MyListings = () => {
   return (
     <div className="min-h-screen bg-white shadow rounded-2xl py-10 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+
+        {/* HEADER */}
         <div className="flex justify-between items-center mb-10">
+
           <h1 className="text-3xl font-bold text-green-700">
             My Product Listings
           </h1>
+
+          {/* ✅ LIMIT BOX (ADDED HERE) */}
+          {limitData && (
+            <div className="bg-white border shadow-md rounded-xl px-4 py-3 w-64">
+
+              <p className="text-sm font-semibold text-gray-600 mb-2">
+                📦 Daily Limit
+              </p>
+
+              <div className="flex justify-between text-sm">
+                <span>Used</span>
+                <span className="font-bold text-green-600">
+                  {limitData.used}
+                </span>
+              </div>
+
+              <div className="flex justify-between text-sm">
+                <span>Remaining</span>
+                <span className="font-bold text-blue-600">
+                  {limitData.remaining}
+                </span>
+              </div>
+
+              <div className="flex justify-between text-sm mb-2">
+                <span>Total</span>
+                <span className="font-bold text-gray-800">
+                  {limitData.limit}
+                </span>
+              </div>
+
+              {/* PROGRESS BAR */}
+              <div className="w-full bg-gray-200 h-2 rounded-full">
+                <div
+                  className="bg-green-500 h-2 rounded-full"
+                  style={{
+                    width: `${
+                      (limitData.used / limitData.limit) * 100
+                    }%`,
+                  }}
+                />
+              </div>
+
+              {limitData.remaining === 0 && (
+                <p className="text-red-500 text-xs mt-2">
+                  ⚠️ Daily limit reached
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Loading */}
+        {/* LOADING */}
         {loading ? (
-          <p className="text-center text-gray-500">Loading products...</p>
+          <p className="text-center text-gray-500">
+            Loading products...
+          </p>
         ) : products.length === 0 ? (
-          /* No Product */
           <div className="text-center bg-white p-10 rounded-2xl shadow-sm border border-green-100">
             <Package className="w-12 h-12 mx-auto text-green-400 mb-3" />
             <p className="text-xl font-semibold text-gray-700">
@@ -77,11 +148,13 @@ const MyListings = () => {
           </div>
         ) : (
           <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8">
+
             {products.map((product) => (
               <div
                 key={product._id}
-                className="group bg-white border border-green-100  overflow-hidden shadow-sm hover:shadow-md transition relative"
+                className="group bg-white border border-green-100 overflow-hidden shadow-sm hover:shadow-md transition relative"
               >
+
                 {/* Featured Badge */}
                 {product.featured && (
                   <span className="absolute top-3 left-3 bg-yellow-400 text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
@@ -92,66 +165,71 @@ const MyListings = () => {
                 {/* Image */}
                 <div className="relative">
                   <img
-                    src={product.imageUrls?.[0] || "/default-product-image.png"}
+                    src={
+                      product.imageUrls?.[0]?.url ||
+                      "/default-product-image.png"
+                    }
                     alt={product.name}
                     className="w-full h-52 object-cover"
                   />
-                  <span className="absolute top-3 right-3 bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    {product.attributes?.year || "N/A"}
-                  </span>
                 </div>
 
                 {/* Content */}
                 <div className="p-5">
+
                   <h2 className="font-semibold text-lg text-gray-800 mb-1 truncate">
                     {product.name}
                   </h2>
 
-                  {/* Category & Icon */}
                   <div className="flex items-center gap-2 mb-3 text-sm text-gray-600">
                     {getIcon(product.category)}
                     <span>{product.category.replace("-", " ")}</span>
                   </div>
 
-                  {/* Seller Name */}
                   <p className="text-sm text-gray-500 mb-3">
-                    Sold by: <span className="font-medium">{product.sellerId?.shopName}</span>
+                    Sold by:{" "}
+                    <span className="font-medium">
+                      {product.sellerId?.shopName}
+                    </span>
                   </p>
 
-                  {/* Price and Actions */}
                   <div className="flex justify-between items-center">
+
                     <p className="text-xl font-bold text-green-700">
                       ₹{product.discountPrice || product.totalPrice}
                     </p>
 
-                    <div className="flex gap-2">
-                      <button
-                        className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 p-2 rounded-lg transition"
-                        title="Edit"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
+                    <button
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this product?"
+                          )
+                        ) {
+                          handleDelete(product._id);
+                        }
+                      }}
+                      className="bg-red-100 hover:bg-red-200 text-red-600 p-2 rounded-lg"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
 
-                      <button
-                        onClick={() => handleDelete(product._id)}
-                        className="bg-red-100 hover:bg-red-200 text-red-600 p-2 rounded-lg transition"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
                   </div>
+
                 </div>
               </div>
             ))}
+
           </div>
         )}
+
       </div>
 
-      {/* Mobile Floating Button */}
-      <button className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg md:hidden transition">
-        <PlusCircle className="w-6 h-6" />
+      {/* FLOAT BUTTON */}
+      <button className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg md:hidden">
+        <PlusCircle />
       </button>
+
     </div>
   );
 };

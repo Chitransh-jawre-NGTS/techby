@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import MobileBottomNavbar from "../../components/MobileBottomNavbar";
 import Footer from "../../components/Footer";
+import sellerlogo from "../../assets/logo/shop logo.jpg"
 import { getAllProducts } from "../../Api/ProductApi";
 
 const ProductsPage = () => {
@@ -132,7 +133,7 @@ const ProductsPage = () => {
                     {product.sellerId && (
                       <div className="flex items-center gap-2 mt-4">
                         <img
-                          src={product.sellerId.logo || "/default-shop-logo.png"}
+                          src={product.sellerId.logo || sellerlogo}
                           alt={product.sellerId.shopName || "Shop Logo"}
                           className="w-8 h-8 rounded-full object-cover"
                         />

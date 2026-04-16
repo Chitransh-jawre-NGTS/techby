@@ -18,6 +18,7 @@ import UploadProduct from "../../DashboardComponents/UploadProducts/page";
 import MyListings from "../../DashboardComponents/MyListings/page";
 import VerifyCodePage from "../../DashboardComponents/VerifyCode/page";
 import logo from "../../assets/logo/logo.png";
+import sellerlogo from "../../assets/logo/shop logo.jpg"
 import { Link } from "react-router-dom";
 import ComingSoon from "../../components/ComingSoon";
 import Help from "../../DashboardComponents/Help/page";
@@ -27,7 +28,7 @@ const SellerDashboard = () => {
   const navigate = useNavigate();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [activeMenu, setActiveMenu] = useState(
     localStorage.getItem("activeMenu") || "Dashboard"
   );
@@ -51,7 +52,7 @@ const SellerDashboard = () => {
 
       setStoreProfile({
         name: res.data.shopName || res.data.name,
-        shopLogo: res.data.logo || "https://i.pravatar.cc/100",
+        shopLogo: res.data.logo || sellerlogo,
       });
 
     } catch (error) {
@@ -233,16 +234,13 @@ const SellerDashboard = () => {
 
           {/* Logout */}
 
-          <button
-            onClick={handleLogout}
-            className="mt-4 w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
-          >
-
-            <FaSignOutAlt />
-
-            Logout
-
-          </button>
+       <button
+  onClick={() => setShowLogoutModal(true)}
+  className="mt-4 w-full px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+>
+  <FaSignOutAlt />
+  Logout
+</button>
 
         </div>
 
@@ -309,6 +307,42 @@ const SellerDashboard = () => {
 
         </main>
 
+{showLogoutModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    
+    <div className="bg-white w-[300px] p-6 rounded-xl shadow-lg text-center animate-fadeIn">
+
+      <h2 className="text-lg font-semibold text-gray-800">
+        Confirm Logout
+      </h2>
+
+      <p className="text-sm text-gray-500 mt-2">
+        Are you sure you want to logout?
+      </p>
+
+      <div className="flex gap-3 mt-5">
+
+        <button
+          onClick={() => setShowLogoutModal(false)}
+          className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={async () => {
+            await handleLogout();
+            setShowLogoutModal(false);
+          }}
+          className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
+        >
+          Logout
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
       </div>
 
     </div>
