@@ -16,7 +16,7 @@ const AdminProtectedRoute = ({ children }) => {
 
   if (authenticated === null) return <div>Loading...</div>;
 
-  if (!authenticated) return <Navigate to="/seller-login" replace />;
+  if (!authenticated) return <Navigate to="/admin-login" replace />;
 
   return children;
 };

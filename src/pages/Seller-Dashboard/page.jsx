@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import ComingSoon from "../../components/ComingSoon";
 import Help from "../../DashboardComponents/Help/page";
 import BookDelivery from "../../DashboardComponents/BookDilivery/page";
+import PricingPage from "../../components/Pricing";
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -87,6 +88,7 @@ const [showLogoutModal, setShowLogoutModal] = useState(false);
     { name: "Upload Products", icon: <FaMobileAlt /> },
     { name: "My Listings", icon: <FaClipboardList /> },
     { name: "Book Delivery", icon: <FaCog /> },
+    { name: "Buy Pack", icon: <FaCog /> },
     { name: "Help & Support", icon: <FaCog /> },
   ];
 
@@ -305,6 +307,7 @@ const [showLogoutModal, setShowLogoutModal] = useState(false);
 
           {activeMenu === "Help & Support" && <ComingSoon/>}
 
+          {activeMenu === "Buy Pack" && <PricingPage/>}
         </main>
 
 {showLogoutModal && (

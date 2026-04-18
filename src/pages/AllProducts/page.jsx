@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import MobileBottomNavbar from "../../components/MobileBottomNavbar";
 import Footer from "../../components/Footer";
-import sellerlogo from "../../assets/logo/shop logo.jpg"
+import sellerlogo from "../../assets/logo/shop logo.jpg";
 import { getAllProducts } from "../../Api/ProductApi";
 
 const ProductsPage = () => {
@@ -21,7 +21,12 @@ const ProductsPage = () => {
   const fetchProducts = async () => {
     try {
       const response = await getAllProducts();
-      setProductsData(response.data);
+
+      const sorted = (response.data || []).sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      setProductsData(sorted);
     } catch (error) {
       console.error(error);
       setError("Failed to load products");
@@ -36,90 +41,97 @@ const ProductsPage = () => {
     setVisibleProducts((prev) => prev + 20);
   };
 
-  const ProductSkeleton = () => {
-    return (
-      <div className="bg-white border border-gray-200 overflow-hidden shadow animate-pulse flex flex-col">
-        <div className="w-full h-48 bg-gray-300"></div>
-
-        <div className="p-4 flex flex-col flex-grow space-y-3">
-          <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-          <div className="h-3 bg-gray-200 rounded w-full"></div>
-          <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-
-          <div className="flex items-center gap-2 mt-2">
-            <div className="h-5 bg-gray-300 rounded w-16"></div>
-            <div className="h-4 bg-gray-200 rounded w-12"></div>
-          </div>
-
-          <div className="flex items-center gap-2 mt-4">
-            <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-            <div className="h-4 bg-gray-200 rounded w-24"></div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const getDiscountPercent = (total, discount) =>
     Math.round(((total - discount) / total) * 100);
+
+  const ProductSkeleton = () => (
+    <div className="bg-white border border-gray-200 shadow animate-pulse flex flex-col">
+      <div className="w-full h-48 bg-gray-300"></div>
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+        <div className="h-3 bg-gray-200 rounded w-full"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+      </div>
+    </div>
+  );
 
   return (
     <>
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-2 sm:px-4 pt-4 pb-8">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-10 px-1">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">
           Browse All Products
         </h2>
 
-        {/* Skeleton Loading */}
         {loading && (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
               <ProductSkeleton key={i} />
             ))}
           </div>
         )}
 
-        {error && <div className="text-center text-red-500">{error}</div>}
+        {error && <div className="text-red-500 text-center">{error}</div>}
 
         {!loading && !error && (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {displayedProducts.map((product) => (
                 <div
                   key={product._id}
                   onClick={() => navigate(`/product/${product._id}`)}
-                  className="bg-white border border-gray-200 overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
+                  className="bg-white border shadow hover:shadow-lg cursor-pointer flex flex-col"
                 >
+                  {/* IMAGE FIXED */}
                   <div className="relative w-full h-48">
                     <img
-                      src={product.imageUrls?.[0] || "/default-product-image.png"}
-                      alt={product.name || "Product Image"}
+                      src={
+                        product.imageUrls?.[0]?.url ||
+                        product.imageUrls?.[0] ||
+                        "/default-product-image.png"
+                      }
+                      alt={product.name}
                       className="w-full h-full object-cover"
                     />
+
+                    {/* FEATURED */}
+                    {product.featured && (
+                      <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">
+                        Featured
+                      </span>
+                    )}
+
+                    {/* DELIVERY */}
+                    {product.deliveryAvailable && (
+                      <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                        Free Delivery
+                      </span>
+                    )}
                   </div>
 
+                  {/* INFO */}
                   <div className="p-4 flex flex-col flex-grow">
-                    <h3 className="font-semibold text-lg text-gray-800 truncate">
+                    <h3 className="font-semibold text-gray-800 truncate">
                       {product.name}
                     </h3>
 
-                    <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+                    <p className="text-sm text-gray-500 line-clamp-2">
                       {product.desc}
                     </p>
 
-                    <div className="flex items-center gap-2 mt-3">
-                      <span className="text-green-600 font-bold text-lg">
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-green-600 font-bold">
                         ₹{product.discountPrice || product.totalPrice}
                       </span>
 
                       {product.discountPrice && (
                         <>
-                          <span className="line-through text-gray-400">
+                          <span className="line-through text-gray-400 text-sm">
                             ₹{product.totalPrice}
                           </span>
-                          <span className="text-red-500 text-xs font-semibold ml-1">
+
+                          <span className="text-red-500 text-xs font-semibold">
                             {getDiscountPercent(
                               product.totalPrice,
                               product.discountPrice
@@ -130,14 +142,15 @@ const ProductsPage = () => {
                       )}
                     </div>
 
+                    {/* SELLER */}
                     {product.sellerId && (
-                      <div className="flex items-center gap-2 mt-4">
+                      <div className="flex items-center gap-2 mt-3">
                         <img
                           src={product.sellerId.logo || sellerlogo}
-                          alt={product.sellerId.shopName || "Shop Logo"}
+                          alt="seller"
                           className="w-8 h-8 rounded-full object-cover"
                         />
-                        <span className="text-gray-700 font-medium text-sm">
+                        <span className="text-sm text-gray-700">
                           {product.sellerId.shopName}
                         </span>
                       </div>
@@ -147,14 +160,14 @@ const ProductsPage = () => {
               ))}
             </div>
 
-            {/* Load More Button */}
+            {/* LOAD MORE */}
             {visibleProducts < productsData.length && (
-              <div className="flex justify-center mt-8">
+              <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreProducts}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                  className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
-                  Load More Products
+                  Load More
                 </button>
               </div>
             )}
@@ -169,20 +182,3 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
-
-
-
-
-
-
-
- {/* {product.featured && (
-                    <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">
-                      Featured
-                    </span>
-                  )}
-                  {product.deliveryAvailable && (
-                    <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                      Free Delivery
-                    </span>
-                  )} */}

@@ -14,6 +14,8 @@ import SellerProtectedRoute from "./StoreRoutes";
 import WinnerCheckPage from "../components/WinnerCheckPage";
 import AdminDashboard from "../pages/AdminDashboard/page";
 import BecomeSeller from "../components/BecomeSeller";
+import AdminLogin from "../pages/AdminLogin/page";
+import PricingPage from "../components/Pricing";
 
 const Routing = () => {
   return (
@@ -39,6 +41,8 @@ const Routing = () => {
 
       {/* Seller Auth */}
       <Route path="/seller-login" element={<SellerLogin />} />
+      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/pricing" element={<PricingPage />} />
       {/* <Route path="/seller-register" element={<SellerRegisterPage />} /> */}
 
       {/* Seller Protected Routes */}

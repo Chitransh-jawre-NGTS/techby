@@ -1,119 +1,292 @@
-import React from "react";
-import { IoMdAddCircle } from "react-icons/io";
-import { FaBoxOpen, FaShoppingCart, FaInfoCircle } from "react-icons/fa";
-import { GiRocket } from "react-icons/gi";
-import { MdStar } from "react-icons/md";
+import React, { useEffect, useState } from "react";
+import {
+  Package,
+  Plus,
+  Star,
+  Clock,
+  BadgeCheck,
+  TrendingUp,
+  ShoppingBag,
+  Leaf,
+} from "lucide-react";
 
-const Dashboard = () => {
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+
+import { getSellerProfile } from "../../Api/authApi";
+import {
+  getSellerProducts,
+  getSellerLimit,
+} from "../../Api/ProductApi";
+
+import axios from "axios";
+
+const SellerDashboard = () => {
+  const [seller, setSeller] = useState({});
+  const [products, setProducts] = useState([]);
+  const [limitData, setLimitData] = useState({
+    limit: 0,
+    used: 0,
+    remaining: 0,
+  });
+
+  const [chartData, setChartData] = useState([]); // ✅ REAL ANALYTICS DATA
+  const [loading, setLoading] = useState(true);
+
+  // ================= FETCH DATA =================
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [profileRes, productRes, limitRes] = await Promise.all([
+          getSellerProfile(),
+          getSellerProducts(),
+          getSellerLimit(),
+        ]);
+
+        const sellerData = profileRes?.data;
+
+        setSeller({
+          _id: sellerData?._id, // ✅ IMPORTANT for analytics API
+          name: sellerData?.name,
+          shopName: sellerData?.shopName,
+          plan: "Free Plan",
+        });
+
+        setProducts(productRes?.data || []);
+
+        const credits = limitRes?.data?.listingCredits;
+
+        setLimitData({
+          limit: credits?.normal || 0,
+          used: 20 - (credits?.normal || 0),
+          remaining: credits?.normal || 0,
+        });
+
+        // ================= FETCH ANALYTICS =================
+        if (sellerData?._id) {
+          const res = await axios.get(
+            `http://localhost:5000/api/product-stats/seller/${sellerData._id}`
+          );
+
+          const data = res.data;
+
+          const formatted = (data.products || []).map((item) => ({
+            name: item.productId?.name || "Product",
+            clicks: item.views || 0,
+          }));
+
+          setChartData(formatted);
+        }
+      } catch (err) {
+        console.log("Dashboard Error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // ================= CALCULATIONS =================
+  const featuredCount = products.filter((p) => p.featured).length;
+
+  const progress =
+    limitData.limit > 0
+      ? (limitData.used / limitData.limit) * 100
+      : 0;
+
+  if (loading) {
+    return <p className="text-center mt-10">Loading dashboard...</p>;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100 p-6">
 
-        {/* Header */}
-        <div className="bg-gradient-to-r from-green-100 to-green-200 rounded-3xl p-8 mb-10 shadow-lg">
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-green-800 mb-3">
-            Welcome, Seller 👋
-          </h1>
-          <p className="text-gray-700 text-lg sm:text-xl mb-6">
-            Manage your products, track orders, and grow your business with TechBy.
-          </p>
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-8">
 
-         {/* Early Seller Benefits */}
-<div className="bg-white border-l-4 border-green-500 rounded-2xl p-6 shadow-md flex flex-col sm:flex-row items-start sm:items-center gap-4">
-  <GiRocket className="text-green-600 text-4xl mt-1 sm:mt-0" />
-  <div className="flex-1">
-    <h3 className="font-semibold text-green-800 mb-2 text-lg flex items-center gap-2">
-      Early Seller Advantage <MdStar className="text-yellow-400 text-xl" />
-    </h3>
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-green-100 rounded-2xl shadow">
+            <Leaf className="text-green-700" />
+          </div>
 
-    <ul className="text-gray-700 text-sm sm:text-base list-disc pl-5 space-y-1">
-      <li>
-        Use the <span className="font-semibold text-green-600">TechBy platform completely free</span> as an early seller
-      </li>
-      <li>
-        <span className="font-semibold text-green-600">No listing fees or hidden charges</span>
-      </li>
-      <li>
-        Platform will remain <span className="font-semibold text-green-600">free until delivery and advanced features launch</span>
-      </li>
-      <li>
-        We will <span className="font-semibold text-green-600">advertise and promote your products for free</span>
-      </li>
-      <li>
-        Get <span className="font-semibold text-green-600">priority visibility</span> as one of our first sellers
-      </li>
-    </ul>
-
-    <p className="text-gray-600 text-sm mt-2">
-      As an early partner, you can list and sell products on TechBy without paying
-      any platform charges. We are focused on helping sellers grow while we build
-      delivery and advanced marketplace features.
-    </p>
-  </div>
-</div>
-        </div>
-        {/* Free Promotion Highlight */}
-<div className="bg-gradient-to-r from-blue-50 to-indigo-100 rounded-3xl p-6 mb-10 shadow-md flex flex-col sm:flex-row items-start sm:items-center gap-4">
-
-  <MdStar className="text-indigo-600 text-4xl mt-1 sm:mt-0" />
-
-  <div className="flex-1">
-    <h3 className="font-bold text-indigo-800 text-xl mb-2">
-      Free Promotion for Early Sellers 🚀
-    </h3>
-
-    <p className="text-gray-700 text-sm sm:text-base mb-3">
-      As an early seller on TechBy, we will help you grow your business by
-      promoting your products across our platform and local audience — completely free.
-    </p>
-
-    <ul className="text-gray-700 text-sm sm:text-base list-disc pl-5 space-y-1">
-      <li>
-        <span className="font-semibold text-indigo-600">Free product listing</span> — no charges to upload products
-      </li>
-      <li>
-        <span className="font-semibold text-indigo-600">Free product promotion</span> on the TechBy platform
-      </li>
-      <li>
-        <span className="font-semibold text-indigo-600">Higher visibility</span> for early sellers
-      </li>
-      <li>
-        <span className="font-semibold text-indigo-600">No platform fees</span> until delivery & advanced features launch
-      </li>
-      <li>
-        Opportunity to become a <span className="font-semibold text-indigo-600">trusted local seller</span> in Indore
-      </li>
-    </ul>
-
-    <p className="text-gray-600 text-sm mt-3">
-      Our goal is to help local businesses grow online. Early sellers will receive
-      priority promotion and visibility on TechBy while the platform expands.
-    </p>
-  </div>
-</div>
-
-    
-
-        {/* Development Notice */}
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-2xl p-6 flex items-start gap-4 shadow-md">
-          <FaInfoCircle className="text-yellow-500 text-2xl mt-1" />
           <div>
-            <h3 className="font-semibold text-yellow-700 mb-1 text-lg">
-              Dashboard Under Development
-            </h3>
-            <p className="text-yellow-800 text-sm sm:text-base leading-relaxed">
-              This is a temporary version of the seller dashboard. Advanced features 
-              like sales analytics, performance insights, real-time order tracking, 
-              and automated reports are coming soon.
-              <br />
-              Thank you for being an early partner with us 🚀
+            <h1 className="text-3xl font-bold text-green-800">
+              Welcome, {seller.shopName}
+            </h1>
+            <p className="text-gray-500">
+              {seller.plan} • Grow your business 🌱
             </p>
           </div>
         </div>
 
+        <button className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-xl">
+          <Plus size={18} />
+          Add Product
+        </button>
+      </div>
+
+      {/* STATS */}
+      <div className="grid md:grid-cols-4 gap-5 mb-8">
+
+        <div className="bg-white p-5 rounded-2xl shadow border-l-4 border-green-500">
+          <Package className="text-green-600" />
+          <p className="text-gray-500 mt-2">Total Products</p>
+          <h2 className="text-2xl font-bold">{products.length}</h2>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl shadow border-l-4 border-yellow-400">
+          <Clock className="text-yellow-500" />
+          <p className="text-gray-500 mt-2">Used</p>
+          <h2 className="text-2xl font-bold">{limitData.used}</h2>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl shadow border-l-4 border-emerald-500">
+          <BadgeCheck className="text-emerald-600" />
+          <p className="text-gray-500 mt-2">Remaining</p>
+          <h2 className="text-2xl font-bold">{limitData.remaining}</h2>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl shadow border-l-4 border-green-700">
+          <Star className="text-green-700" />
+          <p className="text-gray-500 mt-2">Featured</p>
+          <h2 className="text-2xl font-bold">{featuredCount}</h2>
+        </div>
+      </div>
+
+      {/* GRAPH (REAL CLICK ANALYTICS) */}
+      <div className="bg-white p-6 rounded-2xl shadow-md mb-8">
+
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="text-green-600" />
+          <h2 className="text-lg font-semibold text-green-700">
+            Product Click Analytics
+          </h2>
+        </div>
+
+        <div className="h-72">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="clicks"
+                stroke="#16a34a"
+                strokeWidth={3}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* LIMIT BAR */}
+      <div className="bg-gradient-to-r from-green-600 to-emerald-500 text-white p-6 rounded-2xl shadow-lg mb-8">
+
+        <h2 className="text-xl font-semibold">
+          🌱 Monthly Free Listing Plan
+        </h2>
+
+        <p className="text-sm opacity-90 mt-1">
+          You get {limitData.limit} free product uploads every month.
+        </p>
+
+        <div className="mt-4 bg-white/30 h-2 rounded-full">
+          <div
+            className="bg-white h-2 rounded-full"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        <p className="text-sm mt-2">
+          {limitData.used} / {limitData.limit} used
+        </p>
+      </div>
+
+      {/* PRODUCTS */}
+      <div className="grid md:grid-cols-3 gap-6">
+
+        <div className="md:col-span-2 bg-white p-6 rounded-2xl shadow-md">
+
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-green-700 mb-4">
+            <ShoppingBag />
+            Your Products
+          </h2>
+
+          <div className="space-y-3">
+            {products.map((p) => (
+              <div
+                key={p._id}
+                className="flex justify-between items-center border p-4 rounded-xl hover:bg-green-50"
+              >
+                <div>
+                  <p className="font-semibold">{p.name}</p>
+                  <p className="text-sm text-gray-500">₹{p.totalPrice}</p>
+                </div>
+
+                {p.featured && (
+                  <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                    ⭐ Featured
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div className="space-y-5">
+
+          <div className="bg-white p-5 rounded-2xl shadow-md border border-green-100">
+            <h3 className="font-semibold text-green-700 mb-3">
+              ⚡ Quick Actions
+            </h3>
+
+            <button className="w-full bg-green-600 text-white py-2.5 rounded-xl mb-2">
+              + Add Product
+            </button>
+
+            <button className="w-full border border-green-200 text-green-700 py-2.5 rounded-xl">
+              Buy Listings
+            </button>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-5 rounded-2xl shadow">
+            <h3 className="font-semibold text-green-700">
+              💡 Insights
+            </h3>
+
+            <p className="text-sm text-gray-600 mt-2">
+              More clicks = more WhatsApp leads = more sales 🚀
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-5 rounded-2xl shadow-md border border-green-200">
+            <h3 className="font-semibold text-green-700">
+              💎 Your Plan
+            </h3>
+
+            <p className="text-sm text-gray-600 mt-1">
+              Current: <b>{seller.plan}</b>
+            </p>
+
+            <button className="mt-4 w-full bg-emerald-600 text-white py-2.5 rounded-xl hover:bg-emerald-700">
+              Upgrade Plan
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default SellerDashboard;

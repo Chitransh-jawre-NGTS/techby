@@ -16,6 +16,7 @@ import AllSellers from "../../AdminDashboardComponents/Allsellers/page";
 import ComingSoon from "../../components/ComingSoon";
 import AdminDeliveryPage from "../../AdminDashboardComponents/AcceptDilivery/page";
 import AdminDashboard from "../../AdminDashboardComponents/Dashboard/page";
+import AdminPayments from "../../AdminDashboardComponents/Admin Payment Approval page/page";
 
 const SellerDashboard = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const SellerDashboard = () => {
     { name: "Dashboard", icon: <FaTachometerAlt /> },
     { name: "Register Seller", icon: <FaMobileAlt /> },
     { name: "All Sellers", icon: <FaMobileAlt /> },
+    { name: "Accept Payment", icon: <FaMobileAlt /> },
     { name: "Delivery Orders", icon: <FaMobileAlt /> },
   ];
 
@@ -196,7 +198,7 @@ const handleLogout = () => {
           {activeMenu === "Register Seller" && <SellerRegisterPage />}
           {activeMenu === "Delivery Orders" && <AdminDeliveryPage />}
           {activeMenu === "All Sellers" && <AllSellers />}
-
+          {activeMenu === "Accept Payment" && <AdminPayments />}
         </main>
 
       </div>

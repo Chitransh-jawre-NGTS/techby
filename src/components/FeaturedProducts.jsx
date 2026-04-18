@@ -14,18 +14,22 @@ const FeaturedProducts = () => {
   }, []);
 
   const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await getAllProducts();
-      const featured = response.data.filter((p) => p.featured);
-      setProducts(featured);
-    } catch (err) {
-      console.error(err);
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    const response = await getAllProducts();
+
+    const featured = response.data
+      .filter((p) => p.featured)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 🔥 NEWEST FIRST
+
+    setProducts(featured);
+  } catch (err) {
+    console.error(err);
+    setProducts([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleViewMore = () => {
     navigate(`/search?featured=true`);
@@ -95,7 +99,7 @@ const FeaturedProducts = () => {
               {/* Product Image */}
               <div className="relative">
                 <img
-                  src={p.imageUrls?.[0] || "/default-product-image.png"}
+                  src={p.imageUrls?.[0]?.url || "/default-product-image.png"}
                   alt={p.name}
                   className="w-full h-48 sm:h-52 md:h-56 lg:h-60 object-cover transition-transform duration-300 group-hover:scale-105"
                 />

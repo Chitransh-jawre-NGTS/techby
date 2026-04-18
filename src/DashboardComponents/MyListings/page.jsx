@@ -82,53 +82,77 @@ const MyListings = () => {
           </h1>
 
           {/* ✅ LIMIT BOX (ADDED HERE) */}
-          {limitData && (
-            <div className="bg-white border shadow-md rounded-xl px-4 py-3 w-64">
+         {limitData && (
+  <div className="bg-white border border-green-100 shadow-md rounded-2xl px-6 py-4 flex items-center justify-between w-full max-w-xl">
 
-              <p className="text-sm font-semibold text-gray-600 mb-2">
-                📦 Daily Limit
-              </p>
+    {/* LEFT: ICON + LABEL */}
+    <div className="flex items-center gap-3">
+      <div className="bg-green-100 p-2 rounded-full">
+        📊
+      </div>
 
-              <div className="flex justify-between text-sm">
-                <span>Used</span>
-                <span className="font-bold text-green-600">
-                  {limitData.used}
-                </span>
-              </div>
+      <div>
+        <p className="text-sm font-semibold text-gray-700">
+          Daily Listing Usage
+        </p>
+        <p className="text-xs text-gray-400">
+          Track your product posting limit
+        </p>
+      </div>
+    </div>
 
-              <div className="flex justify-between text-sm">
-                <span>Remaining</span>
-                <span className="font-bold text-blue-600">
-                  {limitData.remaining}
-                </span>
-              </div>
+    {/* CENTER: NUMBERS */}
+    <div className="flex items-center gap-6 text-sm">
 
-              <div className="flex justify-between text-sm mb-2">
-                <span>Total</span>
-                <span className="font-bold text-gray-800">
-                  {limitData.limit}
-                </span>
-              </div>
+      <div className="text-center">
+        <p className="text-gray-500 text-xs">Used</p>
+        <p className="font-bold text-green-600">
+          {limitData.used}
+        </p>
+      </div>
 
-              {/* PROGRESS BAR */}
-              <div className="w-full bg-gray-200 h-2 rounded-full">
-                <div
-                  className="bg-green-500 h-2 rounded-full"
-                  style={{
-                    width: `${
-                      (limitData.used / limitData.limit) * 100
-                    }%`,
-                  }}
-                />
-              </div>
+      <div className="text-center">
+        <p className="text-gray-500 text-xs">Remaining</p>
+        <p className="font-bold text-blue-600">
+          {limitData.remaining}
+        </p>
+      </div>
 
-              {limitData.remaining === 0 && (
-                <p className="text-red-500 text-xs mt-2">
-                  ⚠️ Daily limit reached
-                </p>
-              )}
-            </div>
-          )}
+      <div className="text-center">
+        <p className="text-gray-500 text-xs">Total</p>
+        <p className="font-bold text-gray-800">
+          {limitData.limit}
+        </p>
+      </div>
+    </div>
+
+    {/* RIGHT: PROGRESS + STATUS */}
+    <div className="w-40">
+
+      <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+        <div
+          className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full transition-all"
+          style={{
+            width: `${Math.min(
+              (limitData.used / limitData.limit) * 100,
+              100
+            )}%`,
+          }}
+        />
+      </div>
+
+      <p className="text-[10px] text-gray-400 mt-1 text-right">
+        {Math.round((limitData.used / limitData.limit) * 100)}% used
+      </p>
+
+      {limitData.remaining === 0 && (
+        <p className="text-red-500 text-xs mt-1 text-right">
+          ⚠ Limit reached
+        </p>
+      )}
+    </div>
+  </div>
+)}
         </div>
 
         {/* LOADING */}

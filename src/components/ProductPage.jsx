@@ -182,46 +182,42 @@
 
 
 
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../Api/ProductApi";
 
 const ProductsPage = ({ heading = "Products Near You" }) => {
   const [productsData, setProductsData] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(20); // initially show 20
+  const [visibleCount, setVisibleCount] = useState(20);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const itemsPerLoad = 20; // load 20 more on each click
+  const itemsPerLoad = 20;
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
-    try {
-      const response = await getAllProducts();
-      setProductsData(response.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = await getAllProducts();
 
-  // Simulate 100 products by repeating existing ones
-  const simulatedProducts = Array.from({ length: 100 }, (_, idx) => {
-    if (productsData.length === 0) return null;
-    return productsData[idx % productsData.length];
-  }).filter(Boolean); // remove nulls in case of empty products
+    const sortedProducts = response.data.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
 
-  const displayedProducts = simulatedProducts.slice(0, visibleCount);
+    setProductsData(sortedProducts);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // Skeleton placeholders
+  const displayedProducts = productsData.slice(0, visibleCount);
+
   const skeletonArray = Array.from({ length: 20 });
 
-  // Helper to calculate discount %
   const getDiscountPercent = (total, discount) =>
     Math.round(((total - discount) / total) * 100);
 
@@ -231,100 +227,105 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-3xl font-semibold mb-8 text-gray-800">{heading}</h2>
+      <h2 className="text-3xl font-semibold mb-8 text-gray-800">
+        {heading}
+      </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-6">
-        {loading
-          ? skeletonArray.map((_, index) => (
-              <div
-                key={index}
-                className="bg-white border border-gray-200 overflow-hidden shadow animate-pulse flex flex-col"
-              >
-                <div className="w-full h-48 bg-gray-200 relative"></div>
-                <div className="p-4 flex flex-col flex-grow">
-                  <div className="h-5 bg-gray-300 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-gray-300 rounded w-full mb-4"></div>
-                  <div className="h-5 bg-gray-300 rounded w-1/2"></div>
-                </div>
+
+        {/* LOADING */}
+        {loading &&
+          skeletonArray.map((_, index) => (
+            <div
+              key={index}
+              className="bg-white border border-gray-200 shadow animate-pulse flex flex-col"
+            >
+              <div className="w-full h-48 bg-gray-200"></div>
+              <div className="p-4">
+                <div className="h-5 bg-gray-300 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-300 rounded w-full mb-4"></div>
+                <div className="h-5 bg-gray-300 rounded w-1/2"></div>
               </div>
-            ))
-          : displayedProducts.map((product, index) => (
-              <div
-                key={index} // use index because products repeat
-                onClick={() => navigate(`/product/${product._id}`)}
-                className="bg-white border border-gray-200 overflow-hidden shadow hover:shadow-lg transition cursor-pointer flex flex-col"
-              >
-                {/* Image */}
+            </div>
+          ))}
+
+        {/* PRODUCTS */}
+        {!loading &&
+          displayedProducts.map((product) => (
+            <div
+              key={product._id}
+              onClick={() => navigate(`/product/${product._id}`)}
+              className="bg-white border border-gray-200 shadow hover:shadow-lg transition cursor-pointer flex flex-col relative"
+            >
+
+              {/* IMAGE */}
               <div className="relative w-full h-48">
-  <img
-    src={product.imageUrls?.[0]?.url || "/default-product-image.png"}
-    alt={product.name}
-    className="w-full h-full object-cover"
-  />
-</div>
+                <img
+                  src={product.imageUrls?.[0]?.url || "/default-product-image.png"}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
 
-                {/* Info */}
-                <div className="p-4 flex flex-col flex-grow">
-                   <h3 className="font-semibold text-sm text-gray-400 truncate">
-                    {product.desc}
-                  </h3>
-                  <h3 className="font-semibold text-lg text-gray-800 truncate">
-                    {product.name}
-                  </h3>
+                {/* ⭐ FEATURED TAG */}
+                {product.featured && (
+                  <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">
+                    Featured
+                  </span>
+                )}
 
-                  {/* Price & Discount */}
-                  <div className="flex flex-wrap items-center gap-2 mt-3">
-                    <span className="text-green-600 font-bold text-lg">
-                      ₹{product.discountPrice || product.totalPrice}
-                    </span>
-
-                    {product.discountPrice && (
-                      <>
-                        <div className="bg-red-50">
-                          <span className="text-red-500 text-xs font-semibold ml-1">
-                            {getDiscountPercent(
-                              product.totalPrice,
-                              product.discountPrice
-                            )}
-                            % OFF
-                          </span>
-                        </div>
-                        <span className="line-through text-gray-400 text-sm">
-                          ₹{product.totalPrice}
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Seller Info */}
-                  {/* {product.sellerId && (
-                    <div className="flex items-center gap-2 mt-4 flex-wrap">
-                      <img
-                        src={product.sellerId.logo || "/default-shop-logo.png"}
-                        alt={product.sellerId.shopName}
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                      <span className="text-gray-700 font-medium text-sm flex items-center gap-1">
-                        {product.sellerId.shopName}
-                        {product.sellerId.verified && (
-                          <span className="bg-blue-600 text-white text-xs font-semibold px-2 py-0.5 rounded">
-                            Verified
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  )} */}
-                </div>
+                {/* 🚚 DELIVERY TAG */}
+                {product.deliveryAvailable && (
+                  <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                    Free Delivery
+                  </span>
+                )}
               </div>
-            ))}
+
+              {/* INFO */}
+              <div className="p-4 flex flex-col flex-grow">
+
+                <h3 className="font-semibold text-sm text-gray-500 truncate">
+                  {product.desc}
+                </h3>
+
+                <h3 className="font-semibold text-lg text-gray-800 truncate">
+                  {product.name}
+                </h3>
+
+                {/* PRICE */}
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-green-600 font-bold text-lg">
+                    ₹{product.discountPrice || product.totalPrice}
+                  </span>
+
+                  {product.discountPrice && (
+                    <>
+                      <span className="line-through text-gray-400 text-sm">
+                        ₹{product.totalPrice}
+                      </span>
+
+                      <span className="text-red-500 text-xs font-semibold">
+                        {getDiscountPercent(
+                          product.totalPrice,
+                          product.discountPrice
+                        )}
+                        % OFF
+                      </span>
+                    </>
+                  )}
+                </div>
+
+              </div>
+            </div>
+          ))}
       </div>
 
-      {/* Load More Button */}
-      {!loading && visibleCount < simulatedProducts.length && (
+      {/* LOAD MORE */}
+      {!loading && visibleCount < productsData.length && (
         <div className="flex justify-center mt-8">
           <button
             onClick={handleLoadMore}
-            className="px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
           >
             Load More Products
           </button>
@@ -335,16 +336,3 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
 };
 
 export default ProductsPage;
-
-
- {/* {product.featured && (
-                    <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">
-                      Featured
-                    </span>
-                  )} */}
-
-                  {/* {product.deliveryAvailable && (
-                    <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                      Free Delivery
-                    </span>
-                  )} */}

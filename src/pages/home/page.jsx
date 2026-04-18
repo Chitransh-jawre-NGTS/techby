@@ -21,7 +21,7 @@ const Home = () => {
             {/* <WinnerBanner/> */}
             <PrizeCarouselPage/>
             <CategoryPage/>
-            {/* <FeaturedProducts />  */}
+            <FeaturedProducts /> 
             <ProductsPage/>
             <SaleBannerCarousel/>
             <FeaturesSection />

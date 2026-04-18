@@ -45,52 +45,95 @@ const UploadProduct = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const data = new FormData();
-      data.append("name", formData.title);
-      data.append("desc", formData.description);
-      data.append("category", formData.category);
-      data.append("totalPrice", formData.totalPrice);
-      data.append("discountPrice", formData.discountPrice);
-      data.append("featured", formData.featured);
-      data.append("deliveryAvailable", formData.deliveryAvailable);
+  // 🚨 VALIDATION START
+  if (!formData.title.trim()) {
+    return toast.error("Product title is required");
+  }
 
-      formData.images.forEach((img) => data.append("images", img));
+  if (!formData.description.trim()) {
+    return toast.error("Description is required");
+  }
 
-      dynamicFields.forEach((field) => {
-        if (formData[field.name]) data.append(field.name, formData[field.name]);
+  if (!formData.category) {
+    return toast.error("Please select a category");
+  }
+
+  if (!formData.totalPrice || formData.totalPrice <= 0) {
+    return toast.error("Enter valid total price");
+  }
+
+  if (!formData.discountPrice || formData.discountPrice <= 0) {
+    return toast.error("Enter valid discounted price");
+  }
+
+  if (Number(formData.discountPrice) > Number(formData.totalPrice)) {
+    return toast.error("Discount price cannot be greater than total price");
+  }
+
+  if (formData.images.length === 0) {
+    return toast.error("Please upload at least 1 image");
+  }
+
+  // dynamic fields validation
+  for (let field of dynamicFields) {
+    if (!formData[field.name]) {
+      return toast.error(`${field.label} is required`);
+    }
+  }
+  // 🚨 VALIDATION END
+
+  setLoading(true);
+
+  try {
+    const data = new FormData();
+
+    data.append("name", formData.title);
+    data.append("desc", formData.description);
+    data.append("category", formData.category);
+    data.append("totalPrice", formData.totalPrice);
+    data.append("discountPrice", formData.discountPrice);
+    data.append("featured", formData.featured);
+    data.append("deliveryAvailable", formData.deliveryAvailable);
+
+    formData.images.forEach((img) => data.append("images", img));
+
+    dynamicFields.forEach((field) => {
+      if (formData[field.name]) {
+        data.append(field.name, formData[field.name]);
+      }
+    });
+
+    const response = await createProduct(data);
+
+    if (response.status === 201 || response.status === 200) {
+      setSubmitted(true);
+      toast.success("Product uploaded successfully!");
+
+      setFormData({
+        title: "",
+        description: "",
+        category: "",
+        totalPrice: "",
+        discountPrice: "",
+        images: [],
+        featured: false,
+        deliveryAvailable: false,
       });
 
-      const response = await createProduct(data);
-
-      if (response.status === 201 || response.status === 200) {
-        setSubmitted(true);
-        toast.success("Product uploaded successfully!");
-        setFormData({
-          title: "",
-          description: "",
-          category: "",
-          totalPrice: "",
-          discountPrice: "",
-          images: [],
-          featured: false,
-          deliveryAvailable: false,
-        });
-        setTimeout(() => setSubmitted(false), 3000);
-      } else {
-         toast.error(response.data.message || "Upload failed");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+      setTimeout(() => setSubmitted(false), 3000);
+    } else {
+      toast.error(response.data.message || "Upload failed");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error(error.response?.data?.message || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const renderField = (field) => {
     const dependentValue = formData[field.dependsOn] || "";
@@ -233,19 +276,18 @@ const UploadProduct = () => {
 
         {/* Checkboxes */}
         <div className="flex gap-6 items-center mb-4">
-          {/* <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2">
             <input
               type="checkbox"
               name="featured"
               checked={formData.featured}
-              disabled={seller?.location !== "Indore"} // ✅ fix
               onChange={handleChange}
               className="w-4 h-4 text-green-600"
             />
             <span className="text-gray-700">
               Featured Product {seller?.location !== "Indore" && "(Indore sellers only)"}
             </span>
-          </label> */}
+          </label>
 
           <label className="flex items-center gap-2">
             <input

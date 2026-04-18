@@ -23,6 +23,12 @@ const BookDelivery = () => {
     paymentType: "",
   });
 
+  const [sellerData, setSellerData] = useState({
+    shopName: "",
+    shopPhone: "",
+    shopAddress: "",
+  });
+
   const [price, setPrice] = useState(0);
 
   // ---------------- PRODUCTS ----------------
@@ -73,6 +79,11 @@ const BookDelivery = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSellerChange = (e) => {
+    const { name, value } = e.target;
+    setSellerData((prev) => ({ ...prev, [name]: value }));
+  };
+
   // ---------------- CREATE ORDER ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,6 +100,7 @@ const BookDelivery = () => {
         amount: price,
         productId: product._id,
         ...formData,
+        sellerInfo: sellerData,
       });
 
       toast.success("Order created 🚚");
@@ -111,101 +123,173 @@ const BookDelivery = () => {
     }
   };
 
-  // ---------------- STATUS STYLE ----------------
+  // ---------------- STATUS ----------------
   const getStatus = (status) => {
     const map = {
       pending: "bg-yellow-100 text-yellow-700",
-      approved: "bg-blue-100 text-blue-700",
+      approved: "bg-green-100 text-green-700",
       rejected: "bg-red-100 text-red-700",
-      delivered: "bg-green-100 text-green-700",
+      delivered: "bg-emerald-200 text-emerald-800",
     };
-
     return map[status] || "bg-gray-100 text-gray-600";
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100 p-6">
 
       {/* HEADER */}
-      <div className="max-w-6xl mx-auto mb-6">
-        <h1 className="text-3xl font-bold">🚚 Book Delivery</h1>
-        <p className="text-gray-500">Manage your orders & track deliveries</p>
+      <div className="max-w-6xl mx-auto mb-8">
+        <h1 className="text-4xl font-bold text-gray-800">
+          🚚 Book Delivery
+        </h1>
+        <p className="text-gray-500">
+          Smart delivery management system
+        </p>
       </div>
 
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
 
         {/* FORM */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">📦 Create Delivery</h2>
+        <div className="backdrop-blur-xl bg-white/70 p-6 rounded-3xl shadow-xl border border-green-100">
 
-          <select
-            name="productId"
-            value={formData.productId}
-            onChange={handleChange}
-            className="w-full p-2 border rounded mb-4"
-          >
-            <option value="">
-              {loadingProducts ? "Loading..." : "Select Product"}
-            </option>
-            {products.map((p) => (
-              <option key={p._id} value={p._id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+          <h2 className="text-xl font-semibold mb-4 text-green-700">
+            📦 Create Delivery
+          </h2>
 
-          <div className="flex gap-3 mb-4">
-            {["small", "big"].map((size) => (
-              <label
-                key={size}
-                className={`flex-1 text-center p-2 border rounded cursor-pointer ${
-                  formData.productSize === size
-                    ? "bg-blue-600 text-white"
-                    : ""
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="productSize"
-                  value={size}
-                  hidden
-                  onChange={handleChange}
-                />
-                {size === "small" ? "Small ₹130" : "Big ₹180"}
-              </label>
-            ))}
+          {/* SELLER */}
+          <h3 className="text-green-700 font-semibold mb-3">🏪 Seller Details</h3>
+
+          <div className="mb-3">
+            <label className="labelStyle">Shop Name</label>
+            <input
+              name="shopName"
+              value={sellerData.shopName}
+              onChange={handleSellerChange}
+              className="inputStyle"
+            />
           </div>
 
+          <div className="mb-3">
+            <label className="labelStyle">Shop Phone</label>
+            <input
+              name="shopPhone"
+              value={sellerData.shopPhone}
+              onChange={handleSellerChange}
+              className="inputStyle"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="labelStyle">Shop Address</label>
+            <textarea
+              name="shopAddress"
+              value={sellerData.shopAddress}
+              onChange={handleSellerChange}
+              className="inputStyle"
+            />
+          </div>
+
+          {/* PRODUCT */}
+          <div className="mb-3">
+            <label className="labelStyle">Select Product</label>
+            <select
+              name="productId"
+              value={formData.productId}
+              onChange={handleChange}
+              className="inputStyle"
+            >
+              <option value="">
+                {loadingProducts ? "Loading..." : "Select Product"}
+              </option>
+              {products.map((p) => (
+                <option key={p._id} value={p._id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* SIZE */}
+          <div className="mb-3">
+            <label className="labelStyle">Product Size</label>
+            <div className="flex gap-3 mt-2">
+              {["small", "big"].map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => {
+                    setFormData((prev) => ({ ...prev, productSize: size }));
+                    setPrice(calculatePrice(size));
+                  }}
+                  className={`flex-1 p-2 rounded-xl border transition ${
+                    formData.productSize === size
+                      ? "bg-green-600 text-white shadow-md"
+                      : "hover:bg-green-50"
+                  }`}
+                >
+                  {size === "small" ? "Small ₹130" : "Big ₹180"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* PRICE */}
           {price > 0 && (
-            <div className="bg-blue-50 text-center p-2 rounded mb-4 font-semibold">
+            <div className="mb-3 p-3 bg-green-100 text-green-800 rounded-xl text-center font-semibold">
               Total: ₹{price}
             </div>
           )}
 
-          <input name="customerName" placeholder="Customer Name" onChange={handleChange} className="w-full p-2 border mb-2 rounded" />
-          <input name="customerPhone" placeholder="Phone" onChange={handleChange} className="w-full p-2 border mb-2 rounded" />
-          <input name="city" placeholder="City" onChange={handleChange} className="w-full p-2 border mb-2 rounded" />
+          {/* CUSTOMER */}
+          <div className="mb-3">
+            <label className="labelStyle">Customer Name</label>
+            <input name="customerName" onChange={handleChange} className="inputStyle" />
+          </div>
 
-          <textarea name="pickupAddress" placeholder="Pickup Address" onChange={handleChange} className="w-full p-2 border mb-2 rounded" />
-          <textarea name="deliveryAddress" placeholder="Delivery Address" onChange={handleChange} className="w-full p-2 border mb-2 rounded" />
+          <div className="mb-3">
+            <label className="labelStyle">Customer Phone</label>
+            <input name="customerPhone" onChange={handleChange} className="inputStyle" />
+          </div>
 
-          <select name="paymentType" onChange={handleChange} className="w-full p-2 border mb-4 rounded">
-            <option value="">Payment Type</option>
-            <option value="online">Online</option>
-            <option value="cod">COD</option>
-          </select>
+          <div className="mb-3">
+            <label className="labelStyle">City (Indore only)</label>
+            <input name="city" onChange={handleChange} className="inputStyle" />
+          </div>
+
+          {/* ADDRESSES */}
+          <div className="mb-3">
+            <label className="labelStyle">Pickup Address</label>
+            <textarea name="pickupAddress" onChange={handleChange} className="inputStyle" />
+          </div>
+
+          <div className="mb-3">
+            <label className="labelStyle">Delivery Address</label>
+            <textarea name="deliveryAddress" onChange={handleChange} className="inputStyle" />
+          </div>
+
+          {/* PAYMENT */}
+          <div className="mb-3">
+            <label className="labelStyle">Payment Type</label>
+            <select name="paymentType" onChange={handleChange} className="inputStyle">
+              <option value="">Select Payment</option>
+              <option value="online">Online</option>
+              <option value="cod">COD</option>
+            </select>
+          </div>
 
           <button
             onClick={handleSubmit}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl shadow-md transition"
           >
             Book Delivery
           </button>
         </div>
 
         {/* ORDERS */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">📋 My Deliveries</h2>
+        <div className="backdrop-blur-xl bg-white/70 p-6 rounded-3xl shadow-xl border border-green-100">
+          <h2 className="text-xl font-semibold mb-4 text-green-700">
+            📋 My Deliveries
+          </h2>
 
           {loadingOrders ? (
             <p>Loading...</p>
@@ -215,25 +299,21 @@ const BookDelivery = () => {
             deliveries.map((d) => (
               <div
                 key={d._id}
-                className="p-4 border rounded-lg mb-3 flex justify-between items-center hover:shadow"
+                className="p-4 mb-3 rounded-xl border hover:shadow-lg transition flex justify-between items-center"
               >
                 <div>
                   <p className="font-semibold">{d.productName}</p>
                   <p className="text-sm text-gray-500">
                     {d.customerName} • {d.city}
                   </p>
-                  <span
-                    className={`text-xs px-2 py-1 rounded mt-1 inline-block ${getStatus(
-                      d.status
-                    )}`}
-                  >
+                  <span className={`text-xs px-2 py-1 rounded ${getStatus(d.status)}`}>
                     {d.status}
                   </span>
                 </div>
 
                 <button
                   onClick={() => setInvoiceData(d)}
-                  className="text-blue-600 text-sm underline"
+                  className="text-green-600 text-sm font-medium hover:underline"
                 >
                   Invoice
                 </button>
@@ -243,23 +323,36 @@ const BookDelivery = () => {
         </div>
       </div>
 
-      {/* 🧠 SELLER INFO PANEL */}
-      <div className="max-w-6xl mx-auto mt-8 bg-white p-5 rounded-xl shadow">
-
-        <h3 className="text-lg font-semibold mb-3">📌 Important Notes for Sellers</h3>
-
-        <ul className="text-sm text-gray-600 space-y-2">
-          <li>✔ Orders are automatically linked to your seller account</li>
-          <li>✔ You do NOT need to send sellerId manually</li>
-          <li>✔ Order status updates will reflect in real-time dashboard</li>
-          <li>✔ Only "approved" orders should be processed for delivery</li>
-          <li>✔ Invoice can be downloaded anytime from order list</li>
-        </ul>
-
-      </div>
-
       {/* INVOICE */}
       <InvoicePage invoiceData={invoiceData} setInvoiceData={setInvoiceData} />
+
+      {/* STYLES */}
+      <style>
+        {`
+        .inputStyle {
+          width: 100%;
+          padding: 12px;
+          border-radius: 14px;
+          border: 1px solid #d1fae5;
+          background: white;
+          transition: 0.2s;
+        }
+
+        .inputStyle:focus {
+          border-color: #16a34a;
+          box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+          outline: none;
+        }
+
+        .labelStyle {
+          display: block;
+          font-size: 13px;
+          font-weight: 500;
+          color: #374151;
+          margin-bottom: 4px;
+        }
+        `}
+      </style>
     </div>
   );
 };

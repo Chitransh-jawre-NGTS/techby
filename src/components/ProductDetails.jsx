@@ -17,11 +17,38 @@ import CategoryMenu from "./CategoryMenu";
 import sellerlogo from "../assets/logo/shop logo.jpg";
 import ProductsPage from "./ProductPage";
 import Footer from "./Footer";
+import axios from "axios";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    console.log("Product ID from URL:", id);
+  if (!product?._id) return;
+
+  const key = `viewed_${product._id}`;
+  const alreadyViewed = sessionStorage.getItem(key);
+
+  if (alreadyViewed) return;
+
+  const increaseView = async () => {
+    try {
+      await axios.post(
+        `http://localhost:5000/api/product-stats/view/${product._id}`,
+      );
+
+      sessionStorage.setItem(key, "true");
+    } catch (error) {
+      console.log("View API error:", error.message);
+    }
+  };
+
+  increaseView();
+}, [product?._id]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -38,6 +65,17 @@ const ProductDetails = () => {
 
     fetchProduct();
   }, [id]);
+  const nextImage = () => {
+  setCurrentIndex((prev) =>
+    prev === product.imageUrls.length - 1 ? 0 : prev + 1
+  );
+};
+
+const prevImage = () => {
+  setCurrentIndex((prev) =>
+    prev === 0 ? product.imageUrls.length - 1 : prev - 1
+  );
+};
 
   if (!product) {
     return (
@@ -89,6 +127,7 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+  
     );
   }
   const discountPercent =
@@ -131,6 +170,8 @@ Is it still available? Please share more details.`;
 
   window.open(whatsappUrl, "_blank");
 };
+
+
 
   const services = [
     {
@@ -177,10 +218,18 @@ Is it still available? Please share more details.`;
 
     <div className="relative rounded-lg overflow-hidden h-66 md:h-96">
       <img
-        src={selectedImage || "/default-product-image.png"}
-        alt={product.name}
-        className="w-full h-full object-cover"
-      />
+  src={selectedImage || "/default-product-image.png"}
+  alt={product.name}
+  className="w-full h-full object-cover cursor-pointer"
+  onClick={() => {
+    const index = product.imageUrls.findIndex(
+      (img) => img.url === selectedImage
+    );
+    setCurrentIndex(index >= 0 ? index : 0);
+    setIsViewerOpen(true);
+  }}
+/>
+
 
       {product.featured && (
         <span className="absolute top-3 left-3 bg-yellow-400 text-black text-xs font-semibold px-3 py-1 rounded-lg shadow">
@@ -197,20 +246,22 @@ Is it still available? Please share more details.`;
 
     {/* thumbnails */}
     {product.imageUrls && product.imageUrls.length > 1 && (
-      <div className="flex gap-2 overflow-x-auto">
-        {product.imageUrls.map((img, idx) => (
-          <img
-            key={idx}
-            src={img.url}
-            alt={`Thumbnail ${idx + 1}`}
-            className={`w-20 h-20 object-cover rounded-lg border cursor-pointer transition ${
-              img === selectedImage ? "border-green-600" : "border-gray-300"
-            }`}
-            onClick={() => setSelectedImage(img)}
-          />
-        ))}
-      </div>
-    )}
+  <div className="flex gap-2 overflow-x-auto">
+    {product.imageUrls.map((img, idx) => (
+      <img
+        key={idx}
+        src={img.url}
+        alt={`Thumbnail ${idx + 1}`}
+        className={`w-20 h-20 object-cover rounded-lg border cursor-pointer transition ${
+          selectedImage === img.url
+            ? "border-green-600"
+            : "border-gray-300"
+        }`}
+        onClick={() => setSelectedImage(img.url)}
+      />
+    ))}
+  </div>
+)}
 
     {/* ✅ MOVED WHATSAPP BUTTON HERE (DESKTOP ONLY) */}
     <div className="hidden md:block">
@@ -367,6 +418,46 @@ Is it still available? Please share more details.`;
 
       <ProductsPage heading="You May Also Like" />
       <Footer />
+          {isViewerOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+
+    {/* Close Button */}
+    <button
+      className="absolute top-5 right-5 text-white text-3xl"
+      onClick={() => setIsViewerOpen(false)}
+    >
+      ✕
+    </button>
+
+    {/* Left Arrow */}
+    {product.imageUrls.length > 1 && (
+      <button
+        onClick={prevImage}
+        className="absolute left-5 text-white text-4xl"
+      >
+        ‹
+      </button>
+    )}
+
+    {/* Image */}
+    <img
+      src={product.imageUrls[currentIndex]?.url}
+      alt="preview"
+      className="max-h-[90vh] max-w-[90vw] object-contain"
+    />
+
+    {/* Right Arrow */}
+    {product.imageUrls.length > 1 && (
+      <button
+        onClick={nextImage}
+        className="absolute right-5 text-white text-4xl"
+      >
+        ›
+      </button>
+    )}
+
+  </div>
+)}
     </>
   );
 };
