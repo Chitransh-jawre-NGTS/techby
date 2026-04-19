@@ -17,7 +17,6 @@ import CategoryMenu from "./CategoryMenu";
 import sellerlogo from "../assets/logo/shop logo.jpg";
 import ProductsPage from "./ProductPage";
 import Footer from "./Footer";
-import axios from "axios";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -27,7 +26,6 @@ const ProductDetails = () => {
 const [currentIndex, setCurrentIndex] = useState(0);
 
 useEffect(() => {
-  console.log("Product ID from URL:", id);
 
   if (!product?._id) return;
 
@@ -374,11 +372,11 @@ Is it still available? Please share more details.`;
                     {/* {product.sellerId.email && (
           <span className="text-gray-500 text-sm">{product.sellerId.email}</span>
         )} */}
-                    {product.sellerId.phone && (
+                    {/* {product.sellerId.phone && (
                       <span className="text-gray-500 text-sm">
                         {product.sellerId.phone}
                       </span>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>

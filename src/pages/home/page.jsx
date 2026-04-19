@@ -11,6 +11,8 @@ import CategoryPage from '../../components/CategoryPage'
 import PrizeCarouselPage from '../../components/PrizeCarouselPage'
 import MobileBottomNavbar from '../../components/MobileBottomNavbar'
 import WinnerBanner from '../../components/WinnerBanner'
+import FullImageCover from '../../components/FullImageCover'
+import coverImage from "../../assets/add banners/image1.png"
 
 const Home = () => {
   return (
@@ -23,7 +25,8 @@ const Home = () => {
             <CategoryPage/>
             <FeaturedProducts /> 
             <ProductsPage/>
-            <SaleBannerCarousel/>
+            {/* <SaleBannerCarousel/> */}
+            <FullImageCover imageUrl={coverImage}/>
             <FeaturesSection />
             <Footer/>
             <MobileBottomNavbar/>
