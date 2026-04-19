@@ -6,11 +6,10 @@ export const ENDPOINTS = {
     PROFILE: "/auth/sellers/profile",
     VERIFY: "/auth/sellers/verify",
     DASHBOARD: "/auth/sellers/dashboard",
-   
   },
-   ADMIN: {
+
+  ADMIN: {
     LOGIN: "/auth/admin/login",
-        // ✅ FIXED HERE
     GET_ALL_SELLERS: "/auth/admin/sellers",
     DELETE_SELLER: "/auth/admin/sellers",
   },
@@ -28,7 +27,11 @@ export const ENDPOINTS = {
     GET_ALL: "/products",
     GET_ONE: (id) => `/products/${id}`,
     GET_SELLER_PRODUCTS: "/products/seller",
-       // ✅ NEW: Seller daily limit API
     LIMIT: "/products/limit",
+  },
+
+  // 🆕 ADD THIS SECTION
+  PRODUCT_STATS: {
+    VIEW: "/product-stats/view",
   },
 };

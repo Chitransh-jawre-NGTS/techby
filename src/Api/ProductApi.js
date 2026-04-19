@@ -15,6 +15,13 @@ export const createProduct = (formData) => {
 export const getSellerLimit = () => {
   return httpClient.get(ENDPOINTS.PRODUCTS.LIMIT);
 };
+// Send view to backend
+export const increaseProductView = (productId, data) => {
+  return httpClient.post(
+    `${ENDPOINTS.PRODUCT_STATS.VIEW}/${productId}`,
+    data
+  );
+};
 
 
 export const updateProduct = (id, formData) => {

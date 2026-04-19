@@ -11,7 +11,7 @@ import {
   FaUndo,
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../Api/ProductApi"; // ✅ centralized API
+import { getProductById ,increaseProductView } from "../Api/ProductApi"; // ✅ centralized API
 import Navbar from "./Navbar";
 import CategoryMenu from "./CategoryMenu";
 import sellerlogo from "../assets/logo/shop logo.jpg";
@@ -26,22 +26,14 @@ const ProductDetails = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    console.log("Product ID from URL:", id);
+useEffect(() => {
+  console.log("Product ID from URL:", id);
+
   if (!product?._id) return;
-
-  const key = `viewed_${product._id}`;
-  const alreadyViewed = sessionStorage.getItem(key);
-
-  if (alreadyViewed) return;
 
   const increaseView = async () => {
     try {
-      await axios.post(
-        `http://localhost:5000/api/product-stats/view/${product._id}`,
-      );
-
-      sessionStorage.setItem(key, "true");
+      await increaseProductView(product._id);
     } catch (error) {
       console.log("View API error:", error.message);
     }
