@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import payment from "../assets/payment.jpeg";
 import { createPurchase } from "../Api/listingApi";
+import toast from "react-hot-toast";
 
 export default function PricingPage() {
   const [normalCount, setNormalCount] = useState(0);
@@ -10,7 +11,6 @@ export default function PricingPage() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // PRICING
   const normalOriginal = 149;
   const normalPrice = 79;
 
@@ -28,15 +28,14 @@ export default function PricingPage() {
     setFile(e.target.files[0]);
   };
 
-  // ================= API CALL (USING HttpClient) =================
   const handlePurchase = async () => {
     if (!file) {
-      alert("Please upload payment screenshot");
+      toast.error("Please upload payment screenshot");
       return;
     }
 
     if (normalCount === 0 && featureCount === 0) {
-      alert("Select at least one listing");
+      toast.error("Select at least one listing");
       return;
     }
 
@@ -51,7 +50,6 @@ export default function PricingPage() {
 
       const storedData = JSON.parse(localStorage.getItem("sellerToken"));
 
-      // ✅ API CALL FROM API FILE
       await createPurchase(formData, storedData?.token);
 
       const newOrder = {
@@ -69,10 +67,10 @@ export default function PricingPage() {
       setFeatureCount(0);
       setFile(null);
 
-      alert("Purchase request sent to admin ✅");
+      toast.success("Purchase request sent to admin ✅");
     } catch (err) {
       console.error(err);
-      alert("Error submitting purchase");
+      toast.error("Error submitting purchase");
     } finally {
       setLoading(false);
     }
@@ -81,7 +79,6 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100 py-10 px-4">
 
-      {/* HEADER */}
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold text-green-700">
           Seller Pricing Dashboard
@@ -91,10 +88,8 @@ export default function PricingPage() {
         </p>
       </div>
 
-      {/* MAIN CARD */}
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-8 border border-green-100">
 
-        {/* PRICING */}
         <div className="grid md:grid-cols-2 gap-8">
 
           {/* NORMAL */}
@@ -188,18 +183,10 @@ export default function PricingPage() {
           <p className="text-2xl font-bold text-green-700 mt-1">
             Total: ₹{total.toFixed(2)}
           </p>
-
-          <p className="text-sm text-gray-500 mt-2">
-            * Prices are inclusive of all applicable taxes (including GST)
-          </p>
         </div>
 
         {/* QR */}
         <div className="mt-10 text-center border-t pt-6">
-          <h3 className="text-lg font-semibold text-gray-700">
-            📱 Pay via QR
-          </h3>
-
           <img src={payment} alt="qr" className="mx-auto my-4 w-64" />
 
           <input
@@ -217,39 +204,6 @@ export default function PricingPage() {
         >
           {loading ? "Processing..." : "Confirm Purchase"}
         </button>
-      </div>
-
-      {/* HISTORY */}
-      <div className="max-w-5xl mx-auto mt-10">
-        <h2 className="text-xl font-bold text-green-700 mb-4">
-          📜 Purchase History
-        </h2>
-
-        {history.length === 0 ? (
-          <p className="text-gray-500">No purchases yet</p>
-        ) : (
-          history.map((item) => (
-            <div key={item.id} className="bg-white p-4 mb-3 rounded-xl shadow border">
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-semibold">
-                    Normal: {item.normalCount} | Featured: {item.featureCount}
-                  </p>
-                  <p className="text-sm text-gray-500">{item.date}</p>
-                </div>
-
-                <div className="text-right">
-                  <p className="font-bold text-green-700">
-                    ₹{item.total}
-                  </p>
-                  <p className="text-sm text-orange-500">
-                    {item.status}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
       </div>
     </div>
   );

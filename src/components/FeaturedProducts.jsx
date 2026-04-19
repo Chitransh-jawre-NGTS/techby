@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../Api/ProductApi";
+import shoplogo from "../assets/logo/shop logo.jpg"
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
@@ -148,18 +149,28 @@ const FeaturedProducts = () => {
                   </div>
 
                   {/* Seller Info */}
-                  {p.sellerId && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <img
-                        src={p.sellerId.logo || "/default-shop-logo.png"}
-                        alt={p.sellerId.shopName}
-                        className="w-8 h-8 rounded-full object-cover border border-green-200"
-                      />
-                      <span className="text-gray-700 font-medium text-xs sm:text-sm truncate">
-                        {p.sellerId.shopName}
-                      </span>
-                    </div>
-                  )}
+                     {p.sellerId && (
+                   <div className="flex items-start gap-2 mt-2">
+                     <img
+                       src={p.sellerId.logo || shoplogo}
+                       alt={p.sellerId.shopName}
+                       className="w-8 h-8 rounded-full object-cover"
+                     />
+                 
+                     <div className="flex flex-col">
+                       <span className="text-gray-700 font-medium text-sm">
+                         {p.sellerId.shopName}
+                       </span>
+                 
+                       {/* Seller Location */}
+                       {p.sellerId.location && (
+                         <span className="text-gray-500 text-xs">
+                           {p.sellerId.location}
+                         </span>
+                       )}
+                     </div>
+                   </div>
+                 )}
                 </div>
               </div>
             </div>
