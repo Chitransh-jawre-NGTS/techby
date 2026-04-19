@@ -26,7 +26,7 @@ import {
   getSellerLimit,
 } from "../../Api/ProductApi";
 
-import axios from "axios";
+import { getSellerStats } from "../../Api/statsApi"; // ✅ NEW API
 import BetaBanner from "../../components/BetaBanner";
 
 const SellerDashboard = () => {
@@ -39,10 +39,10 @@ const SellerDashboard = () => {
   });
 
   const [chartData, setChartData] = useState([]);
-  const [totalViews, setTotalViews] = useState(0); // ✅ NEW
+  const [totalViews, setTotalViews] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // ================= FETCH DATA =================
+  // ================= FETCH =================
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,35 +71,33 @@ const SellerDashboard = () => {
           remaining: credits?.normal || 0,
         });
 
-        // ================= ANALYTICS =================
-       if (sellerData?._id) {
-  const res = await axios.get(
-    `http://localhost:5000/api/product-stats/seller/${sellerData._id}`
-  );
+        // ================= ANALYTICS API =================
+        if (sellerData?._id) {
+          const res = await getSellerStats(sellerData._id);
 
-  const data = res.data;
+          const data = res?.data;
 
-  setTotalViews(data.totalViews || 0);
+          setTotalViews(data?.totalViews || 0);
 
-  // ✅ STEP 1: SORT BY DATE FIRST
-  const sorted = [...(data.products || [])].sort(
-    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-  );
+          // SORT BY DATE
+          const sorted = [...(data?.products || [])].sort(
+            (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+          );
 
-  // ✅ STEP 2: CUMULATIVE GROWTH (FIXED ORDER)
-  let cumulative = 0;
+          // CUMULATIVE GROWTH FIX
+          let cumulative = 0;
 
-  const formatted = sorted.map((item, index) => {
-    cumulative += item.views || 0;
+          const formatted = sorted.map((item) => {
+            cumulative += item.views || 0;
 
-    return {
-      name: new Date(item.createdAt).toLocaleDateString("en-GB"), // clean format
-      clicks: cumulative,
-    };
-  });
+            return {
+              name: new Date(item.createdAt).toLocaleDateString("en-GB"),
+              clicks: cumulative,
+            };
+          });
 
-  setChartData(formatted);
-}
+          setChartData(formatted);
+        }
       } catch (err) {
         console.log("Dashboard Error:", err);
       } finally {
@@ -124,7 +122,9 @@ const SellerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100 p-6">
- <BetaBanner/>
+
+      <BetaBanner />
+
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
 
@@ -176,7 +176,6 @@ const SellerDashboard = () => {
           <h2 className="text-2xl font-bold">{featuredCount}</h2>
         </div>
 
-        {/* ✅ NEW TOTAL VIEWS CARD */}
         <div className="bg-white p-5 rounded-2xl shadow border-l-4 border-blue-500">
           <TrendingUp className="text-blue-600" />
           <p className="text-gray-500 mt-2">Total Views</p>
@@ -293,19 +292,6 @@ const SellerDashboard = () => {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-5 rounded-2xl shadow-md border border-green-200">
-            <h3 className="font-semibold text-green-700">
-              💎 Your Plan
-            </h3>
-
-            <p className="text-sm text-gray-600 mt-1">
-              Current: <b>{seller.plan}</b>
-            </p>
-
-            <button className="mt-4 w-full bg-emerald-600 text-white py-2.5 rounded-xl hover:bg-emerald-700">
-              Upgrade Plan
-            </button>
-          </div>
         </div>
       </div>
     </div>

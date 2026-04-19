@@ -261,7 +261,7 @@ const [formData, setFormData] = useState({
 
       if (register.fulfilled.match(result)) {
         alert("Registration successful!");
-        navigate("/seller-login");
+        navigate("/admin-dashboard");
       } else {
         alert(result.payload?.message || "Registration failed");
       }
@@ -414,16 +414,6 @@ const [formData, setFormData] = useState({
             {loading ? "Please wait..." : "Register"}
           </button>
         </form>
-
-        <p className="text-center mt-6 text-gray-600">
-          Already have an account?
-          <button
-            onClick={() => navigate("/seller-login")}
-            className="text-green-700 font-semibold ml-2 hover:underline"
-          >
-            Login
-          </button>
-        </p>
       </div>
     </div>
   );

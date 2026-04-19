@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import payment from "../assets/payment.jpeg";
-import axios from "axios";
+import { createPurchase } from "../Api/listingApi";
 
 export default function PricingPage() {
   const [normalCount, setNormalCount] = useState(0);
@@ -10,28 +10,25 @@ export default function PricingPage() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // ✅ PRICING
+  // PRICING
   const normalOriginal = 149;
   const normalPrice = 79;
 
   const featureOriginal = 299;
   const featurePrice = 209;
 
-  // ✅ TOTAL (OFFER PRICE)
   const total = normalCount * normalPrice + featureCount * featurePrice;
 
-  // ✅ ORIGINAL TOTAL (FOR SAVINGS)
   const originalTotal =
     normalCount * normalOriginal + featureCount * featureOriginal;
 
   const savings = originalTotal - total;
 
-  // ✅ HANDLE FILE
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // ✅ API CALL
+  // ================= API CALL (USING HttpClient) =================
   const handlePurchase = async () => {
     if (!file) {
       alert("Please upload payment screenshot");
@@ -54,16 +51,8 @@ export default function PricingPage() {
 
       const storedData = JSON.parse(localStorage.getItem("sellerToken"));
 
-      await axios.post(
-        "http://localhost:5000/api/listing/purchase",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${storedData?.token}`,
-          },
-        }
-      );
+      // ✅ API CALL FROM API FILE
+      await createPurchase(formData, storedData?.token);
 
       const newOrder = {
         id: Date.now(),
@@ -76,7 +65,6 @@ export default function PricingPage() {
 
       setHistory([newOrder, ...history]);
 
-      // reset
       setNormalCount(0);
       setFeatureCount(0);
       setFile(null);
@@ -107,122 +95,88 @@ export default function PricingPage() {
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-8 border border-green-100">
 
         {/* PRICING */}
-      <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8">
 
-  {/* NORMAL */}
-  <div className="p-5 border rounded-xl">
-    <h2 className="font-bold text-lg text-green-700">
-      Normal Listing
-    </h2>
+          {/* NORMAL */}
+          <div className="p-5 border rounded-xl">
+            <h2 className="font-bold text-lg text-green-700">
+              Normal Listing
+            </h2>
 
-    <p className="mt-1">
-      <span className="line-through text-gray-400 mr-2">
-        ₹{normalOriginal}
-      </span>
-      <span className="text-xl font-bold text-green-700">
-        ₹{normalPrice}
-      </span>
-    </p>
+            <p className="mt-1">
+              <span className="line-through text-gray-400 mr-2">
+                ₹{normalOriginal}
+              </span>
+              <span className="text-xl font-bold text-green-700">
+                ₹{normalPrice}
+              </span>
+            </p>
 
-    {/* FEATURES */}
-    <ul className="mt-4 space-y-2 text-sm">
-      <li className="flex items-center gap-2 text-gray-600">
-        ❌ Limited Visibility
-      </li>
-      <li className="flex items-center gap-2 text-gray-600">
-        ❌ No Priority Placement
-      </li>
-      <li className="flex items-center gap-2 text-gray-600">
-        ❌ Lower Click Chances
-      </li>
-      <li className="flex items-center gap-2 text-gray-600">
-        ❌ No Highlight Badge
-      </li>
-    </ul>
+            <div className="flex items-center gap-4 mt-5">
+              <button
+                onClick={() => setNormalCount(Math.max(0, normalCount - 1))}
+                className="p-2 bg-green-100 rounded"
+              >
+                <Minus size={16} />
+              </button>
 
-    <div className="flex items-center gap-4 mt-5">
-      <button
-        onClick={() => setNormalCount(Math.max(0, normalCount - 1))}
-        className="p-2 bg-green-100 rounded"
-      >
-        <Minus size={16} />
-      </button>
+              <span className="text-xl font-semibold">
+                {normalCount}
+              </span>
 
-      <span className="text-xl font-semibold">
-        {normalCount}
-      </span>
+              <button
+                onClick={() => setNormalCount(normalCount + 1)}
+                className="p-2 bg-green-100 rounded"
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+          </div>
 
-      <button
-        onClick={() => setNormalCount(normalCount + 1)}
-        className="p-2 bg-green-100 rounded"
-      >
-        <Plus size={16} />
-      </button>
-    </div>
-  </div>
+          {/* FEATURED */}
+          <div className="p-5 border-2 border-green-500 rounded-xl relative">
 
-  {/* FEATURED */}
-  <div className="p-5 border-2 border-green-500 rounded-xl shadow-md relative">
+            <span className="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded-full">
+              ⭐ Best Value
+            </span>
 
-    {/* BADGE */}
-    <span className="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded-full">
-      ⭐ Best Value
-    </span>
+            <h2 className="font-bold text-lg text-green-700">
+              Featured Listing
+            </h2>
 
-    <h2 className="font-bold text-lg text-green-700">
-      Featured Listing
-    </h2>
+            <p className="mt-1">
+              <span className="line-through text-gray-400 mr-2">
+                ₹{featureOriginal}
+              </span>
+              <span className="text-xl font-bold text-green-700">
+                ₹{featurePrice}
+              </span>
+            </p>
 
-    <p className="mt-1">
-      <span className="line-through text-gray-400 mr-2">
-        ₹{featureOriginal}
-      </span>
-      <span className="text-xl font-bold text-green-700">
-        ₹{featurePrice}
-      </span>
-    </p>
+            <div className="flex items-center gap-4 mt-5">
+              <button
+                onClick={() => setFeatureCount(Math.max(0, featureCount - 1))}
+                className="p-2 bg-green-100 rounded"
+              >
+                <Minus size={16} />
+              </button>
 
-    {/* FEATURES */}
-    <ul className="mt-4 space-y-2 text-sm">
-      <li className="flex items-center gap-2 text-green-600 font-medium">
-        ✔️ High Visibility
-      </li>
-      <li className="flex items-center gap-2 text-green-600 font-medium">
-        ✔️ Top Priority Placement
-      </li>
-      <li className="flex items-center gap-2 text-green-600 font-medium">
-        ✔️ More Clicks & Leads
-      </li>
-      <li className="flex items-center gap-2 text-green-600 font-medium">
-        ✔️ Highlighted with Badge
-      </li>
-    </ul>
+              <span className="text-xl font-semibold">
+                {featureCount}
+              </span>
 
-    <div className="flex items-center gap-4 mt-5">
-      <button
-        onClick={() => setFeatureCount(Math.max(0, featureCount - 1))}
-        className="p-2 bg-green-100 rounded"
-      >
-        <Minus size={16} />
-      </button>
-
-      <span className="text-xl font-semibold">
-        {featureCount}
-      </span>
-
-      <button
-        onClick={() => setFeatureCount(featureCount + 1)}
-        className="p-2 bg-green-100 rounded"
-      >
-        <Plus size={16} />
-      </button>
-    </div>
-  </div>
-</div>
+              <button
+                onClick={() => setFeatureCount(featureCount + 1)}
+                className="p-2 bg-green-100 rounded"
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* SUMMARY */}
         <div className="mt-8 bg-green-50 p-5 rounded-xl">
-
           <p className="text-gray-500">
             Original Price: ₹{originalTotal}
           </p>
