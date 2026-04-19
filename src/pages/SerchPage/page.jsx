@@ -3,6 +3,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { getAllProducts } from "../../Api/ProductApi";
+import sellerlogo from "../../assets/logo/shop logo.jpg"
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -131,7 +132,7 @@ const SearchPage = () => {
                 {/* Product Image */}
                 <div className="relative w-full h-48">
                   <img
-                    src={product.imageUrls?.[0] || "/default-product-image.png"}
+                    src={product.imageUrls?.[0]?.url || "/default-product-image.png"}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
@@ -162,7 +163,7 @@ const SearchPage = () => {
                   {product.sellerId && (
                     <div className="flex items-center gap-2 mt-2">
                       <img
-                        src={product.sellerId.logo || "/default-shop-logo.png"}
+                        src={product.sellerId.logo || sellerlogo}
                         alt={product.sellerId.shopName}
                         className="w-8 h-8 rounded-full object-cover"
                       />

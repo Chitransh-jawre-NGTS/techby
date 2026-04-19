@@ -27,6 +27,7 @@ import {
 } from "../../Api/ProductApi";
 
 import axios from "axios";
+import BetaBanner from "../../components/BetaBanner";
 
 const SellerDashboard = () => {
   const [seller, setSeller] = useState({});
@@ -37,7 +38,8 @@ const SellerDashboard = () => {
     remaining: 0,
   });
 
-  const [chartData, setChartData] = useState([]); // ✅ REAL ANALYTICS DATA
+  const [chartData, setChartData] = useState([]);
+  const [totalViews, setTotalViews] = useState(0); // ✅ NEW
   const [loading, setLoading] = useState(true);
 
   // ================= FETCH DATA =================
@@ -53,7 +55,7 @@ const SellerDashboard = () => {
         const sellerData = profileRes?.data;
 
         setSeller({
-          _id: sellerData?._id, // ✅ IMPORTANT for analytics API
+          _id: sellerData?._id,
           name: sellerData?.name,
           shopName: sellerData?.shopName,
           plan: "Free Plan",
@@ -69,21 +71,35 @@ const SellerDashboard = () => {
           remaining: credits?.normal || 0,
         });
 
-        // ================= FETCH ANALYTICS =================
-        if (sellerData?._id) {
-          const res = await axios.get(
-            `http://localhost:5000/api/product-stats/seller/${sellerData._id}`
-          );
+        // ================= ANALYTICS =================
+       if (sellerData?._id) {
+  const res = await axios.get(
+    `http://localhost:5000/api/product-stats/seller/${sellerData._id}`
+  );
 
-          const data = res.data;
+  const data = res.data;
 
-          const formatted = (data.products || []).map((item) => ({
-            name: item.productId?.name || "Product",
-            clicks: item.views || 0,
-          }));
+  setTotalViews(data.totalViews || 0);
 
-          setChartData(formatted);
-        }
+  // ✅ STEP 1: SORT BY DATE FIRST
+  const sorted = [...(data.products || [])].sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
+
+  // ✅ STEP 2: CUMULATIVE GROWTH (FIXED ORDER)
+  let cumulative = 0;
+
+  const formatted = sorted.map((item, index) => {
+    cumulative += item.views || 0;
+
+    return {
+      name: new Date(item.createdAt).toLocaleDateString("en-GB"), // clean format
+      clicks: cumulative,
+    };
+  });
+
+  setChartData(formatted);
+}
       } catch (err) {
         console.log("Dashboard Error:", err);
       } finally {
@@ -108,7 +124,7 @@ const SellerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100 p-6">
-
+ <BetaBanner/>
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
 
@@ -134,7 +150,7 @@ const SellerDashboard = () => {
       </div>
 
       {/* STATS */}
-      <div className="grid md:grid-cols-4 gap-5 mb-8">
+      <div className="grid md:grid-cols-5 gap-5 mb-8">
 
         <div className="bg-white p-5 rounded-2xl shadow border-l-4 border-green-500">
           <Package className="text-green-600" />
@@ -159,9 +175,16 @@ const SellerDashboard = () => {
           <p className="text-gray-500 mt-2">Featured</p>
           <h2 className="text-2xl font-bold">{featuredCount}</h2>
         </div>
+
+        {/* ✅ NEW TOTAL VIEWS CARD */}
+        <div className="bg-white p-5 rounded-2xl shadow border-l-4 border-blue-500">
+          <TrendingUp className="text-blue-600" />
+          <p className="text-gray-500 mt-2">Total Views</p>
+          <h2 className="text-2xl font-bold">{totalViews}</h2>
+        </div>
       </div>
 
-      {/* GRAPH (REAL CLICK ANALYTICS) */}
+      {/* GRAPH */}
       <div className="bg-white p-6 rounded-2xl shadow-md mb-8">
 
         <div className="flex items-center gap-2 mb-4">
