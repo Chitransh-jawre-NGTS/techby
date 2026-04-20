@@ -8,6 +8,7 @@ const categories = [
   { name: "Tablets", slug: "tablets" },
   { name: "Gaming Consoles", slug: "gaming-consoles" },
   { name: "PS CD", slug: "ps-cd" },
+  { name: "Bikes", slug: "bikes" },
 ];
 
 const bannerItems = [

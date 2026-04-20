@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   Leaf,
 } from "lucide-react";
+import { FaCheckCircle, FaStore, FaExclamationTriangle } from "react-icons/fa";
 
 import {
   LineChart,
@@ -65,11 +66,11 @@ const SellerDashboard = () => {
 
         const credits = limitRes?.data?.listingCredits;
 
-        setLimitData({
-          limit: credits?.normal || 0,
-          used: 20 - (credits?.normal || 0),
-          remaining: credits?.normal || 0,
-        });
+      setLimitData({
+  freeLimit: limitRes?.data?.freeLimit || 20,
+  used: limitRes?.data?.used || 0,
+  remaining: limitRes?.data?.remainingFree || 0,
+});
 
         // ================= ANALYTICS API =================
         if (sellerData?._id) {
@@ -111,11 +112,10 @@ const SellerDashboard = () => {
   // ================= CALCULATIONS =================
   const featuredCount = products.filter((p) => p.featured).length;
 
-  const progress =
-    limitData.limit > 0
-      ? (limitData.used / limitData.limit) * 100
-      : 0;
-
+ const progress =
+  limitData.freeLimit > 0
+    ? (limitData.used / limitData.freeLimit) * 100
+    : 0;
   if (loading) {
     return <p className="text-center mt-10">Loading dashboard...</p>;
   }
@@ -126,7 +126,7 @@ const SellerDashboard = () => {
       <BetaBanner />
 
       {/* HEADER */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-4">
 
         <div className="flex items-center gap-3">
           <div className="p-3 bg-green-100 rounded-2xl shadow">
@@ -143,12 +143,39 @@ const SellerDashboard = () => {
           </div>
         </div>
 
-        <button className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-xl">
+        {/* <button className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-xl">
           <Plus size={18} />
           Add Product
-        </button>
+        </button> */}
       </div>
+      
 
+<div className="text-sm text-gray-700 mb-6 p-2 leading-relaxed">
+  <h1 className="text-2xl font-bold mb-4 text-green-800">
+  🚚 Ship to Customers at Zero Delivery Cost — Offer Ending Soon
+</h1>
+  <div className="flex items-center gap-2 mb-2">
+    <FaStore className="text-green-600" />
+    <span>
+      You may offer customers the option to visit your store if they prefer.
+    </span>
+  </div>
+
+  <div className="flex items-start gap-2">
+    <FaExclamationTriangle className="text-yellow-500 mt-1" />
+    <span>
+      However, you must <span className="font-semibold">not force or pressure</span> customers to visit your store 
+      or make any advance payments outside the platform. All deliveries should be handled properly to maintain trust.
+    </span>
+  </div>
+
+  <p className="mt-3">
+    Any complaint regarding such behavior may result in 
+    <span className="font-semibold text-red-600"> account suspension or permanent termination</span>, 
+    and the seller may be added to a blacklist.
+  </p>
+
+</div>
       {/* STATS */}
       <div className="grid md:grid-cols-5 gap-5 mb-8">
 
@@ -219,7 +246,7 @@ const SellerDashboard = () => {
         </h2>
 
         <p className="text-sm opacity-90 mt-1">
-          You get {limitData.limit} free product uploads every month.
+          You get {limitData.freeLimit} free product uploads every month.
         </p>
 
         <div className="mt-4 bg-white/30 h-2 rounded-full">
@@ -230,7 +257,7 @@ const SellerDashboard = () => {
         </div>
 
         <p className="text-sm mt-2">
-          {limitData.used} / {limitData.limit} used
+         {limitData.used} / {limitData.freeLimit} used ({limitData.remaining} remaining)
         </p>
       </div>
 
@@ -244,29 +271,29 @@ const SellerDashboard = () => {
             Your Products
           </h2>
 
-          <div className="space-y-3">
-            {products.map((p) => (
-              <div
-                key={p._id}
-                className="flex justify-between items-center border p-4 rounded-xl hover:bg-green-50"
-              >
-                <div>
-                  <p className="font-semibold">{p.name}</p>
-                  <p className="text-sm text-gray-500">₹{p.totalPrice}</p>
-                </div>
+        <div className="space-y-3">
+  {products.slice(0, 5).map((p) => (
+    <div
+      key={p._id}
+      className="flex justify-between items-center border p-4 rounded-xl hover:bg-green-50"
+    >
+      <div>
+        <p className="font-semibold">{p.name}</p>
+        <p className="text-sm text-gray-500">₹{p.totalPrice}</p>
+      </div>
 
-                {p.featured && (
-                  <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
-                    ⭐ Featured
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
+      {p.featured && (
+        <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
+          ⭐ Featured
+        </span>
+      )}
+    </div>
+  ))}
+</div>
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="space-y-5">
+        {/* <div className="space-y-5">
 
           <div className="bg-white p-5 rounded-2xl shadow-md border border-green-100">
             <h3 className="font-semibold text-green-700 mb-3">
@@ -292,7 +319,7 @@ const SellerDashboard = () => {
             </p>
           </div>
 
-        </div>
+        </div> */}
       </div>
     </div>
   );

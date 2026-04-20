@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import bannerMain from "../assets/images/modern-stationary-collection-arrangement.jpg";
 import bannerRight from "../assets/images/amanz-WlxBHSKW7dU-unsplash.jpg";
 import bannerBottom from "../assets/images/download.jpg";
-import VedioImage from "../assets/images/tablet.jpg";
+import VedioImage from "../assets/images/tablet.png";
 
 const HeroSection = () => {
 

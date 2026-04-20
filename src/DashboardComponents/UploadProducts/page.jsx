@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Upload, CheckCircle } from "lucide-react";
 import { itemFields } from "../../data/itemFields";
 import { createProduct } from "../../Api/ProductApi";
 import toast from "react-hot-toast";
+import { getSellerLimit } from "../../Api/ProductApi";
+import LimitBar from "../LimitBar";
 
 const UploadProduct = () => {
   const { seller } = useSelector((state) => state.auth); // ✅ get seller from Redux
@@ -20,7 +22,7 @@ const UploadProduct = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [limitData, setLimitData] = useState(null);
   const selectedCategory = itemFields[formData.category];
   const dynamicFields = selectedCategory?.fields || [];
 
@@ -44,7 +46,18 @@ const UploadProduct = () => {
       }));
     }
   };
+useEffect(() => {
+  const fetchLimit = async () => {
+    try {
+      const res = await getSellerLimit();
+      setLimitData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  fetchLimit();
+}, []);
  const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -177,7 +190,9 @@ const UploadProduct = () => {
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Upload Used Product
       </h2>
-
+<div className="mb-6">
+  <LimitBar limitData={limitData}/>
+</div>
       {submitted && (
         <div className="flex items-center justify-center bg-green-50 text-green-700 py-2 rounded-md mb-4">
           <CheckCircle className="w-5 h-5 mr-2" />

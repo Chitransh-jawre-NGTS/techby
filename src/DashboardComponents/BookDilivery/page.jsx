@@ -85,43 +85,45 @@ const BookDelivery = () => {
   };
 
   // ---------------- CREATE ORDER ----------------
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+// ---------------- CREATE ORDER ----------------
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!formData.productId || !formData.productSize || !formData.paymentType) {
-      return toast.error("Please fill required fields");
-    }
+  // ❌ PAYMENT VALIDATION TEMPORARILY DISABLED
+  if (!formData.productId || !formData.productSize) {
+    return toast.error("Please fill required fields");
+  }
 
-    const product = products.find((p) => p._id === formData.productId);
-    if (!product) return toast.error("Invalid product");
+  const product = products.find((p) => p._id === formData.productId);
+  if (!product) return toast.error("Invalid product");
 
-    try {
-      await createOrder({
-        amount: price,
-        productId: product._id,
-        ...formData,
-        sellerInfo: sellerData,
-      });
+  try {
+    await createOrder({
+      amount: price,
+      productId: product._id,
+      ...formData,
+      sellerInfo: sellerData,
+    });
 
-      toast.success("Order created 🚚");
-      fetchOrders();
+    toast.success("Order created 🚚");
+    fetchOrders();
 
-      setFormData({
-        productId: "",
-        productSize: "",
-        customerName: "",
-        customerPhone: "",
-        city: "",
-        pickupAddress: "",
-        deliveryAddress: "",
-        paymentType: "",
-      });
+    setFormData({
+      productId: "",
+      productSize: "",
+      customerName: "",
+      customerPhone: "",
+      city: "",
+      pickupAddress: "",
+      deliveryAddress: "",
+      paymentType: "", // still kept but ignored
+    });
 
-      setPrice(0);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Server error");
-    }
-  };
+    setPrice(0);
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Server error");
+  }
+};
 
   // ---------------- STATUS ----------------
   const getStatus = (status) => {
@@ -140,8 +142,8 @@ const BookDelivery = () => {
       {/* HEADER */}
       <div className="max-w-6xl mx-auto mb-8">
         <h1 className="text-4xl font-bold text-gray-800">
-          🚚 Book Delivery
-        </h1>
+  🚚 Exclusive: Free for Early Sellers (Limited Time)
+</h1>
         <p className="text-gray-500">
           Smart delivery management system
         </p>
@@ -227,18 +229,18 @@ const BookDelivery = () => {
                       : "hover:bg-green-50"
                   }`}
                 >
-                  {size === "small" ? "Small ₹130" : "Big ₹180"}
+                  {size === "small" ? "Small (like a mobile & tablet) " : "Big (like a laptop) "}
                 </button>
               ))}
             </div>
           </div>
 
           {/* PRICE */}
-          {price > 0 && (
+          {/* {price > 0 && (
             <div className="mb-3 p-3 bg-green-100 text-green-800 rounded-xl text-center font-semibold">
               Total: ₹{price}
             </div>
-          )}
+          )} */}
 
           {/* CUSTOMER */}
           <div className="mb-3">
@@ -268,14 +270,14 @@ const BookDelivery = () => {
           </div>
 
           {/* PAYMENT */}
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label className="labelStyle">Payment Type</label>
             <select name="paymentType" onChange={handleChange} className="inputStyle">
               <option value="">Select Payment</option>
               <option value="online">Online</option>
               <option value="cod">COD</option>
             </select>
-          </div>
+          </div> */}
 
           <button
             onClick={handleSubmit}

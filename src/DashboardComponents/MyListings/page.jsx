@@ -75,85 +75,115 @@ const MyListings = () => {
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex justify-between items-center mb-10 flex-wrap gap-4">
 
-          <h1 className="text-3xl font-bold text-green-700">
-            My Product Listings
-          </h1>
+  {/* TITLE */}
+  <h1 className="text-3xl font-bold text-green-700">
+    My Product Listings
+  </h1>
 
-          {/* ✅ LIMIT BOX (ADDED HERE) */}
-         {limitData && (
-  <div className="bg-white border border-green-100 shadow-md rounded-2xl px-6 py-4 flex items-center justify-between w-full max-w-xl">
+  {/* LIMIT BAR */}
+  {limitData && (
+    <div className="flex items-center gap-6 bg-white/80 backdrop-blur-md border border-green-100 shadow-md rounded-full px-5 py-3 w-full max-w-3xl">
 
-    {/* LEFT: ICON + LABEL */}
-    <div className="flex items-center gap-3">
-      <div className="bg-green-100 p-2 rounded-full">
-        📊
-      </div>
-
-      <div>
-        <p className="text-sm font-semibold text-gray-700">
-          Daily Listing Usage
-        </p>
-        <p className="text-xs text-gray-400">
-          Track your product posting limit
-        </p>
-      </div>
-    </div>
-
-    {/* CENTER: NUMBERS */}
-    <div className="flex items-center gap-6 text-sm">
-
-      <div className="text-center">
-        <p className="text-gray-500 text-xs">Used</p>
-        <p className="font-bold text-green-600">
-          {limitData.used}
-        </p>
-      </div>
-
-      <div className="text-center">
-        <p className="text-gray-500 text-xs">Remaining</p>
-        <p className="font-bold text-blue-600">
-          {limitData.remaining}
-        </p>
-      </div>
-
-      <div className="text-center">
-        <p className="text-gray-500 text-xs">Total</p>
-        <p className="font-bold text-gray-800">
-          {limitData.limit}
-        </p>
-      </div>
-    </div>
-
-    {/* RIGHT: PROGRESS + STATUS */}
-    <div className="w-40">
-
-      <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-        <div
-          className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full transition-all"
-          style={{
-            width: `${Math.min(
-              (limitData.used / limitData.limit) * 100,
-              100
-            )}%`,
-          }}
-        />
-      </div>
-
-      <p className="text-[10px] text-gray-400 mt-1 text-right">
-        {Math.round((limitData.used / limitData.limit) * 100)}% used
-      </p>
-
-      {limitData.remaining === 0 && (
-        <p className="text-red-500 text-xs mt-1 text-right">
-          ⚠ Limit reached
-        </p>
-      )}
-    </div>
-  </div>
-)}
+      {/* LEFT: ICON + LABEL */}
+      <div className="flex items-center gap-3 min-w-fit">
+        <div className="p-2 bg-green-100 rounded-full">
+          📊
         </div>
+
+        <div className="leading-tight">
+          <p className="text-sm font-semibold text-gray-700">
+            Listing Usage
+          </p>
+          <p className="text-[11px] text-gray-400">
+            Free + Paid Credits
+          </p>
+        </div>
+      </div>
+
+      {/* CENTER: STATS PILLS */}
+      <div className="flex items-center gap-3 text-xs">
+
+        <div className="px-3 py-1 bg-gray-100 rounded-full">
+          <span className="text-gray-500">Used:</span>{" "}
+          <span className="font-bold text-green-600">
+            {limitData.used}
+          </span>
+        </div>
+
+        <div className="px-3 py-1 bg-blue-50 rounded-full">
+          <span className="text-gray-500">Free:</span>{" "}
+          <span className="font-bold text-blue-600">
+            {limitData.remainingFree}
+          </span>
+        </div>
+
+        <div className="px-3 py-1 bg-gray-100 rounded-full">
+          <span className="text-gray-500">Total:</span>{" "}
+          <span className="font-bold text-gray-800">
+            {limitData.freeLimit}
+          </span>
+        </div>
+
+      </div>
+
+      {/* RIGHT: PROGRESS */}
+      <div className="flex flex-col items-end min-w-[180px]">
+
+        {/* BAR */}
+        <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+          <div
+            className="h-2 rounded-full bg-gradient-to-r from-green-500 via-emerald-500 to-green-700 transition-all"
+            style={{
+              width: `${Math.min(
+                (limitData.used / limitData.freeLimit) * 100,
+                100
+              )}%`,
+            }}
+          />
+        </div>
+
+        {/* TEXT */}
+        <p className="text-[10px] text-gray-500 mt-1">
+          {Math.round((limitData.used / limitData.freeLimit) * 100)}% used
+        </p>
+
+        {limitData.remainingFree === 0 && (
+          <p className="text-[10px] text-red-500 font-semibold">
+            Free limit reached
+          </p>
+        )}
+
+      </div>
+
+      {/* PAID CREDITS */}
+      {(limitData.paidCredits?.normal > 0 ||
+        limitData.paidCredits?.featured > 0) && (
+        <div className="flex flex-col text-xs border-l pl-4 min-w-fit">
+
+          <p className="font-semibold text-gray-700 mb-1">
+            Paid Credits
+          </p>
+
+          <div className="flex gap-2">
+
+            <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full">
+              Normal: {limitData.paidCredits.normal}
+            </span>
+
+            <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full">
+              Featured: {limitData.paidCredits.featured}
+            </span>
+
+          </div>
+
+        </div>
+      )}
+
+    </div>
+  )}
+</div>
 
         {/* LOADING */}
         {loading ? (

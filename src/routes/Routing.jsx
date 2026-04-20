@@ -43,6 +43,7 @@ const Routing = () => {
       <Route path="/seller-login" element={<SellerLogin />} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/pricing" element={<PricingPage />} />
+      <Route path="/become-seller" element={<BecomeSeller />} />
       {/* <Route path="/seller-register" element={<SellerRegisterPage />} /> */}
 
       {/* Seller Protected Routes */}

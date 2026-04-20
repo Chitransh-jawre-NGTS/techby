@@ -54,12 +54,6 @@ export const itemFields = {
         options: ["2GB", "4GB", "6GB", "8GB", "12GB", "16GB"],
       },
       {
-        name: "year",
-        label: "Purchase Year",
-        type: "number",
-        placeholder: "e.g., 2022",
-      },
-      {
         name: "condition",
         label: "Condition",
         type: "select",
@@ -134,12 +128,6 @@ export const itemFields = {
         options: ["13 inch", "14 inch", "15 inch", "16 inch", "17 inch"],
       },
       {
-        name: "year",
-        label: "Purchase Year",
-        type: "number",
-        placeholder: "e.g., 2021",
-      },
-      {
         name: "condition",
         label: "Condition",
         type: "select",
@@ -176,12 +164,6 @@ export const itemFields = {
         options: ["500GB", "1TB", "2TB", "4TB"],
       },
       {
-        name: "year",
-        label: "Purchase Year",
-        type: "number",
-        placeholder: "e.g., 2022",
-      },
-      {
         name: "condition",
         label: "Condition",
         type: "select",
@@ -214,12 +196,6 @@ export const itemFields = {
         label: "Edition",
         type: "select",
         options: ["Standard", "Deluxe", "Collector's", "Game of the Year"],
-      },
-      {
-        name: "year",
-        label: "Release Year",
-        type: "number",
-        placeholder: "e.g., 2023",
       },
       {
         name: "condition",

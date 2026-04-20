@@ -14,6 +14,8 @@ import {
   FaCheckCircle,
   FaUsers,
 } from "react-icons/fa";
+import logo from "../assets/logo/logo.png"; // ✅ added logo import
+import { Link } from "react-router-dom"; // ✅ better routing
 
 const Footer = () => {
   return (
@@ -45,7 +47,8 @@ const Footer = () => {
 
           {/* BRAND */}
           <div>
-            <h2 className="text-white text-2xl font-bold mb-2">TechBy</h2>
+            {/* ✅ LOGO ADDED */}
+            <img src={logo} alt="TechBy Logo" className="h-14 mb-3" />
 
             <p className="text-sm text-gray-400 mb-3">
               Buy & sell used products with verified sellers in Indore.
@@ -61,7 +64,7 @@ const Footer = () => {
 
             <div className="flex gap-4 mt-4 text-lg">
               <FaFacebookF className="hover:text-green-400 cursor-pointer" />
-              <FaInstagram  className="hover:text-green-400 cursor-pointer" />
+              <FaInstagram className="hover:text-green-400 cursor-pointer" />
               <FaTwitter className="hover:text-green-400 cursor-pointer" />
               <FaYoutube className="hover:text-green-400 cursor-pointer" />
             </div>
@@ -75,12 +78,21 @@ const Footer = () => {
               Start selling your products and grow your business.
             </p>
 
-            <a
-              href="/seller-login"
-              className="block text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded text-sm font-semibold"
+            {/* ✅ Become Seller Button */}
+            <Link
+              to="/become-seller"
+              className="block text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded text-sm font-semibold mb-3"
             >
-              Start Selling
-            </a>
+              Become Seller
+            </Link>
+
+            {/* ✅ NEW Seller Login Button */}
+            <Link
+              to="/seller-login"
+              className="block text-center border border-green-600 text-green-400 hover:bg-green-600 hover:text-white py-2 rounded text-sm font-semibold transition"
+            >
+              Seller Login
+            </Link>
           </div>
 
           {/* LINKS */}
@@ -107,28 +119,12 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* BOTTOM */}
-        {/* <div className="flex flex-col sm:flex-row justify-between items-center pt-6 text-sm text-gray-400 gap-3">
-          <p>© 2026 TechBy. All rights reserved.</p>
-
-          <div className="flex gap-3">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" className="h-6" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" className="h-6" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Mastercard-logo.png" className="h-6" />
-          </div>
-        </div> */}
-
       </div>
     </footer>
   );
 };
 
 export default Footer;
-
-
-
-
-
 
 
 
