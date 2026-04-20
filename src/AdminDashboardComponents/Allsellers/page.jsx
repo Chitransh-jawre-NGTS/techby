@@ -7,7 +7,11 @@ const AllSellers = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ FETCH SELLERS
+  // 🔥 NEW STATE FOR MODAL
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSellerId, setSelectedSellerId] = useState(null);
+
+  // FETCH SELLERS
   const fetchSellers = async () => {
     try {
       const res = await getAllSellers();
@@ -23,20 +27,28 @@ const AllSellers = () => {
     fetchSellers();
   }, []);
 
-  // ✅ DELETE SELLER
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this seller?")) return;
+  // OPEN MODAL
+  const openDeleteModal = (id) => {
+    setSelectedSellerId(id);
+    setShowModal(true);
+  };
 
+  // CONFIRM DELETE
+  const confirmDelete = async () => {
     try {
-      setDeletingId(id);
+      setDeletingId(selectedSellerId);
 
-      await deleteSeller(id);
+      await deleteSeller(selectedSellerId);
 
-      setSellers((prev) => prev.filter((s) => s._id !== id));
+      setSellers((prev) =>
+        prev.filter((s) => s._id !== selectedSellerId)
+      );
     } catch (error) {
       console.error("Delete failed:", error);
     } finally {
       setDeletingId(null);
+      setShowModal(false);
+      setSelectedSellerId(null);
     }
   };
 
@@ -77,7 +89,7 @@ const AllSellers = () => {
                   <td className="px-6 py-3">{seller.phone}</td>
                   <td className="px-6 py-3">
                     <button
-                      onClick={() => handleDelete(seller._id)}
+                      onClick={() => openDeleteModal(seller._id)}
                       disabled={deletingId === seller._id}
                       className="text-red-600 hover:text-red-800 flex items-center gap-1"
                     >
@@ -88,6 +100,41 @@ const AllSellers = () => {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* 🔥 DELETE CONFIRM MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm text-center">
+            
+            <h2 className="text-xl font-bold mb-3 text-gray-800">
+              Confirm Delete
+            </h2>
+
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this seller?
+            </p>
+
+            <div className="flex justify-center gap-4">
+              
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+              >
+                Delete
+              </button>
+
+            </div>
+          </div>
         </div>
       )}
     </div>

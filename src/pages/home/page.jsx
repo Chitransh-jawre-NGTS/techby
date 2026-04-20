@@ -13,12 +13,14 @@ import MobileBottomNavbar from '../../components/MobileBottomNavbar'
 import WinnerBanner from '../../components/WinnerBanner'
 import FullImageCover from '../../components/FullImageCover'
 import coverImage from "../../assets/add banners/image1.png"
+import MaintenanceScreen from '../../components/MaintananceScreen'
 
 const Home = () => {
   return (
                <>
                <Navbar/>
                <CategoryMenu/>
+               <MaintenanceScreen/>
             <HeroSection />
             {/* <WinnerBanner/> */}
             <PrizeCarouselPage/>

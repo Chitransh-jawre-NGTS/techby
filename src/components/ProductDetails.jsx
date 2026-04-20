@@ -206,11 +206,11 @@ Is it still available? Please share more details.`;
 <div className="w-full md:w-1/2">
   <div className="sticky top-30 flex flex-col gap-4 md:max-h-[calc(100vh-5rem)] overflow-auto">
 
-    <div className="relative rounded-lg overflow-hidden h-66 md:h-96">
+    <div className="relative rounded-lg bg-black overflow-hidden h-66 md:h-96">
       <img
   src={selectedImage || "/default-product-image.png"}
   alt={product.name}
-  className="w-full h-full object-cover cursor-pointer"
+  className="w-full h-full object-contain cursor-pointer"
   onClick={() => {
     const index = product.imageUrls.findIndex(
       (img) => img.url === selectedImage
