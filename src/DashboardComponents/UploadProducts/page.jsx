@@ -40,11 +40,16 @@ const UploadProduct = () => {
       const selectedFiles = Array.from(files).slice(0, 4);
       setFormData((prev) => ({ ...prev, images: selectedFiles }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
+  setFormData((prev) => ({
+    ...prev,
+    [name]: type === "checkbox" ? checked : value,
+
+    // auto disable delivery for bikes
+    ...(name === "category" && value === "used-bike"
+      ? { deliveryAvailable: false }
+      : {}),
+  }));
+}
   };
 useEffect(() => {
   const fetchLimit = async () => {
@@ -304,16 +309,25 @@ useEffect(() => {
             </span>
           </label>
 
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="deliveryAvailable"
-              checked={formData.deliveryAvailable}
-              onChange={handleChange}
-              className="w-4 h-4 text-green-600"
-            />
-            <span className="text-gray-700">Delivery Available</span>
-          </label>
+         <label className="flex items-center gap-2">
+  <input
+    type="checkbox"
+    name="deliveryAvailable"
+    checked={formData.deliveryAvailable}
+    onChange={handleChange}
+    disabled={formData.category === "used-bike"}
+    className="w-4 h-4 text-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+  />
+
+  <span
+    className={`text-gray-700 ${
+      formData.category === "used-bike" ? "opacity-50" : ""
+    }`}
+  >
+    Delivery Available
+    {formData.category === "used-bike" && " (Not available for used bikes)"}
+  </span>
+</label>
         </div>
        {/* Product Image Guidelines */}
 <div className="bg-white rounded-2xl shadow-md mt-10 p-6 mb-10 border-l-4 border-green-500">

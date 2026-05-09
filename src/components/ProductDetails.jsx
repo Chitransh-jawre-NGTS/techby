@@ -163,38 +163,38 @@ Is it still available? Please share more details.`;
 
 
 
-  const services = [
-    {
-      icon: <FaTruck className="text-green-600 text-2xl" />,
-      title: "Free Delivery in Indore",
-      desc: "Enjoy free delivery on all orders within Indore city.",
-    },
-    {
-      icon: <FaClock className="text-green-600 text-2xl" />,
-      title: "Same Day / Next Day Delivery",
-      desc: "Get your product delivered the same day or the next day.",
-    },
-    {
-      icon: <FaUndo className="text-green-600 text-2xl" />,
-      title: "No Return Policy",
-      desc: "Please check product carefully before purchase.",
-    },
-    {
-      icon: <FaMoneyBillWave className="text-green-600 text-2xl" />,
-      title: "COD Available",
-      desc: "Order tension free with Cash On Delivery option.",
-    },
-    {
-      icon: <FaTruck className="text-green-600 text-2xl" />,
-      title: "Cancel at Doorstep",
-      desc: "You can cancel your order at the time of delivery.",
-    },
-    {
-      icon: <FaMobileAlt className="text-green-600 text-2xl" />,
-      title: "Exchange Old Mobile",
-      desc: "Exchange available depending on shop owner's policy.",
-    },
-  ];
+ const services = [
+  {
+    icon: <FaTruck className="text-green-600 text-2xl" />,
+    title: "Free Delivery in Indore",
+    desc: "Enjoy free delivery on all eligible products within Indore city (excluding bikes).",
+  },
+  {
+    icon: <FaClock className="text-green-600 text-2xl" />,
+    title: "Same Day / Next Day Delivery",
+    desc: "Fast delivery available for most products (bikes excluded).",
+  },
+  {
+    icon: <FaUndo className="text-green-600 text-2xl" />,
+    title: "No Return Policy",
+    desc: "Please check product carefully before purchase.",
+  },
+  {
+    icon: <FaMoneyBillWave className="text-green-600 text-2xl" />,
+    title: "COD Available",
+    desc: "Order tension free with Cash On Delivery option.",
+  },
+  {
+    icon: <FaTruck className="text-green-600 text-2xl" />,
+    title: "Cancel at Doorstep",
+    desc: "You can cancel your order at the time of delivery (not applicable for bikes).",
+  },
+  {
+    icon: <FaMobileAlt className="text-green-600 text-2xl" />,
+    title: "Exchange Old Mobile",
+    desc: "Exchange available depending on shop owner's policy.",
+  },
+];
   return (
     <>
       <Navbar />

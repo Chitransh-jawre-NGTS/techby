@@ -290,28 +290,29 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                   {product.name}
                 </h3>
 
-                {/* PRICE */}
-                <div className="flex items-center gap-2 mt-3">
-                  <span className="text-green-600 font-bold text-lg">
-                    ₹{product.discountPrice || product.totalPrice}
-                  </span>
+            {/* PRICE */}
+<div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-3">
+  <span className="text-green-600 font-bold text-sm sm:text-lg whitespace-nowrap">
+    ₹{product.discountPrice || product.totalPrice}
+  </span>
 
-                  {product.discountPrice && (
-                    <>
-                      <span className="line-through text-gray-400 text-sm">
-                        ₹{product.totalPrice}
-                      </span>
+  {product.discountPrice && (
+    <>
+      
 
-                      <span className="text-red-500 text-xs font-semibold">
-                        {getDiscountPercent(
-                          product.totalPrice,
-                          product.discountPrice,
-                        )}
-                        % OFF
-                      </span>
-                    </>
-                  )}
-                </div>
+      <span className="text-red-500 text-[10px] sm:text-xs font-semibold whitespace-nowrap">
+        {getDiscountPercent(
+          product.totalPrice,
+          product.discountPrice,
+        )}
+        % OFF
+      </span>
+      <span className="line-through text-gray-400 text-xs sm:text-sm whitespace-nowrap">
+        ₹{product.totalPrice}
+      </span>
+    </>
+  )}
+</div>
                 {/* Seller */}
                 {product.sellerId && (
                   <div className="flex items-start gap-2 mt-2">
