@@ -293,7 +293,7 @@ const SellerDashboard = () => {
         </div>
 
         {/* RIGHT PANEL */}
-        {/* <div className="space-y-5">
+        <div className="space-y-5">
 
           <div className="bg-white p-5 rounded-2xl shadow-md border border-green-100">
             <h3 className="font-semibold text-green-700 mb-3">
@@ -319,7 +319,7 @@ const SellerDashboard = () => {
             </p>
           </div>
 
-        </div> */}
+        </div>
       </div>
     </div>
   );

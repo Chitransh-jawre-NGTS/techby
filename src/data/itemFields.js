@@ -135,6 +135,239 @@ export const itemFields = {
       },
     ],
   },
+  // ================= TABLET =================
+"used-tablet": {
+  label: "Used Tablet",
+  fields: [
+    {
+      name: "brand",
+      label: "Brand",
+      type: "select",
+      options: [
+        "Samsung",
+        "Lenovo",
+        "Xiaomi",
+        "Realme",
+        "OnePlus",
+        "Honor",
+        "Nokia",
+        "Huawei",
+      ],
+    },
+    {
+      name: "model",
+      label: "Model",
+      type: "select",
+      dependsOn: "brand",
+      options: {
+        Samsung: [
+          "Galaxy Tab S8",
+          "Galaxy Tab S9",
+          "Galaxy Tab A8",
+        ],
+        Lenovo: [
+          "Tab M10",
+          "Tab P11",
+          "Yoga Tab 11",
+        ],
+        Xiaomi: [
+          "Xiaomi Pad 5",
+          "Redmi Pad",
+        ],
+        Realme: [
+          "Realme Pad",
+          "Realme Pad X",
+        ],
+        OnePlus: [
+          "OnePlus Pad",
+        ],
+        Honor: [
+          "Honor Pad 8",
+        ],
+        Nokia: [
+          "Nokia T20",
+        ],
+        Huawei: [
+          "MatePad 11",
+        ],
+      },
+    },
+    {
+      name: "storage",
+      label: "Storage",
+      type: "select",
+      options: [
+        "32GB",
+        "64GB",
+        "128GB",
+        "256GB",
+        "512GB",
+      ],
+    },
+    {
+      name: "ram",
+      label: "RAM",
+      type: "select",
+      options: [
+        "2GB",
+        "4GB",
+        "6GB",
+        "8GB",
+        "12GB",
+      ],
+    },
+    {
+      name: "screenSize",
+      label: "Screen Size",
+      type: "select",
+      options: [
+        "8 inch",
+        "9 inch",
+        "10 inch",
+        "11 inch",
+        "12 inch",
+        "13 inch",
+      ],
+    },
+    {
+      name: "network",
+      label: "Connectivity",
+      type: "select",
+      options: [
+        "WiFi",
+        "WiFi + 4G",
+        "WiFi + 5G",
+      ],
+    },
+    {
+      name: "condition",
+      label: "Condition",
+      type: "select",
+      options: [
+        "Like New",
+        "Refurbished",
+        "Good",
+        "Fair",
+      ],
+    },
+    // {
+    //   name: "batteryHealth",
+    //   label: "Battery Health",
+    //   type: "text",
+    //   placeholder: "e.g., 90%",
+    // },
+    {
+      name: "color",
+      label: "Color",
+      type: "text",
+    },
+  ],
+},
+
+// ================= IPAD =================
+"used-ipad": {
+  label: "Used iPad",
+  fields: [
+    {
+      name: "series",
+      label: "Series",
+      type: "select",
+      options: [
+        "iPad",
+        "iPad Air",
+        "iPad Mini",
+        "iPad Pro",
+      ],
+    },
+    {
+      name: "model",
+      label: "Model",
+      type: "select",
+      options: [
+        "iPad 9th Gen",
+        "iPad 10th Gen",
+        "iPad Air 4",
+        "iPad Air 5",
+        "iPad Mini 6",
+        "iPad Pro 11",
+        "iPad Pro 12.9",
+      ],
+    },
+    {
+      name: "storage",
+      label: "Storage",
+      type: "select",
+      options: [
+        "64GB",
+        "128GB",
+        "256GB",
+        "512GB",
+        "1TB",
+        "2TB",
+      ],
+    },
+    {
+      name: "color",
+      label: "Color",
+      type: "select",
+      options: [
+        "Silver",
+        "Space Gray",
+        "Blue",
+        "Purple",
+        "Pink",
+        "Starlight",
+      ],
+    },
+    {
+      name: "connectivity",
+      label: "Connectivity",
+      type: "select",
+      options: [
+        "WiFi",
+        "WiFi + Cellular",
+      ],
+    },
+    {
+      name: "screenSize",
+      label: "Screen Size",
+      type: "select",
+      options: [
+        "8.3 inch",
+        "10.2 inch",
+        "10.9 inch",
+        "11 inch",
+        "12.9 inch",
+      ],
+    },
+    {
+      name: "batteryHealth",
+      label: "Battery Health",
+      type: "text",
+      placeholder: "e.g., 92%",
+    },
+    {
+      name: "applePencilSupport",
+      label: "Apple Pencil Support",
+      type: "select",
+      options: [
+        "Yes",
+        "No",
+      ],
+    },
+    {
+      name: "condition",
+      label: "Condition",
+      type: "select",
+      options: [
+        "Like New",
+        "Refurbished",
+        "Good",
+        "Fair",
+      ],
+    },
+  ],
+},
 
   "gaming-console": {
     label: "Gaming Console",

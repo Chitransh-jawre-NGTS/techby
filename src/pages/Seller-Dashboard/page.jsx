@@ -7,7 +7,10 @@ import {
   FaUserCircle,
   FaClipboardList,
   FaSignOutAlt,
-  FaStore
+  FaStore,
+  FaTruck,
+  FaShoppingCart,
+  FaHeadset
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -83,15 +86,14 @@ const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // ---------------- MENU ----------------
 
-  const menuItems = [
-    { name: "Dashboard", icon: <FaTachometerAlt /> },
-    { name: "Upload Products", icon: <FaMobileAlt /> },
-    { name: "My Listings", icon: <FaClipboardList /> },
-    { name: "Book Delivery", icon: <FaCog /> },
-    { name: "Buy Pack", icon: <FaCog /> },
-    { name: "Help & Support", icon: <FaCog /> },
-  ];
-
+const menuItems = [
+  { name: "Dashboard", icon: <FaTachometerAlt /> },
+  { name: "Upload Products", icon: <FaMobileAlt /> },
+  { name: "My Listings", icon: <FaClipboardList /> },
+  { name: "Book Delivery", icon: <FaTruck /> },
+  { name: "Buy Pack", icon: <FaShoppingCart /> },
+  { name: "Help & Support", icon: <FaHeadset /> },
+];
   const handleMenuClick = (menuName) => {
     setActiveMenu(menuName);
     localStorage.setItem("activeMenu", menuName);

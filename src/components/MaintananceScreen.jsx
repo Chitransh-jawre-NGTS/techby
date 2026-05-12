@@ -6,7 +6,7 @@ const MaintenanceBanner = () => {
       
       <p className="text-sm md:text-base font-medium">
          We’re launching soon! Our services will start from{" "}
-        <span className="font-bold underline">11th May</span>.  
+        <span className="font-bold underline">15th May</span>.  
         <span className="hidden sm:inline"> Thank you for your patience 💚</span>
       </p>
 

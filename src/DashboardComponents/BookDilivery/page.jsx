@@ -139,15 +139,59 @@ const handleSubmit = async (e) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100 p-6">
 
-      {/* HEADER */}
-      <div className="max-w-6xl mx-auto mb-8">
-        <h1 className="text-4xl font-bold text-gray-800">
-  🚚 Exclusive: Free for Early Sellers (Limited Time)
-</h1>
-        <p className="text-gray-500">
-          Smart delivery management system
-        </p>
-      </div>
+   {/* HEADER */}
+<div className="max-w-6xl mx-auto mb-8">
+
+  <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+    🚚 Delivery Service Launching Soon
+  </div>
+
+  <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
+    Delivery Service Will Be Available From{" "}
+    <span className="text-green-600">
+      25 May
+    </span>
+  </h1>
+
+  <p className="text-gray-500 mt-4 text-lg max-w-3xl">
+    We are launching our smart delivery management system for sellers and buyers.
+    Early sellers can enjoy exclusive free delivery support for a limited time.
+  </p>
+
+  <div className="mt-6 flex flex-wrap gap-4">
+
+    <div className="bg-white border border-green-200 px-4 py-3 rounded-xl shadow-sm">
+      <p className="text-sm text-gray-500">
+        🚀 Launch Date
+      </p>
+
+      <h3 className="font-bold text-green-700 text-lg">
+        25 May 2026
+      </h3>
+    </div>
+
+    <div className="bg-white border border-green-200 px-4 py-3 rounded-xl shadow-sm">
+      <p className="text-sm text-gray-500">
+        🎁 Early Seller Benefit
+      </p>
+
+      <h3 className="font-bold text-green-700 text-lg">
+        Free Delivery Access
+      </h3>
+    </div>
+
+    <div className="bg-white border border-green-200 px-4 py-3 rounded-xl shadow-sm">
+      <p className="text-sm text-gray-500">
+        📍 Coverage
+      </p>
+
+      <h3 className="font-bold text-green-700 text-lg">
+        Indore City
+      </h3>
+    </div>
+
+  </div>
+</div>
 
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
 
