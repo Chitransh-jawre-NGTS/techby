@@ -330,7 +330,7 @@ const Navbar = () => {
             autoComplete="off"
           >
 
-            <div className="flex items-center border border-gray-400 rounded-full overflow-hidden">
+            <div className="flex items-center border border-green-400 rounded-full overflow-hidden">
 
               <div
                 className="pl-3 text-gray-400 cursor-pointer"

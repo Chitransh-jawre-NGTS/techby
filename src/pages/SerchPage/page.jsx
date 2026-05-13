@@ -77,104 +77,109 @@ const SearchPage = () => {
   }, [products]);
 
   // FILTER PRODUCTS
-  const filteredProducts = useMemo(() => {
-    let filtered = [...products];
+const filteredProducts = useMemo(() => {
+  let filtered = [...products];
 
-    // SEARCH FILTER
-    if (query) {
-      const queryWords = query
-        .toLowerCase()
-        .split(" ")
+  // SHOW NEWEST PRODUCTS FIRST
+  filtered.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  // SEARCH FILTER
+  if (query) {
+    const queryWords = query
+      .toLowerCase()
+      .split(" ")
+      .filter(Boolean)
+      .map(normalize);
+
+    filtered = filtered.filter((product) => {
+      const productFields = [
+        product.name,
+        product.category,
+        product.desc,
+        product.attributes?.brand,
+        product.attributes?.model,
+        product.sellerId?.shopName,
+      ]
         .filter(Boolean)
-        .map(normalize);
+        .map(normalize)
+        .join(" ");
 
-      filtered = filtered.filter((product) => {
-        const productFields = [
-          product.name,
-          product.category,
-          product.desc,
-          product.attributes?.brand,
-          product.attributes?.model,
-          product.sellerId?.shopName,
-        ]
-          .filter(Boolean)
-          .map(normalize)
-          .join(" ");
-
-        return queryWords.every((word) =>
-          productFields.includes(word)
-        );
-      });
-    }
-
-    // CATEGORY PARAM
-    if (category) {
-      filtered = filtered.filter(
-        (p) => normalize(p.category) === normalize(category)
+      return queryWords.every((word) =>
+        productFields.includes(word)
       );
-    }
+    });
+  }
 
-    // CATEGORY FILTER
-    if (selectedCategory) {
-      filtered = filtered.filter(
-        (p) =>
-          normalize(p.category) ===
-          normalize(selectedCategory)
-      );
-    }
+  // CATEGORY PARAM
+  if (category) {
+    filtered = filtered.filter(
+      (p) => normalize(p.category) === normalize(category)
+    );
+  }
 
-    // BRAND FILTER
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter((p) =>
-        selectedBrands.includes(p.attributes?.brand)
-      );
-    }
-
-    // PRICE FILTER
+  // CATEGORY FILTER
+  if (selectedCategory) {
     filtered = filtered.filter(
       (p) =>
-        Number(p.discountPrice || p.totalPrice) <= priceRange
+        normalize(p.category) ===
+        normalize(selectedCategory)
     );
+  }
 
-    // DELIVERY FILTER
-    if (deliveryOnly) {
-      filtered = filtered.filter((p) => p.deliveryAvailable);
-    }
+  // BRAND FILTER
+  if (selectedBrands.length > 0) {
+    filtered = filtered.filter((p) =>
+      selectedBrands.includes(p.attributes?.brand)
+    );
+  }
 
-    // FEATURED FILTER
-    if (featuredOnly) {
-      filtered = filtered.filter((p) => p.featured);
-    }
+  // PRICE FILTER
+  filtered = filtered.filter(
+    (p) =>
+      Number(p.discountPrice || p.totalPrice) <= priceRange
+  );
 
-    // SORTING
-    if (sortBy === "low-high") {
-      filtered.sort(
-        (a, b) =>
-          (a.discountPrice || a.totalPrice) -
-          (b.discountPrice || b.totalPrice)
-      );
-    }
+  // DELIVERY FILTER
+  if (deliveryOnly) {
+    filtered = filtered.filter((p) => p.deliveryAvailable);
+  }
 
-    if (sortBy === "high-low") {
-      filtered.sort(
-        (a, b) =>
-          (b.discountPrice || b.totalPrice) -
-          (a.discountPrice || a.totalPrice)
-      );
-    }
+  // FEATURED FILTER
+  if (featuredOnly) {
+    filtered = filtered.filter((p) => p.featured);
+  }
 
-    return filtered;
-  }, [
-    products,
-    query,
-    category,
-    selectedBrands,
-    selectedCategory,
-    priceRange,
-    deliveryOnly,
-    featuredOnly,
-    sortBy,
-  ]);
+  // SORTING
+  if (sortBy === "low-high") {
+    filtered.sort(
+      (a, b) =>
+        (a.discountPrice || a.totalPrice) -
+        (b.discountPrice || b.totalPrice)
+    );
+  }
+
+  if (sortBy === "high-low") {
+    filtered.sort(
+      (a, b) =>
+        (b.discountPrice || b.totalPrice) -
+        (a.discountPrice || a.totalPrice)
+    );
+  }
+
+  return filtered;
+}, [
+  products,
+  query,
+  category,
+  selectedBrands,
+  selectedCategory,
+  priceRange,
+  deliveryOnly,
+  featuredOnly,
+  sortBy,
+]);
 
   // BRAND TOGGLE
   const toggleBrand = (brand) => {
@@ -234,152 +239,215 @@ const SearchPage = () => {
 
         <div className="flex gap-6">
           {/* SIDEBAR FILTERS */}
-          <div
-            className={`fixed lg:sticky top-0 left-0 z-50 lg:z-0 h-full lg:h-fit w-[280px] bg-white lg:bg-transparent border-r lg:border border-gray-200 p-5 overflow-y-auto transition-all duration-300 ${
-              showFilters
-                ? "translate-x-0"
-                : "-translate-x-full lg:translate-x-0"
-            }`}
-          >
-            {/* MOBILE HEADER */}
-            <div className="flex items-center justify-between mb-5 lg:hidden">
-              <h3 className="text-lg font-bold">Filters</h3>
+         <div
+  className={`fixed lg:sticky top-0 left-0 z-50 lg:z-0 h-full lg:h-fit w-[300px] bg-white/95 backdrop-blur-xl border-r lg:border border-green-100 shadow-2xl lg:shadow-lg p-5 overflow-y-auto transition-all duration-300 rounded-none lg:rounded-3xl ${
+    showFilters
+      ? "translate-x-0"
+      : "-translate-x-full lg:translate-x-0"
+  }`}
+>
+  {/* MOBILE HEADER */}
+  <div className="flex items-center justify-between mb-6 lg:hidden">
+    <h3 className="text-xl font-bold text-gray-800">
+      Filters
+    </h3>
 
-              <button onClick={() => setShowFilters(false)}>
-                <FaTimes size={20} />
-              </button>
-            </div>
+    <button
+      onClick={() => setShowFilters(false)}
+      className="w-9 h-9 rounded-full bg-green-50 hover:bg-green-100 text-green-700 flex items-center justify-center transition"
+    >
+      <FaTimes size={18} />
+    </button>
+  </div>
 
-            {/* SORT */}
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3">Sort By</h3>
+  {/* FILTER TITLE */}
+  <div className="hidden lg:flex items-center gap-3 mb-6">
+    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 text-white flex items-center justify-center shadow-lg">
+      <FaFilter />
+    </div>
 
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2"
-              >
-                <option value="">Recommended</option>
-                <option value="low-high">
-                  Price: Low to High
-                </option>
-                <option value="high-low">
-                  Price: High to Low
-                </option>
-              </select>
-            </div>
+    <div>
+      <h2 className="font-bold text-lg text-gray-800">
+        Filters
+      </h2>
 
-            {/* CATEGORY */}
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3">Category</h3>
+      <p className="text-xs text-gray-500">
+        Find your perfect gadget
+      </p>
+    </div>
+  </div>
 
-              <div className="space-y-2">
-                {categories.map((cat, i) => (
-                  <label
-                    key={i}
-                    className="flex items-center gap-2 text-sm cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      name="category"
-                      checked={selectedCategory === cat}
-                      onChange={() =>
-                        setSelectedCategory(cat)
-                      }
-                    />
+  {/* SORT */}
+  <div className="mb-7">
+    <h3 className="font-semibold mb-3 text-gray-800">
+      Sort By
+    </h3>
 
-                    {cat}
-                  </label>
-                ))}
-              </div>
-            </div>
+    <select
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value)}
+      className="w-full border border-green-100 bg-green-50/40 rounded-2xl p-3 text-sm outline-none focus:ring-2 focus:ring-green-500 transition"
+    >
+      <option value="">Recommended</option>
 
-            {/* BRANDS */}
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3">Brand</h3>
+      <option value="low-high">
+        Price: Low to High
+      </option>
 
-              <div className="space-y-2 max-h-52 overflow-y-auto">
-                {brands.map((brand, i) => (
-                  <label
-                    key={i}
-                    className="flex items-center gap-2 text-sm cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedBrands.includes(brand)}
-                      onChange={() => toggleBrand(brand)}
-                    />
+      <option value="high-low">
+        Price: High to Low
+      </option>
+    </select>
+  </div>
 
-                    {brand}
-                  </label>
-                ))}
-              </div>
-            </div>
+  {/* CATEGORY */}
+  <div className="mb-7">
+    <h3 className="font-semibold mb-3 text-gray-800">
+      Categories
+    </h3>
 
-            {/* PRICE */}
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3">
-                Price Range
-              </h3>
+    <div className="space-y-3">
+      {categories.map((cat, i) => (
+        <label
+          key={i}
+          className={`flex items-center gap-3 text-sm cursor-pointer border rounded-2xl px-3 py-2 transition-all ${
+            selectedCategory === cat
+              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-green-600 shadow-md"
+              : "border-green-100 hover:border-green-400 hover:bg-green-50"
+          }`}
+        >
+          <input
+            type="radio"
+            name="category"
+            checked={selectedCategory === cat}
+            onChange={() => setSelectedCategory(cat)}
+            className="accent-green-600"
+          />
 
-              <input
-                type="range"
-                min="1000"
-                max="100000"
-                value={priceRange}
-                onChange={(e) =>
-                  setPriceRange(e.target.value)
-                }
-                className="w-full"
-              />
+          <span className="truncate">{cat}</span>
+        </label>
+      ))}
+    </div>
+  </div>
 
-              <p className="text-sm text-gray-600 mt-2">
-                Up to ₹{priceRange}
-              </p>
-            </div>
+  {/* BRANDS */}
+  <div className="mb-7">
+    <h3 className="font-semibold mb-3 text-gray-800">
+      Brands
+    </h3>
 
-            {/* EXTRA */}
-            <div className="space-y-3">
-              <label className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={deliveryOnly}
-                  onChange={() =>
-                    setDeliveryOnly(!deliveryOnly)
-                  }
-                />
+    <div className="space-y-3 max-h-56 overflow-y-auto pr-1">
+      {brands.map((brand, i) => (
+        <label
+          key={i}
+          className={`flex items-center gap-3 text-sm cursor-pointer border rounded-2xl px-3 py-2 transition-all ${
+            selectedBrands.includes(brand)
+              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-green-600 shadow-md"
+              : "border-green-100 hover:border-green-400 hover:bg-green-50"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={selectedBrands.includes(brand)}
+            onChange={() => toggleBrand(brand)}
+            className="accent-green-600"
+          />
 
-                Free Delivery
-              </label>
+          <span className="truncate">{brand}</span>
+        </label>
+      ))}
+    </div>
+  </div>
 
-              <label className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={featuredOnly}
-                  onChange={() =>
-                    setFeaturedOnly(!featuredOnly)
-                  }
-                />
+  {/* PRICE */}
+  <div className="mb-7">
+    <div className="flex items-center justify-between mb-3">
+      <h3 className="font-semibold text-gray-800">
+        Price Range
+      </h3>
 
-                Featured Products
-              </label>
-            </div>
+      <span className="text-sm font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full">
+        ₹{priceRange}
+      </span>
+    </div>
 
-            {/* RESET */}
-            <button
-              onClick={() => {
-                setSelectedBrands([]);
-                setSelectedCategory("");
-                setPriceRange(100000);
-                setDeliveryOnly(false);
-                setFeaturedOnly(false);
-                setSortBy("");
-              }}
-              className="w-full mt-6 bg-gray-100 hover:bg-gray-200 py-2 rounded-lg text-sm font-medium"
-            >
-              Clear Filters
-            </button>
-          </div>
+    <input
+      type="range"
+      min="1000"
+      max="100000"
+      value={priceRange}
+      onChange={(e) =>
+        setPriceRange(e.target.value)
+      }
+      className="w-full accent-green-600 cursor-pointer"
+    />
+
+    <div className="flex justify-between text-xs text-gray-500 mt-2">
+      <span>₹1K</span>
+      <span>₹100K</span>
+    </div>
+  </div>
+
+  {/* EXTRA */}
+  <div className="space-y-4">
+    <label className="flex items-center justify-between border border-green-100 rounded-2xl px-4 py-3 cursor-pointer hover:border-green-400 hover:bg-green-50 transition">
+      <div>
+        <p className="text-sm font-medium text-gray-800">
+          Free Delivery
+        </p>
+
+        <p className="text-xs text-gray-500">
+          Show delivery products
+        </p>
+      </div>
+
+      <input
+        type="checkbox"
+        checked={deliveryOnly}
+        onChange={() =>
+          setDeliveryOnly(!deliveryOnly)
+        }
+        className="accent-green-600 w-4 h-4"
+      />
+    </label>
+
+    <label className="flex items-center justify-between border border-green-100 rounded-2xl px-4 py-3 cursor-pointer hover:border-green-400 hover:bg-green-50 transition">
+      <div>
+        <p className="text-sm font-medium text-gray-800">
+          Featured Products
+        </p>
+
+        <p className="text-xs text-gray-500">
+          Premium verified listings
+        </p>
+      </div>
+
+      <input
+        type="checkbox"
+        checked={featuredOnly}
+        onChange={() =>
+          setFeaturedOnly(!featuredOnly)
+        }
+        className="accent-green-600 w-4 h-4"
+      />
+    </label>
+  </div>
+
+  {/* RESET */}
+  <button
+    onClick={() => {
+      setSelectedBrands([]);
+      setSelectedCategory("");
+      setPriceRange(100000);
+      setDeliveryOnly(false);
+      setFeaturedOnly(false);
+      setSortBy("");
+    }}
+    className="w-full mt-7 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-2xl text-sm font-semibold transition-all shadow-lg hover:scale-[1.02]"
+  >
+    Clear Filters
+  </button>
+</div>
 
           {/* OVERLAY */}
           {showFilters && (
@@ -459,7 +527,7 @@ const SearchPage = () => {
                     onClick={() =>
                       navigate(`/product/${product._id}`)
                     }
-                    className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 cursor-pointer rounded-xl overflow-hidden group"
+                    className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 cursor-pointer  overflow-hidden group"
                   >
                     {/* IMAGE */}
                     <div className="relative h-40 sm:h-56 overflow-hidden">

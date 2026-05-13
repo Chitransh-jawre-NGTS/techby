@@ -136,27 +136,46 @@ const prevImage = () => {
     return;
   }
 
-  // ✅ FIX: add country code if not present
+  // add country code
   if (!sellerPhone.startsWith("91")) {
     sellerPhone = "91" + sellerPhone;
   }
 
   const productUrl = window.location.href;
 
-  const message = `Hi 👋,
+  // first product image
+  const productImage =
+    product?.imageUrls?.[0]?.url || "";
 
-I am interested in your product *${product.name}*.
-📦 description: ${product.desc}
+  const message = `Hi 👋
+
+I am interested in your product.
+
+📱 Product: ${product.name}
+
+📝 Description:${product.desc}
+
 💰 Price: ₹${product.discountPrice || product.totalPrice}
+
 📦 Category: ${product.category}
-⚙️ Condition: ${product.attributes?.condition || "N/A"}
+
+⚙️ Condition: ${
+    product.attributes?.condition || "N/A"
+  }
+
+📍 Location: Indore
+
+🖼️ Product Image:
+${productImage}
 
 🔗 Product Link:
 ${productUrl}
 
-Is it still available? Please share more details.`;
+Is this product still available?`;
 
-  const whatsappUrl = `https://wa.me/${sellerPhone}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${sellerPhone}?text=${encodeURIComponent(
+    message
+  )}`;
 
   window.open(whatsappUrl, "_blank");
 };
