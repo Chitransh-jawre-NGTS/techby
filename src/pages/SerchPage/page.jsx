@@ -391,12 +391,47 @@ const SearchPage = () => {
 
           {/* PRODUCTS */}
           <div className="flex-1">
-            {/* LOADING */}
-            {loading && (
-              <p className="text-center text-gray-500 text-lg animate-pulse">
-                Loading products...
-              </p>
-            )}
+ {/* LOADING */}
+{loading && (
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+
+    {[...Array(10)].map((_, index) => (
+      <div
+        key={index}
+        className="bg-white rounded-2xl shadow-md overflow-hidden animate-pulse"
+      >
+
+        {/* Image Skeleton */}
+        <div className="w-full h-44 bg-gray-200"></div>
+
+        {/* Content */}
+        <div className="p-4">
+
+          {/* Title */}
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-3"></div>
+
+          {/* Price */}
+          <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+
+          {/* Location */}
+          <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+
+          {/* Small Details */}
+          <div className="h-3 bg-gray-200 rounded w-5/6 mb-2"></div>
+
+          <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
+
+          {/* Button */}
+          <div className="h-10 bg-gray-200 rounded-xl mt-5"></div>
+
+        </div>
+
+      </div>
+    ))}
+
+  </div>
+)}
+            
 
             {/* ERROR */}
             {error && !loading && (

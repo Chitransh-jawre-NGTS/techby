@@ -14,6 +14,7 @@ import WinnerBanner from '../../components/WinnerBanner'
 import FullImageCover from '../../components/FullImageCover'
 import coverImage from "../../assets/add banners/image1.png"
 import MaintenanceScreen from '../../components/MaintananceScreen'
+import BlogPage from '../../components/Blog'
 
 const Home = () => {
   return (
@@ -23,11 +24,12 @@ const Home = () => {
                <MaintenanceScreen/>
             <HeroSection />
             {/* <WinnerBanner/> */}
-            <PrizeCarouselPage/>
+            {/* <PrizeCarouselPage/> */}
             <CategoryPage/>
             <FeaturedProducts /> 
             <ProductsPage/>
             {/* <SaleBannerCarousel/> */}
+            <BlogPage/> 
             <FullImageCover imageUrl={coverImage}/>
             <FeaturesSection />
             <Footer/>

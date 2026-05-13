@@ -16,6 +16,8 @@ import AdminDashboard from "../pages/AdminDashboard/page";
 import BecomeSeller from "../components/BecomeSeller";
 import AdminLogin from "../pages/AdminLogin/page";
 import PricingPage from "../components/Pricing";
+import BlogPage from "../components/Blog";
+
 
 const Routing = () => {
   return (
@@ -45,6 +47,10 @@ const Routing = () => {
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/become-seller" element={<BecomeSeller />} />
       {/* <Route path="/seller-register" element={<SellerRegisterPage />} /> */}
+
+
+      <Route path="/blogs" element={<BlogPage />} />
+        {/* <Route path="/blogs/:id" element={<BlogsPage />} /> */}
 
       {/* Seller Protected Routes */}
       <Route
