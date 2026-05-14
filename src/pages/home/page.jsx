@@ -15,6 +15,7 @@ import FullImageCover from '../../components/FullImageCover'
 import coverImage from "../../assets/add banners/image1.png"
 import MaintenanceScreen from '../../components/MaintananceScreen'
 import BlogPage from '../../components/Blog'
+import TopDiscountBikes from '../../components/TopDiscountBikes'
 
 const Home = () => {
   return (
@@ -27,6 +28,7 @@ const Home = () => {
             {/* <PrizeCarouselPage/> */}
             <CategoryPage/>
             <FeaturedProducts /> 
+            {/* <TopDiscountBikes/> */}
             <ProductsPage/>
             {/* <SaleBannerCarousel/> */}
             <BlogPage/> 
