@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../Api/ProductApi";
-import shoplogo from "../assets/logo/shop logo.jpg"
+import shoplogo from "../assets/logo/shop logo.jpg";
+import { FaShareAlt } from "react-icons/fa";
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
@@ -15,22 +16,22 @@ const FeaturedProducts = () => {
   }, []);
 
   const fetchProducts = async () => {
-  try {
-    setLoading(true);
-    const response = await getAllProducts();
+    try {
+      setLoading(true);
+      const response = await getAllProducts();
 
-    const featured = response.data
-      .filter((p) => p.featured)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 🔥 NEWEST FIRST
+      const featured = response.data
+        .filter((p) => p.featured)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    setProducts(featured);
-  } catch (err) {
-    console.error(err);
-    setProducts([]);
-  } finally {
-    setLoading(false);
-  }
-};
+      setProducts(featured);
+    } catch (err) {
+      console.error(err);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleViewMore = () => {
     navigate(`/search?featured=true`);
@@ -41,6 +42,59 @@ const FeaturedProducts = () => {
   const getDiscountPercent = (total, discount) =>
     Math.round(((total - discount) / total) * 100);
 
+  // ✅ SHARE FUNCTION (Flipkart style)
+  const handleShare = async (e, product) => {
+  e.stopPropagation();
+
+  const url = `${window.location.origin}/product/${product._id}`;
+
+  const discount =
+    product.totalPrice && product.discountPrice
+      ? Math.round(
+          ((product.totalPrice - product.discountPrice) /
+            product.totalPrice) *
+            100
+        )
+      : 0;
+
+  const message =
+`🛍 PRODUCT DETAILS
+
+📌 Name: ${product.name}
+
+💰 Price: ₹${product.discountPrice || product.totalPrice}
+${product.discountPrice ? `🔥 Discount: ${discount}% OFF` : ""}
+
+📂 Category: ${product.category || "N/A"}
+
+⚙️ Condition: ${product.attributes?.condition || "Used"}
+
+🏪 Seller: ${product.sellerId?.shopName || "Local Seller"}
+
+📍 Location: Indore
+
+🔗 View Product:
+${url}
+`;
+
+  // Native share (WhatsApp / Instagram / apps)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: product.name,
+        text: message,
+        url,
+      });
+    } catch (err) {
+      console.log("Share cancelled");
+    }
+  } else {
+    // fallback → copy full message
+    navigator.clipboard.writeText(message);
+    alert("Product details copied!");
+  }
+};
+
   return (
     <div className="max-w-7xl mx-auto p-4 border-4 border-green-500 rounded-3xl bg-green-50 shadow-lg">
       <h2 className="text-2xl sm:text-3xl font-extrabold mb-6 text-green-800 text-center">
@@ -48,8 +102,8 @@ const FeaturedProducts = () => {
       </h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-3 md:gap-4 lg:gap-8">
-        
-        {/* Loading Skeleton */}
+
+        {/* LOADING */}
         {loading &&
           skeletonArray.map((_, index) => (
             <div
@@ -65,31 +119,26 @@ const FeaturedProducts = () => {
             </div>
           ))}
 
-        {/* No Products */}
-        {!loading && products.length === 0 && (
-          <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-            <div className="text-6xl mb-4">📦</div>
-            <h3 className="text-xl font-semibold text-gray-700">
-              No Featured Products Available
-            </h3>
-            <p className="text-gray-500 text-sm mt-1">
-              Sellers haven't added featured products yet.
-            </p>
-          </div>
-        )}
-
-        {/* Products */}
+        {/* PRODUCTS */}
         {!loading &&
           products.length > 0 &&
-          products.map((p, index) => (
+          products.map((p) => (
             <div
-              key={index}
+              key={p._id}
               onClick={() => {
                 navigate(`/product/${p._id}`);
                 window.scrollTo(0, 0);
               }}
               className="group relative bg-white shadow-md hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1 overflow-hidden border border-green-200 cursor-pointer rounded-lg"
             >
+              {/* SHARE BUTTON */}
+              <button
+                onClick={(e) => handleShare(e, p)}
+                className="absolute top-2 right-2 z-20 bg-white p-2 rounded-full shadow hover:bg-gray-100"
+              >
+                <FaShareAlt className="text-green-600 text-sm" />
+              </button>
+
               {/* Featured Badge */}
               {p.featured && (
                 <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-full shadow z-10">
@@ -97,7 +146,7 @@ const FeaturedProducts = () => {
                 </span>
               )}
 
-              {/* Product Image */}
+              {/* IMAGE */}
               <div className="relative">
                 <img
                   src={p.imageUrls?.[0]?.url || "/default-product-image.png"}
@@ -105,7 +154,6 @@ const FeaturedProducts = () => {
                   className="w-full h-48 sm:h-52 md:h-56 lg:h-60 object-cover transition-transform duration-300 group-hover:scale-105"
                 />
 
-                {/* Free Delivery */}
                 {p.deliveryAvailable && (
                   <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
                     Free Delivery
@@ -113,17 +161,15 @@ const FeaturedProducts = () => {
                 )}
               </div>
 
-              {/* Product Info */}
+              {/* INFO */}
               <div className="p-3 sm:p-4 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-semibold text-gray-800 text-sm sm:text-base truncate">
-                    {p.name}
-                  </h3>
+                <h3 className="font-semibold text-gray-800 text-sm sm:text-base truncate">
+                  {p.name}
+                </h3>
 
-                  <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
-                    {p.desc}
-                  </p>
-                </div>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
+                  {p.desc}
+                </p>
 
                 <div className="mt-2 sm:mt-3 flex flex-col gap-1">
                   <div className="flex items-center gap-2">
@@ -138,45 +184,41 @@ const FeaturedProducts = () => {
                         </span>
 
                         <span className="text-red-500 text-xs sm:text-sm font-semibold">
-                          {getDiscountPercent(
-                            p.totalPrice,
-                            p.discountPrice
-                          )}
-                          % OFF
+                          {getDiscountPercent(p.totalPrice, p.discountPrice)}%
+                          OFF
                         </span>
                       </>
                     )}
                   </div>
 
-                  {/* Seller Info */}
-                     {p.sellerId && (
-                   <div className="flex items-start gap-2 mt-2">
-                     <img
-                       src={p.sellerId.logo || shoplogo}
-                       alt={p.sellerId.shopName}
-                       className="w-8 h-8 rounded-full object-cover"
-                     />
-                 
-                     <div className="flex flex-col">
-                       <span className="text-gray-700 font-medium text-sm">
-                         {p.sellerId.shopName}
-                       </span>
-                 
-                       {/* Seller Location */}
-                       {p.sellerId.location && (
-                         <span className="text-gray-500 text-xs">
-                           {p.sellerId.location}
-                         </span>
-                       )}
-                     </div>
-                   </div>
-                 )}
+                  {/* SELLER */}
+                  {p.sellerId && (
+                    <div className="flex items-start gap-2 mt-2">
+                      <img
+                        src={p.sellerId.logo || shoplogo}
+                        alt={p.sellerId.shopName}
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+
+                      <div className="flex flex-col">
+                        <span className="text-gray-700 font-medium text-sm">
+                          {p.sellerId.shopName}
+                        </span>
+
+                        {p.sellerId.location && (
+                          <span className="text-gray-500 text-xs">
+                            {p.sellerId.location}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           ))}
 
-        {/* View More */}
+        {/* VIEW MORE */}
         {!loading && products.length > 0 && (
           <div
             onClick={handleViewMore}

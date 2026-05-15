@@ -11,11 +11,12 @@ import {
   FaTimes,
   FaStar,
 } from "react-icons/fa";
-
+import { FiShare2 } from "react-icons/fi";
 import { getAllProducts } from "../../Api/ProductApi";
 import sellerlogo from "../../assets/logo/shop logo.jpg";
 import Navbar from "../../components/Navbar";
 import MobileBottomNavbar from "../../components/MobileBottomNavbar";
+import MobileNavbar from "../../components/MobileNavbar";
 
 const ProductsPage = ({
   heading = "Products Near You",
@@ -231,9 +232,59 @@ const ProductsPage = ({
     ]
   );
 
+  const handleShare = async (product) => {
+  const productUrl = `${window.location.origin}/product/${product._id}`;
+
+  const message = `
+🛍 PRODUCT DETAILS
+
+📌 Name: ${product.name}
+💰 Price: ₹${product.discountPrice || product.totalPrice}
+🏷 Category: ${product.category || "N/A"}
+🚚 Delivery: ${product.deliveryAvailable ? "Available" : "Not Available"}
+⭐ Featured: ${product.featured ? "Yes" : "No"}
+📍 Location: ${product?.sellerId?.location || "Indore"}
+
+🔗 View Product:
+${productUrl}
+  `.trim();
+
+  // ✅ 1. Native Share (WhatsApp / Instagram / apps)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: product.name,
+        text: message,
+        url: productUrl,
+      });
+      return;
+    } catch (err) {
+      console.log("Share cancelled or failed");
+    }
+  }
+
+  // ✅ 2. WhatsApp Direct Share (fallback option)
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+    message
+  )}`;
+
+  // Try opening WhatsApp first
+  const opened = window.open(whatsappUrl, "_blank");
+
+  // If blocked → fallback copy
+  if (!opened) {
+    try {
+      await navigator.clipboard.writeText(message);
+      alert("Product details copied to clipboard!");
+    } catch (err) {
+      alert("Unable to share or copy!");
+    }
+  }
+};
+
   return (
     <>
-      <Navbar />
+      <MobileNavbar/>
 
       <div className="max-w-7xl mx-auto px-2 sm:px-4 pt-4 pb-8">
         {/* TOP */}
@@ -504,7 +555,15 @@ const ProductsPage = ({
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         />
-
+          <button
+  onClick={(e) => {
+    e.stopPropagation();
+    handleShare(product);
+  }}
+  className="absolute top-2 right-2 bg-white/90 hover:bg-white text-gray-700 p-2 rounded-full shadow-md transition"
+>
+  <FiShare2 size={16} />
+</button>
                         {product.featured && (
                           <span className="absolute top-2 left-2 bg-yellow-400 text-black text-[10px] sm:text-xs font-semibold px-2 py-1 rounded">
                             Featured
@@ -515,8 +574,10 @@ const ProductsPage = ({
                           <span className="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] sm:text-xs font-semibold px-2 py-1 rounded">
                             Free Delivery
                           </span>
+                          
                         )}
                       </div>
+        
 
                       {/* INFO */}
                       <div className="p-3 sm:p-4">

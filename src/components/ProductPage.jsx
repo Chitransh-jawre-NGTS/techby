@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../Api/ProductApi";
 import sellerlogo from "../assets/logo/shop logo.jpg";
+import { FaShareAlt } from "react-icons/fa";
 
 const ProductsPage = ({ heading = "Products Near You" }) => {
   const [productsData, setProductsData] = useState([]);
@@ -20,7 +21,7 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
       const response = await getAllProducts();
 
       const sortedProducts = response.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
 
       setProductsData(sortedProducts);
@@ -32,7 +33,6 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
   };
 
   const displayedProducts = productsData.slice(0, visibleCount);
-
   const skeletonArray = Array.from({ length: 20 });
 
   const getDiscountPercent = (total, discount) =>
@@ -42,11 +42,70 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
     setVisibleCount((prev) => prev + itemsPerLoad);
   };
 
+  // ================= SHARE FUNCTION =================
+  const handleShare = async (product) => {
+  const productUrl = `${window.location.origin}/product/${product._id}`;
+
+  const discount =
+    product.totalPrice && product.discountPrice
+      ? Math.round(
+          ((product.totalPrice - product.discountPrice) /
+            product.totalPrice) *
+            100
+        )
+      : 0;
+
+  const message =
+`🛍 PRODUCT DETAILS
+
+📌 Name: ${product.name}
+
+💰 Price: ₹${product.discountPrice || product.totalPrice}
+${product.discountPrice ? `🔥 Discount: ${discount}% OFF` : ""}
+
+📂 Category: ${product.category || "N/A"}
+
+⚙️ Condition: ${product.attributes?.condition || "Used"}
+
+🏪 Seller: ${product.sellerId?.shopName || "Local Seller"}
+
+📍 Location: Indore
+
+🔗 Product Link:
+${productUrl}
+`.trim();
+
+  // Native share (WhatsApp / Instagram / Telegram / apps)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: product.name,
+        text: message,
+        url: productUrl,
+      });
+      return;
+    } catch (err) {
+      console.log("Share cancelled");
+    }
+  }
+
+  // Fallback → copy full message
+  try {
+    await navigator.clipboard.writeText(message);
+    alert("Product details copied!");
+  } catch (err) {
+    alert("Unable to copy");
+  }
+};
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-3xl font-semibold mb-8 text-gray-800">{heading}</h2>
+      <h2 className="text-3xl font-semibold mb-8 text-gray-800">
+        {heading}
+      </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-6">
+
         {/* LOADING */}
         {loading &&
           skeletonArray.map((_, index) => (
@@ -71,24 +130,37 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
               onClick={() => navigate(`/product/${product._id}`)}
               className="bg-white border border-gray-200 shadow hover:shadow-lg transition cursor-pointer flex flex-col relative"
             >
+
+              {/* SHARE ICON */}
+              <div className="absolute top-2 right-2 z-10">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShare(product);
+                  }}
+                  className="bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
+                >
+                  <FaShareAlt className="text-gray-700 text-sm" />
+                </button>
+              </div>
+
               {/* IMAGE */}
               <div className="relative w-full h-48">
                 <img
                   src={
-                    product.imageUrls?.[0]?.url || "/default-product-image.png"
+                    product.imageUrls?.[0]?.url ||
+                    "/default-product-image.png"
                   }
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
 
-                {/* ⭐ FEATURED TAG */}
                 {product.featured && (
                   <span className="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">
                     Featured
                   </span>
                 )}
 
-                {/* 🚚 DELIVERY TAG */}
                 {product.deliveryAvailable && (
                   <span className="absolute bottom-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
                     Free Delivery
@@ -98,6 +170,7 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
 
               {/* INFO */}
               <div className="p-4 flex flex-col flex-grow">
+
                 <h3 className="font-semibold text-sm text-gray-500 truncate">
                   {product.desc}
                 </h3>
@@ -106,30 +179,30 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                   {product.name}
                 </h3>
 
-            {/* PRICE */}
-<div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-3">
-  <span className="text-green-600 font-bold text-sm sm:text-lg whitespace-nowrap">
-    ₹{product.discountPrice || product.totalPrice}
-  </span>
+                {/* PRICE */}
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-3">
+                  <span className="text-green-600 font-bold text-sm sm:text-lg whitespace-nowrap">
+                    ₹{product.discountPrice || product.totalPrice}
+                  </span>
 
-  {product.discountPrice && (
-    <>
-      
+                  {product.discountPrice && (
+                    <>
+                      <span className="text-red-500 text-[10px] sm:text-xs font-semibold whitespace-nowrap">
+                        {getDiscountPercent(
+                          product.totalPrice,
+                          product.discountPrice
+                        )}
+                        % OFF
+                      </span>
 
-      <span className="text-red-500 text-[10px] sm:text-xs font-semibold whitespace-nowrap">
-        {getDiscountPercent(
-          product.totalPrice,
-          product.discountPrice,
-        )}
-        % OFF
-      </span>
-      <span className="line-through text-gray-400 text-xs sm:text-sm whitespace-nowrap">
-        ₹{product.totalPrice}
-      </span>
-    </>
-  )}
-</div>
-                {/* Seller */}
+                      <span className="line-through text-gray-400 text-xs sm:text-sm whitespace-nowrap">
+                        ₹{product.totalPrice}
+                      </span>
+                    </>
+                  )}
+                </div>
+
+                {/* SELLER */}
                 {product.sellerId && (
                   <div className="flex items-start gap-2 mt-2">
                     <img
@@ -143,7 +216,6 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
                         {product.sellerId.shopName}
                       </span>
 
-                      {/* Seller Location */}
                       {product.sellerId.location && (
                         <span className="text-gray-500 text-xs">
                           {product.sellerId.location}
@@ -173,11 +245,6 @@ const ProductsPage = ({ heading = "Products Near You" }) => {
 };
 
 export default ProductsPage;
-
-
-
-
-
 
 
 

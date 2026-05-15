@@ -176,12 +176,6 @@
 
 
 
-
-
-
-
-
-
 import React from "react";
 import Slider from "react-slick";
 import {
@@ -252,11 +246,11 @@ const categories = [
   },
 ];
 
-// Compact Arrows
+// Arrows (desktop slider)
 const PrevArrow = ({ onClick }) => (
   <button
     onClick={onClick}
-    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-md hover:scale-110 transition-all duration-300 p-2 rounded-full shadow-lg border border-gray-200"
+    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 rounded-full shadow-lg border"
   >
     <FaChevronLeft size={14} className="text-green-700" />
   </button>
@@ -265,7 +259,7 @@ const PrevArrow = ({ onClick }) => (
 const NextArrow = ({ onClick }) => (
   <button
     onClick={onClick}
-    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 backdrop-blur-md hover:scale-110 transition-all duration-300 p-2 rounded-full shadow-lg border border-gray-200"
+    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 rounded-full shadow-lg border"
   >
     <FaChevronRight size={14} className="text-green-700" />
   </button>
@@ -294,7 +288,7 @@ const CategoryPage = () => {
   return (
     <section className="relative overflow-hidden py-14 px-4 bg-gradient-to-br from-white via-green-50 to-green-100 rounded-[28px]">
 
-      {/* Background Glow */}
+      {/* Glow */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-green-200 rounded-full blur-3xl opacity-20"></div>
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-green-300 rounded-full blur-3xl opacity-20"></div>
 
@@ -312,14 +306,14 @@ const CategoryPage = () => {
             Browse TechBy Categories
           </h2>
 
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto text-base leading-relaxed">
+          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
             Discover refurbished mobiles, laptops, gaming consoles,
             tablets, accessories, and more.
           </p>
 
         </div>
 
-        {/* Desktop Grid */}
+        {/* ================= DESKTOP GRID ================= */}
         <div className="hidden sm:grid grid-cols-2 lg:grid-cols-6 gap-5">
 
           {categories.map((category) => (
@@ -328,33 +322,25 @@ const CategoryPage = () => {
               onClick={() => handleCategoryClick(category.slug)}
               className="group relative h-[260px] rounded-[24px] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500"
             >
-
-              {/* Image */}
               <img
                 src={category.image}
                 alt={category.title}
-                className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
               />
 
-              {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
 
-              {/* Hover Glow */}
-              <div className="absolute inset-0 bg-green-500/10 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-5 z-10">
 
-              {/* Content */}
-              <div className="absolute inset-0 z-10 flex flex-col justify-end p-5">
-
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-lg mb-3">
+                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white mb-3">
                   {category.icon}
                 </div>
 
-                <p className="text-green-300 text-xs font-medium">
+                <p className="text-green-300 text-xs">
                   {category.subtitle}
                 </p>
 
-                <h3 className="text-2xl font-bold text-white mt-1">
+                <h3 className="text-2xl font-bold text-white">
                   {category.title}
                 </h3>
 
@@ -363,80 +349,65 @@ const CategoryPage = () => {
                     e.stopPropagation();
                     handleCategoryClick(category.slug);
                   }}
-                  className="mt-4 w-fit px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-medium transition-all duration-300"
+                  className="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm"
                 >
                   Explore
                 </button>
 
               </div>
-
             </div>
           ))}
 
         </div>
 
-        {/* Mobile Slider */}
-        <div className="sm:hidden relative">
+        {/* ================= MOBILE GRID (NO CAROUSEL) ================= */}
+        <div className="sm:hidden grid grid-cols-2 gap-4">
 
-          <Slider {...settings}>
+          {categories.map((category) => (
+            <div
+              key={category.slug}
+              onClick={() => handleCategoryClick(category.slug)}
+              className="relative h-[160px] rounded-[18px] overflow-hidden shadow-md cursor-pointer"
+            >
+              <img
+                src={category.image}
+                alt={category.title}
+                className="w-full h-full object-cover"
+              />
 
-            {categories.map((category) => (
-              <div key={category.slug} className="px-2 py-2">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
 
-                <div
-                  onClick={() => handleCategoryClick(category.slug)}
-                  className="relative h-[280px] rounded-[24px] overflow-hidden shadow-xl cursor-pointer"
-                >
+              <div className="absolute inset-0 flex flex-col justify-end p-3">
 
-                  {/* Image */}
-                  <img
-                    src={category.image}
-                    alt={category.title}
-                    className="w-full h-full object-cover"
-                  />
-
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-
-                  {/* Content */}
-                  <div className="absolute inset-0 z-10 flex flex-col justify-end p-5">
-
-                    {/* Icon */}
-                    <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-lg mb-3">
-                      {category.icon}
-                    </div>
-
-                    <p className="text-green-300 text-xs font-medium">
-                      {category.subtitle}
-                    </p>
-
-                    <h3 className="text-2xl font-bold text-white mt-1">
-                      {category.title}
-                    </h3>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCategoryClick(category.slug);
-                      }}
-                      className="mt-4 w-fit px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-medium transition-all duration-300"
-                    >
-                      Explore
-                    </button>
-
-                  </div>
-
+                <div className="w-9 h-9 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center text-white mb-2">
+                  {category.icon}
                 </div>
 
-              </div>
-            ))}
+                <p className="text-green-300 text-[10px]">
+                  {category.subtitle}
+                </p>
 
-          </Slider>
+                <h3 className="text-white font-bold text-sm">
+                  {category.title}
+                </h3>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCategoryClick(category.slug);
+                  }}
+                  className="mt-2 px-3 py-1 bg-green-500 text-white text-xs rounded-lg"
+                >
+                  Explore
+                </button>
+
+              </div>
+            </div>
+          ))}
 
         </div>
 
       </div>
-
     </section>
   );
 };

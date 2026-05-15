@@ -27,8 +27,8 @@ const Home = () => {
             {/* <WinnerBanner/> */}
             {/* <PrizeCarouselPage/> */}
             <CategoryPage/>
+            <TopDiscountBikes/>
             <FeaturedProducts /> 
-            {/* <TopDiscountBikes/> */}
             <ProductsPage/>
             {/* <SaleBannerCarousel/> */}
             <BlogPage/> 

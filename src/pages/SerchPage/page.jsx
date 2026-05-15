@@ -566,7 +566,7 @@ const filteredProducts = useMemo(() => {
                       {/* RATING */}
                       <div className="flex items-center gap-1 mt-2">
                         <div className="bg-green-600 text-white text-xs px-2 py-0.5 rounded flex items-center gap-1">
-                          4.3 <FaStar size={10} />
+                           <FaStar size={10} />
                         </div>
 
                         <span className="text-xs text-gray-500">

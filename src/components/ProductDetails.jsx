@@ -24,6 +24,7 @@ const ProductDetails = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 const [currentIndex, setCurrentIndex] = useState(0);
+const [showFullDesc, setShowFullDesc] = useState(false);
 
 useEffect(() => {
 
@@ -165,9 +166,6 @@ I am interested in your product.
 
 📍 Location: Indore
 
-🖼️ Product Image:
-${productImage}
-
 🔗 Product Link:
 ${productUrl}
 
@@ -307,7 +305,24 @@ Is this product still available?`;
                 </>
               )}
             </div>
-            <p className="text-gray-700 mt-3">{product.desc}</p>
+            <div className="mt-3">
+  <p
+    className={`text-gray-700 leading-relaxed transition-all duration-300 ${
+      showFullDesc ? "" : "line-clamp-3"
+    }`}
+  >
+    {product.desc}
+  </p>
+
+  {product.desc?.length > 120 && (
+    <button
+      onClick={() => setShowFullDesc(!showFullDesc)}
+      className="mt-2 text-green-600 hover:text-green-700 font-semibold text-sm"
+    >
+      {showFullDesc ? "Read Less" : "Read More"}
+    </button>
+  )}
+</div>
           </div>
 
           {/* WhatsApp Button for Desktop */}
