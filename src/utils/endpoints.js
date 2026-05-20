@@ -7,7 +7,15 @@ export const ENDPOINTS = {
     VERIFY: "/auth/sellers/verify",
     DASHBOARD: "/auth/sellers/dashboard",
   },
+  USER: {
+    LOGIN: "/user/login",
+    REGISTER: "/user/signup",
+    GOOGLE_LOGIN: "/user/google-login",
 
+    VERIFY: "/user/verify",
+    PROFILE: "/user/profile",
+    UPDATE_PROFILE: "/user/update-profile",
+  },
   ADMIN: {
     LOGIN: "/auth/admin/login",
     GET_ALL_SELLERS: "/auth/admin/sellers",
@@ -21,7 +29,7 @@ export const ENDPOINTS = {
   },
 
   PRODUCTS: {
-    CREATE: "/products",
+    CREATE: "/products/create",
     UPDATE: (id) => `/products/${id}`,
     DELETE: (id) => `/products/${id}`,
     GET_ALL: "/products",

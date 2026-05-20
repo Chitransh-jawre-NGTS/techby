@@ -37,3 +37,56 @@ export const verifySeller = () => {
 export const getDashboard = () => {
   return httpClient.get(ENDPOINTS.AUTH.DASHBOARD);
 };
+
+
+// ================= LOGIN =================
+export const loginUserApi = (data) => {
+  return httpClient.post(
+    ENDPOINTS.USER.LOGIN,
+    data
+  );
+};
+
+// ================= REGISTER =================
+export const registerUserApi = (data) => {
+  return httpClient.post(
+    ENDPOINTS.USER.REGISTER,
+    data
+  );
+};
+
+// ================= GOOGLE LOGIN =================
+export const googleLoginApi = (data) => {
+  return httpClient.post(
+    ENDPOINTS.USER.GOOGLE_LOGIN,
+    data
+  );
+};
+
+// ================= VERIFY USER =================
+export const verifyUserApi = () => {
+  return httpClient.get(
+    ENDPOINTS.USER.VERIFY
+  );
+};
+
+// ================= GET PROFILE =================
+export const getUserProfileApi = () => {
+  return httpClient.get(
+    ENDPOINTS.USER.PROFILE
+  );
+};
+
+// ================= UPDATE PROFILE =================
+export const updateUserProfileApi = (data) => {
+  return httpClient.put(
+    ENDPOINTS.USER.UPDATE_PROFILE,
+    data
+  );
+};
+
+// ================= LOGOUT =================
+export const logoutUserApi = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+};

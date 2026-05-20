@@ -96,9 +96,6 @@
 
 
 
-
-
-
 import axios from "axios";
 
 const httpClient = axios.create({
@@ -107,29 +104,51 @@ const httpClient = axios.create({
   headers: {},
 });
 
-httpClient.interceptors.request.use((config) => {
-  // Get both tokens
-  const storedSeller = JSON.parse(localStorage.getItem("sellerToken") || "{}");
-  const storedAdmin = JSON.parse(localStorage.getItem("adminToken") || "{}");
+// ================= TOKEN HANDLER =================
+const getToken = (key) => {
+  const data = localStorage.getItem(key);
+  if (!data) return null;
 
-  let token;
+  // Case 1: JSON format { token, expiry }
+  try {
+    const parsed = JSON.parse(data);
 
-  if (storedAdmin.token && Date.now() <= storedAdmin.expiry) {
-    token = storedAdmin.token;
-  } else if (storedSeller.token && Date.now() <= storedSeller.expiry) {
-    token = storedSeller.token;
+    if (parsed?.token) {
+      if (!parsed.expiry || Date.now() <= parsed.expiry) {
+        return parsed.token;
+      }
+      return null;
+    }
+  } catch (e) {
+    // Not JSON → treat as raw string token
   }
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  // Case 2: raw string token
+  return data;
+};
 
-  // Remove Content-Type if sending FormData
-  if (config.data instanceof FormData) {
-    delete config.headers["Content-Type"];
-  }
+// ================= INTERCEPTOR =================
+httpClient.interceptors.request.use(
+  (config) => {
+    // 🔥 SUPPORT BOTH SINGLE & MULTI TOKEN SYSTEM
+    const token =
+      getToken("token") || // ✅ your actual stored token (IMPORTANT FIX)
+      getToken("adminToken") ||
+      getToken("sellerToken") ||
+      getToken("userToken");
 
-  return config;
-}, (error) => Promise.reject(error));
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Remove Content-Type for FormData
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default httpClient;

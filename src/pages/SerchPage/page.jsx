@@ -10,6 +10,7 @@ import Navbar from "../../components/Navbar";
 import { getAllProducts } from "../../Api/ProductApi";
 import sellerlogo from "../../assets/logo/shop logo.jpg";
 import MobileBottomNavbar from "../../components/MobileBottomNavbar";
+import MobileNavbar from "../../components/MobileNavbar";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -193,7 +194,7 @@ const filteredProducts = useMemo(() => {
   return (
     <>
       <Navbar />
-
+       {/* <MobileNavbar/> */}
       <div className="max-w-7xl mx-auto px-3 sm:px-5 py-6">
         {/* BREADCRUMB */}
         <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-5 flex-wrap">

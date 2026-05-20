@@ -7,16 +7,20 @@ import SellerDashboard from "../pages/Seller-Dashboard/page";
 import AccountDashboard from "../pages/Accounts/page";
 import SellerLogin from "../pages/sellerLogin/Page";
 import AllProductsPage from "../pages/AllProducts/page";
-import AboutUs from "../pages/about/page";
-import GenerateCodePage from "../components/GenrateCodePage";
+import AboutUs from "../pages/Account pages/About";
 import AdminProtectedRoute from "./AdminProtectedRoutes";
 import SellerProtectedRoute from "./StoreRoutes";
-import WinnerCheckPage from "../components/WinnerCheckPage";
 import AdminDashboard from "../pages/AdminDashboard/page";
-import BecomeSeller from "../components/BecomeSeller";
 import AdminLogin from "../pages/AdminLogin/page";
 import PricingPage from "../components/Pricing";
 import BlogPage from "../components/Blog";
+import UserLoginPage from "../pages/UserLogin/page";
+import SellPage from "../pages/sell/page";
+import MyListingsPage from "../pages/MyListing/page";
+import InboxPage from "../pages/chat/dextop/page";
+import ChatPage from "../pages/chat/dextop/Chat";
+import TermsCondition from "../pages/Account pages/TermsCondition";
+import PrivacyPolicy from "../pages/Account pages/PrivacyPolicy";
 
 
 const Routing = () => {
@@ -29,8 +33,14 @@ const Routing = () => {
       {/* Products */}
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/all-products" element={<AllProductsPage />} />
-      <Route path="/winner-check" element={<WinnerCheckPage />} />
+  
+      <Route path="/sell" element={<SellPage/>} />
 
+
+      <Route path="/login" element={<UserLoginPage/>} />
+      <Route path="/my-listings" element={<MyListingsPage/>} />
+      <Route path="/inbox" element={<InboxPage/>} />
+      <Route path="/chat" element={<ChatPage/>} />
       <Route
           path="/admin-dashboard"
           element={
@@ -45,7 +55,6 @@ const Routing = () => {
       <Route path="/seller-login" element={<SellerLogin />} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/pricing" element={<PricingPage />} />
-      <Route path="/become-seller" element={<BecomeSeller />} />
       {/* <Route path="/seller-register" element={<SellerRegisterPage />} /> */}
 
 
@@ -66,8 +75,9 @@ const Routing = () => {
       {/* <Route path="/becomeseller" element={<BecomeSeller />} /> */}
       <Route path="/account" element={<AccountDashboard />} />
       <Route path="/about" element={<AboutUs />} />
+      <Route path="/terms-condition" element={<TermsCondition />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/search" element={<SearchPage />} />
-      <Route path="/generate-code" element={<GenerateCodePage />} />
 
 
       {/* 404 Page */}

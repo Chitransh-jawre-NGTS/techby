@@ -41,16 +41,7 @@ export const getAllProducts = () => {
 };
 
 
-// export const getAllProducts = (
-//   page = 1,
-//   limit = 20
-// ) => {
 
-//   return httpClient.get(
-//     `${ENDPOINTS.PRODUCTS.GET_ALL}?page=${page}&limit=${limit}`
-//   );
-
-// };
 export const getProductById = (id) => {
   return httpClient.get(ENDPOINTS.PRODUCTS.GET_ONE(id));
 };

@@ -5,7 +5,6 @@ import { itemFields } from "../../data/itemFields";
 import { createProduct } from "../../Api/ProductApi";
 import toast from "react-hot-toast";
 import { getSellerLimit } from "../../Api/ProductApi";
-import LimitBar from "../LimitBar";
 
 const UploadProduct = () => {
   const { seller } = useSelector((state) => state.auth); // ✅ get seller from Redux
@@ -22,7 +21,6 @@ const UploadProduct = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [limitData, setLimitData] = useState(null);
   const selectedCategory = itemFields[formData.category];
   const dynamicFields = selectedCategory?.fields || [];
 
@@ -196,7 +194,6 @@ useEffect(() => {
         Upload Used Product
       </h2>
 <div className="mb-6">
-  <LimitBar limitData={limitData}/>
 </div>
       {submitted && (
         <div className="flex items-center justify-center bg-green-50 text-green-700 py-2 rounded-md mb-4">
@@ -329,53 +326,6 @@ useEffect(() => {
   </span>
 </label>
         </div>
-       {/* Product Image Guidelines */}
-<div className="bg-white rounded-2xl shadow-md mt-10 p-6 mb-10 border-l-4 border-green-500">
-  <h3 className="text-xl font-bold text-green-700 mb-4">
-    Product Image Guidelines for Sellers 📸
-  </h3>
-
-  <ul className="text-gray-700 text-sm sm:text-base list-disc pl-5 space-y-3 leading-relaxed">
-    <li>
-      Please upload{" "}
-      <span className="font-semibold text-green-600">white background images</span>{" "}
-      or{" "}
-      <span className="font-semibold text-green-600">
-        background removed images
-      </span>{" "}
-      for better visibility.
-    </li>
-
-    <li>
-      Do{" "}
-      <span className="font-semibold text-red-600">
-        not add your shop name, phone number, or promotional text
-      </span>{" "}
-      directly on the product image.
-    </li>
-
-    <li>
-      Images with{" "}
-      <span className="font-semibold text-red-600">
-        direct promotion or contact details
-      </span>{" "}
-      may be rejected by some advertising platforms.
-    </li>
-
-    <li>
-      Clean and professional product images help us{" "}
-      <span className="font-semibold text-green-600">
-        promote your products more effectively.
-      </span>
-    </li>
-  </ul>
-
-  <p className="text-gray-600 text-sm mt-4 leading-relaxed">
-    Following these guidelines helps TechBy advertise your products across
-    different platforms without any issues and improves product visibility
-    for buyers.
-  </p>
-</div>
 
         {/* Image Upload */}
         <div>
@@ -420,43 +370,6 @@ useEffect(() => {
           {loading ? "Uploading..." : "Upload Product"}
         </button>
       </form>
-      {/* Seller Rules & Important Notes */}
-<div className="bg-red-50 rounded-2xl shadow-md p-6 mt-10 mb-10 border-l-4 border-red-500">
-  <h3 className="text-xl font-bold text-red-700 mb-4">
-    Seller Rules & Important Notes ⚠️
-  </h3>
-
-  <ul className="text-gray-700 text-sm sm:text-base list-disc pl-5 space-y-3 leading-relaxed">
-    
-    <li>
-      Please upload images that match the <span className="font-semibold text-red-600">selected product category</span>. 
-      Any unrelated images may be <span className="font-semibold text-red-600">automatically removed</span> from the platform.
-    </li>
-
-    <li>
-      Sellers can upload a maximum of 
-      <span className="font-semibold text-red-600"> 5 products per day</span>.
-      This helps us maintain quality and fair usage of the platform.
-    </li>
-
-    <li>
-      Write a <span className="font-semibold text-green-600">catchy product title and clear description</span> 
-      so that users are more likely to click and buy your product.
-    </li>
-
-    <li>
-      Good titles and descriptions help us 
-      <span className="font-semibold text-green-600"> promote your products better</span> 
-      across the TechBy platform and other promotional channels.
-    </li>
-
-  </ul>
-
-  <p className="text-gray-600 text-sm mt-4 leading-relaxed">
-    Following these rules helps maintain product quality on TechBy and increases the chances 
-    of your products being promoted and discovered by more buyers.
-  </p>
-</div>
     </div>
   );
 };
