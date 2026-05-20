@@ -1,4 +1,5 @@
 import React from "react";
+import Banner from "..//assets/add banners/main banner.png";
 
 const BannerPage = () => {
   return (
@@ -13,8 +14,8 @@ const BannerPage = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-yellow-400/10 pointer-events-none"></div>
 
           {/* IMAGE */}
-          <img
-            src="src/assets/add banners/main banner.png"
+            <img
+                src={Banner}
             alt="Rewards Banner"
             className="w-full h-full object-cover rounded-[30px]"
           />
