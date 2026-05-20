@@ -1,233 +1,219 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Smartphone,
+  Laptop,
+  Tablet,
+  Gamepad2,
+  Car,
+  Bike,
+  Home,
+  Sofa,
+  Shirt,
+  PawPrint,
+  Briefcase,
+  Wrench,
+} from "lucide-react";
 
 const categories = [
   {
     name: "Mobiles",
     slug: "mobiles",
-    image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
+    icon: Smartphone,
   },
 
   {
     name: "Laptops",
     slug: "laptops",
-    image:
-      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
+    icon: Laptop,
   },
 
   {
     name: "Tablets",
     slug: "tablets",
-    image:
-      "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0",
+    icon: Tablet,
   },
 
   {
     name: "Gaming",
-    slug: "gaming-consoles",
-    image:
-      "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3",
+    slug: "gaming",
+    icon: Gamepad2,
   },
 
   {
     name: "Cars",
     slug: "cars",
-    image:
-      "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7",
+    icon: Car,
   },
 
   {
     name: "Bikes",
     slug: "bikes",
-    image:
-      "https://images.unsplash.com/photo-1558981806-ec527fa84c39",
+    icon: Bike,
   },
 
   {
     name: "Properties",
     slug: "properties",
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa",
+    icon: Home,
   },
 
   {
     name: "Furniture",
     slug: "furniture",
-    image:
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
+    icon: Sofa,
   },
 
   {
     name: "Fashion",
     slug: "fashion",
-    image:
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
+    icon: Shirt,
   },
 
   {
     name: "Pets",
     slug: "pets",
-    image:
-      "https://images.unsplash.com/photo-1517849845537-4d257902454a",
+    icon: PawPrint,
   },
 
   {
     name: "Jobs",
     slug: "jobs",
-    image:
-      "https://images.unsplash.com/photo-1521791136064-7986c2920216",
+    icon: Briefcase,
   },
 
   {
     name: "Services",
     slug: "services",
-    image:
-      "https://images.unsplash.com/photo-1556740749-887f6717d7e4",
+    icon: Wrench,
   },
 ];
 
 const CategoryMenu = () => {
   const navigate = useNavigate();
 
+  // ================= CATEGORY CLICK =================
   const handleCategoryClick = (slug) => {
-    navigate(`/search?q=${slug}`);
+    navigate(`/search?category=${slug}`);
   };
 
   return (
-    <>
-      {/* 🔥 LED GLOW BANNER */}
-      <div className="relative overflow-hidden bg-black">
-        {/* glowing animated layer */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-lime-400 to-green-500 opacity-70 animate-pulse"></div>
+    <div className="bg-white border-b border-green-100">
 
-        {/* moving shine effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shine_2s_linear_infinite]"></div>
+      <div className="max-w-7xl mx-auto px-3 py-4">
 
-        {/* text */}
-        <div className="relative text-center py-1.5 sm:py-2 text-[10px] sm:text-sm font-bold text-white tracking-wide px-2">
-          ⚡ Refer Friends & Earn 20 Techby Coins — Unlock Free Listings &
-          Boost Your Ads Faster ⚡
+        {/* MOBILE */}
+        <div className="md:hidden overflow-x-auto scrollbar-hide">
+
+          <div className="flex gap-4 min-w-max">
+
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+
+              return (
+                <button
+                  key={cat.slug}
+                  onClick={() =>
+                    handleCategoryClick(cat.slug)
+                  }
+                  className="flex flex-col items-center group"
+                >
+                  {/* ICON */}
+                  <div
+                    className="
+                      w-14 h-14
+                      rounded-2xl
+                      bg-gradient-to-b
+                      from-green-50
+                      to-green-100
+                      border border-green-200
+                      flex items-center justify-center
+                      shadow-sm
+                      group-hover:scale-105
+                      group-hover:bg-green-600
+                      transition-all duration-200
+                    "
+                  >
+                    <Icon
+                      size={24}
+                      className="text-green-700 group-hover:text-white"
+                    />
+                  </div>
+
+                  {/* TEXT */}
+                  <p className="text-[11px] font-medium text-gray-700 mt-2 whitespace-nowrap">
+                    {cat.name}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* DESKTOP */}
+        <div
+          className="
+            hidden md:grid
+            grid-cols-4
+            lg:grid-cols-6
+            xl:grid-cols-8
+            gap-5
+          "
+        >
+          {categories.map((cat) => {
+            const Icon = cat.icon;
+
+            return (
+              <button
+                key={cat.slug}
+                onClick={() =>
+                  handleCategoryClick(cat.slug)
+                }
+                className="
+                  bg-white
+                  border border-green-100
+                  rounded-3xl
+                  p-5
+                  flex flex-col items-center
+                  hover:shadow-lg
+                  hover:border-green-300
+                  hover:-translate-y-1
+                  transition-all duration-200
+                  group
+                "
+              >
+                {/* ICON */}
+                <div
+                  className="
+                    w-16 h-16
+                    rounded-2xl
+                    bg-gradient-to-b
+                    from-green-50
+                    to-green-100
+                    flex items-center justify-center
+                    group-hover:bg-green-600
+                    transition-all duration-200
+                  "
+                >
+                  <Icon
+                    size={30}
+                    className="text-green-700 group-hover:text-white"
+                  />
+                </div>
+
+                {/* NAME */}
+                <p className="text-sm font-semibold text-gray-700 mt-3 text-center">
+                  {cat.name}
+                </p>
+              </button>
+            );
+          })}
         </div>
       </div>
-
-     {/* CATEGORY MENU */}
-<div className="bg-white border-b border-gray-200 shadow-sm">
-  <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-4">
-
-    {/* MOBILE = 2 ROW SCROLL */}
-    <div
-      className="
-        grid
-        grid-rows-2
-        grid-flow-col
-        auto-cols-max
-        gap-x-4
-        gap-y-3
-        overflow-x-auto
-        scrollbar-hide
-
-        md:hidden
-      "
-    >
-      {categories.map((cat) => (
-        <button
-          key={cat.slug}
-          onClick={() => handleCategoryClick(cat.slug)}
-          className="flex flex-col items-center min-w-[65px] group"
-        >
-          {/* IMAGE */}
-          <div
-            className="
-              w-12 h-12
-              rounded-full
-              overflow-hidden
-              border border-gray-200
-              shadow-sm
-              group-hover:scale-105
-              transition
-            "
-          >
-            <img
-              src={cat.image}
-              alt={cat.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* NAME */}
-          <p className="text-[10px] mt-1 font-medium text-gray-700 text-center leading-tight">
-            {cat.name}
-          </p>
-        </button>
-      ))}
-    </div>
-
-    {/* DESKTOP = PERFECT GRID */}
-    <div
-      className="
-        hidden
-        md:grid
-
-        grid-cols-4
-        lg:grid-cols-6
-        xl:grid-cols-8
-
-        gap-6
-        justify-items-center
-      "
-    >
-      {categories.map((cat) => (
-        <button
-          key={cat.slug}
-          onClick={() => handleCategoryClick(cat.slug)}
-          className="flex flex-col items-center group"
-        >
-          {/* IMAGE */}
-          <div
-            className="
-              w-20 h-20
-              lg:w-24 lg:h-24
-              rounded-full
-              overflow-hidden
-              border border-gray-200
-              shadow-md
-              group-hover:scale-105
-              hover:shadow-xl
-              transition
-            "
-          >
-            <img
-              src={cat.image}
-              alt={cat.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* NAME */}
-          <p className="text-sm lg:text-base mt-2 font-semibold text-gray-700 text-center">
-            {cat.name}
-          </p>
-        </button>
-      ))}
-    </div>
-
-  </div>
-</div>
 
       {/* HIDE SCROLLBAR */}
       <style>
         {`
-          @keyframes shine {
-            0% {
-              transform: translateX(-100%);
-            }
-
-            100% {
-              transform: translateX(100%);
-            }
-          }
-
           .scrollbar-hide::-webkit-scrollbar {
             display: none;
           }
@@ -238,7 +224,7 @@ const CategoryMenu = () => {
           }
         `}
       </style>
-    </>
+    </div>
   );
 };
 

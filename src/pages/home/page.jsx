@@ -10,11 +10,15 @@ import CategoryPage from '../../components/CategoryPage'
 import MobileBottomNavbar from '../../components/MobileBottomNavbar'
 import BlogPage from '../../components/Blog'
 import RecentlyViewed from '../../components/RecentlyViewd'
+import BannerPage from '../../components/Banner'
+import CategoryBar from '../../components/CategoryBar'
 
 const Home = () => {
   return (
                <>
                <Navbar/>
+               <CategoryBar/>
+               <BannerPage/>
                <CategoryMenu/>
             {/* <HeroSection /> */}
             {/* <WinnerBanner/> */}
@@ -23,7 +27,7 @@ const Home = () => {
             <RecentlyViewed
              /> 
             <ProductsPage/>
-            <BlogPage/> 
+            {/* <BlogPage/>  */}
             {/* <FullImageCover imageUrl={coverImage}/> */}
             {/* <FeaturesSection /> */}
             <Footer/>

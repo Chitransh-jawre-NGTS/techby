@@ -1,15 +1,38 @@
 // src/data/categories.js
 
+import {
+  Smartphone,
+  Laptop,
+  Tablet,
+  Camera,
+  Tv,
+  AirVent,
+  Car,
+  Bike,
+  Home,
+  Building2,
+  BedDouble,
+  Sofa,
+  Shirt,
+  Briefcase,
+  Wrench,
+  PawPrint,
+  Baby,
+  Map,
+} from "lucide-react";
+
 export const categories = [
   // ================= ELECTRONICS =================
   {
     slug: "electronics",
     label: "Electronics",
+    icon: Smartphone,
 
     subCategories: [
       {
         slug: "used-mobile",
         label: "Mobiles",
+        icon: Smartphone,
 
         fields: [
           "brand",
@@ -24,6 +47,7 @@ export const categories = [
       {
         slug: "used-laptop",
         label: "Laptops",
+        icon: Laptop,
 
         fields: [
           "brand",
@@ -38,6 +62,7 @@ export const categories = [
       {
         slug: "used-tablet",
         label: "Tablets",
+        icon: Tablet,
 
         fields: [
           "brand",
@@ -51,6 +76,7 @@ export const categories = [
       {
         slug: "camera",
         label: "Cameras",
+        icon: Camera,
 
         fields: [
           "brand",
@@ -63,6 +89,7 @@ export const categories = [
       {
         slug: "tv",
         label: "Televisions",
+        icon: Tv,
 
         fields: [
           "brand",
@@ -75,6 +102,7 @@ export const categories = [
       {
         slug: "ac",
         label: "Air Conditioners",
+        icon: AirVent,
 
         fields: [
           "brand",
@@ -89,11 +117,13 @@ export const categories = [
   {
     slug: "vehicles",
     label: "Vehicles",
+    icon: Car,
 
     subCategories: [
       {
         slug: "used-car",
         label: "Cars",
+        icon: Car,
 
         fields: [
           "brand",
@@ -108,6 +138,7 @@ export const categories = [
       {
         slug: "used-bike",
         label: "Bikes",
+        icon: Bike,
 
         fields: [
           "brand",
@@ -121,6 +152,7 @@ export const categories = [
       {
         slug: "scooty",
         label: "Scooty",
+        icon: Bike,
 
         fields: [
           "brand",
@@ -137,11 +169,13 @@ export const categories = [
   {
     slug: "properties",
     label: "Properties",
+    icon: Home,
 
     subCategories: [
       {
         slug: "house-sale",
         label: "House for Sale",
+        icon: Home,
 
         fields: [
           "bhk",
@@ -155,6 +189,7 @@ export const categories = [
       {
         slug: "house-rent",
         label: "House for Rent",
+        icon: Building2,
 
         fields: [
           "bhk",
@@ -168,6 +203,7 @@ export const categories = [
       {
         slug: "flat-sale",
         label: "Flat for Sale",
+        icon: Building2,
 
         fields: [
           "bhk",
@@ -181,6 +217,7 @@ export const categories = [
       {
         slug: "flat-rent",
         label: "Flat for Rent",
+        icon: Building2,
 
         fields: [
           "bhk",
@@ -193,6 +230,7 @@ export const categories = [
       {
         slug: "pg-hostel",
         label: "PG & Hostel",
+        icon: BedDouble,
 
         fields: [
           "gender",
@@ -205,6 +243,7 @@ export const categories = [
       {
         slug: "land-plot",
         label: "Land & Plots",
+        icon: Map,
 
         fields: [
           "plotArea",
@@ -219,11 +258,13 @@ export const categories = [
   {
     slug: "furniture",
     label: "Furniture",
+    icon: Sofa,
 
     subCategories: [
       {
         slug: "sofa",
         label: "Sofa",
+        icon: Sofa,
 
         fields: [
           "material",
@@ -236,6 +277,7 @@ export const categories = [
       {
         slug: "bed",
         label: "Beds",
+        icon: BedDouble,
 
         fields: [
           "bedSize",
@@ -248,6 +290,7 @@ export const categories = [
       {
         slug: "dining-table",
         label: "Dining Table",
+        icon: Sofa,
 
         fields: [
           "material",
@@ -262,11 +305,13 @@ export const categories = [
   {
     slug: "fashion",
     label: "Fashion",
+    icon: Shirt,
 
     subCategories: [
       {
         slug: "mens-fashion",
         label: "Men's Fashion",
+        icon: Shirt,
 
         fields: [
           "brand",
@@ -279,6 +324,7 @@ export const categories = [
       {
         slug: "womens-fashion",
         label: "Women's Fashion",
+        icon: Shirt,
 
         fields: [
           "brand",
@@ -290,15 +336,17 @@ export const categories = [
     ],
   },
 
-  // ================= JOBS =================
+  // ================= JOBS & SERVICES =================
   {
     slug: "jobs-services",
     label: "Jobs & Services",
+    icon: Briefcase,
 
     subCategories: [
       {
         slug: "jobs",
         label: "Jobs",
+        icon: Briefcase,
 
         fields: [
           "jobRole",
@@ -311,6 +359,7 @@ export const categories = [
       {
         slug: "services",
         label: "Services",
+        icon: Wrench,
 
         fields: [
           "serviceType",
@@ -321,15 +370,17 @@ export const categories = [
     ],
   },
 
-  // ================= PETS =================
+  // ================= PETS & KIDS =================
   {
     slug: "pets-kids",
     label: "Pets & Kids",
+    icon: PawPrint,
 
     subCategories: [
       {
         slug: "pets",
         label: "Pets",
+        icon: PawPrint,
 
         fields: [
           "petType",
@@ -342,6 +393,7 @@ export const categories = [
       {
         slug: "kids",
         label: "Kids Products",
+        icon: Baby,
 
         fields: [
           "productType",
@@ -352,8 +404,6 @@ export const categories = [
     ],
   },
 ];
-
-
 // // src/data/categoryFields.js
 // export const categoryData = {
 //   cars: {

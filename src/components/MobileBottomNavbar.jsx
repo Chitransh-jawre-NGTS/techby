@@ -125,44 +125,45 @@ import {
   FaThLarge,
   FaPlusCircle,
   FaClipboardList,
+  FaComments
 } from "react-icons/fa";
 
 const MobileBottomNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const navItems = [
-    {
-      name: "Home",
-      icon: <FaHome />,
-      path: "/",
-    },
+ const navItems = [
+  {
+    name: "Home",
+    icon: <FaHome />,
+    path: "/",
+  },
 
-    {
-      name: "Products",
-      icon: <FaThLarge />,
-      path: "/all-products",
-    },
+  {
+    name: "Chats",
+    icon: <FaComments />,
+    path: "/chat",
+  },
 
-    {
-      name: "Sell",
-      icon: <FaPlusCircle />,
-      path: "/sell",
-      center: true,
-    },
+  {
+    name: "Sell",
+    icon: <FaPlusCircle />,
+    path: "/sell",
+    center: true,
+  },
 
-    {
-      name: "My Ads",
-      icon: <FaClipboardList />,
-      path: "/my-listings",
-    },
+  {
+    name: "My Ads",
+    icon: <FaClipboardList />,
+    path: "/my-listings",
+  },
 
-    {
-      name: "Profile",
-      icon: <FaUser />,
-      path: "/account",
-    },
-  ];
+  {
+    name: "Profile",
+    icon: <FaUser />,
+    path: "/account",
+  },
+];
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.08)] lg:hidden z-48">

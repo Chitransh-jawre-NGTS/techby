@@ -1,133 +1,380 @@
 import React from "react";
 import {
-  FaInstagram,
   FaFacebookF,
+  FaInstagram,
   FaTwitter,
   FaYoutube,
-} from "react-icons/fa";
-import { MdEmail, MdLocationOn } from "react-icons/md";
-import {
-  FaStore,
+  FaApple,
+  FaGooglePlay,
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaShieldAlt,
+  FaCoins,
+  FaBolt,
+  FaHeadphones,
   FaMobileAlt,
-  FaTools,
-  FaShippingFast,
-  FaCheckCircle,
-  FaUsers,
 } from "react-icons/fa";
-import logo from "../assets/logo/logo.png"; // ✅ added logo import
-import { Link } from "react-router-dom"; // ✅ better routing
+
+import { Link } from "react-router-dom";
+
+import logo from "../assets/logo/logo.png";
 
 const Footer = () => {
+  const popularCategories = [
+    "Cars",
+    "Properties",
+    "Mobiles",
+    "Jobs",
+    "Bikes",
+    "Electronics",
+    "Furniture",
+    "Fashion",
+  ];
+
+  const companyLinks = [
+    { name: "About Us", path: "/about" },
+    { name: "Contact Us", path: "/contact" },
+    { name: "Privacy Policy", path: "/privacy-policy" },
+    { name: "Terms & Conditions", path: "/terms" },
+    { name: "Refund Policy", path: "/refund-policy" },
+    { name: "Safety Tips", path: "/safety-tips" },
+  ];
+
+  const quickLinks = [
+    { name: "My Account", path: "/profile" },
+    { name: "My Listings", path: "/my-listings" },
+    { name: "Wishlist", path: "/wishlist" },
+    { name: "Wallet", path: "/wallet" },
+    { name: "Jackpot Zone", path: "/jackpot" },
+    { name: "Chat", path: "/chat" },
+  ];
+
   return (
-    <footer className="bg-[#1a1a1a] text-gray-300 px-4 sm:px-6 lg:px-8 py-10">
-      
-      {/* MAIN CONTAINER */}
-      <div className="max-w-7xl mx-auto">
+    <footer className="bg-[#002f34] text-white mt-10">
+      {/* TOP STRIP */}
+      <div className="border-b border-white/10 bg-[#01363c]">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-        {/* TOP FEATURES */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 border-b border-gray-700 pb-8">
-          {[
-            { title: "Verified Sellers", desc: "Trusted dealers", icon: <FaCheckCircle /> },
-            { title: "Direct Contact", desc: "No middleman", icon: <FaUsers /> },
-            { title: "Mobiles", desc: "Best deals", icon: <FaMobileAlt /> },
-            { title: "Repair", desc: "Fast service", icon: <FaTools /> },
-            { title: "Delivery", desc: "Same/Next day", icon: <FaShippingFast /> },
-            { title: "Local Market", desc: "Indore only", icon: <FaStore /> },
-          ].map((item, i) => (
-            <div key={i} className="flex flex-col gap-1">
-              <div className="text-green-500 text-lg">{item.icon}</div>
-              <p className="text-white font-semibold text-sm">{item.title}</p>
-              <p className="text-gray-400 text-xs">{item.desc}</p>
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                <FaShieldAlt />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-sm">
+                  Trusted Platform
+                </h4>
+
+                <p className="text-xs text-gray-300">
+                  Verified users & sellers
+                </p>
+              </div>
             </div>
-          ))}
-        </div>
 
-        {/* MIDDLE SECTION */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-10 border-b border-gray-700">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400">
+                <FaCoins />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-sm">
+                  Earn Coins
+                </h4>
+
+                <p className="text-xs text-gray-300">
+                  Refer & unlock rewards
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                <FaBolt />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-sm">
+                  Boost Listings
+                </h4>
+
+                <p className="text-xs text-gray-300">
+                  Sell products faster
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400">
+                <FaHeadphones />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-sm">
+                  Jackpot Rewards
+                </h4>
+
+                <p className="text-xs text-gray-300">
+                  Win mobiles & gadgets
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* MAIN FOOTER */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
 
           {/* BRAND */}
-          <div>
-            {/* ✅ LOGO ADDED */}
-            <img src={logo} alt="TechBy Logo" className="h-14 mb-3" />
+          <div className="lg:col-span-2">
 
-            <p className="text-sm text-gray-400 mb-3">
-              Buy & sell used products with verified sellers in Indore.
+            <img
+              src={logo}
+              alt="Techby"
+              className="h-14 object-contain"
+            />
+
+            <p className="text-sm text-gray-300 mt-5 leading-7 max-w-md">
+              Techby is a modern local marketplace to buy and
+              sell mobiles, electronics, vehicles, furniture,
+              fashion and more with trusted sellers near you.
             </p>
 
-            <p className="flex items-center gap-2 text-sm">
-              <MdLocationOn className="text-green-500" /> Indore, India
-            </p>
+            {/* CONTACT */}
+            <div className="mt-6 space-y-3 text-sm text-gray-300">
 
-            <p className="flex items-center gap-2 text-sm mt-2">
-              <MdEmail className="text-green-500" /> techbysupport@gmail.com
-            </p>
+              <div className="flex items-center gap-3">
+                <FaMapMarkerAlt className="text-green-400" />
+                <span>Indore, Madhya Pradesh, India</span>
+              </div>
 
-            <div className="flex gap-4 mt-4 text-lg">
-              <FaFacebookF className="hover:text-green-400 cursor-pointer" />
-              <FaInstagram className="hover:text-green-400 cursor-pointer" />
-              <FaTwitter className="hover:text-green-400 cursor-pointer" />
-              <FaYoutube className="hover:text-green-400 cursor-pointer" />
+              <div className="flex items-center gap-3">
+                <FaEnvelope className="text-green-400" />
+                <span>techbysupport@gmail.com</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <FaPhoneAlt className="text-green-400" />
+                <span>+91 9876543210</span>
+              </div>
+
+            </div>
+
+            {/* SOCIAL */}
+            <div className="flex items-center gap-4 mt-7">
+
+              <a
+                href="#"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-green-500 transition flex items-center justify-center"
+              >
+                <FaFacebookF />
+              </a>
+
+              <a
+                href="#"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-green-500 transition flex items-center justify-center"
+              >
+                <FaInstagram />
+              </a>
+
+              <a
+                href="#"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-green-500 transition flex items-center justify-center"
+              >
+                <FaTwitter />
+              </a>
+
+              <a
+                href="#"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-green-500 transition flex items-center justify-center"
+              >
+                <FaYoutube />
+              </a>
+
             </div>
           </div>
 
-          {/* SELLER CTA */}
+          {/* POPULAR CATEGORIES */}
           <div>
-            <h4 className="text-white font-semibold mb-3">Become Seller</h4>
+            <h3 className="font-bold text-lg mb-5 text-white">
+              Popular Categories
+            </h3>
 
-            <p className="text-sm text-gray-400 mb-4">
-              Start selling your products and grow your business.
-            </p>
-
-            {/* ✅ Become Seller Button */}
-            <Link
-              to="/become-seller"
-              className="block text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded text-sm font-semibold mb-3"
-            >
-              Become Seller
-            </Link>
-
-            {/* ✅ NEW Seller Login Button */}
-            <Link
-              to="/seller-login"
-              className="block text-center border border-green-600 text-green-400 hover:bg-green-600 hover:text-white py-2 rounded text-sm font-semibold transition"
-            >
-              Seller Login
-            </Link>
-          </div>
-
-          {/* LINKS */}
-          <div>
-            <h4 className="text-white font-semibold mb-3">Links</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li className="hover:text-white cursor-pointer">Home</li>
-              <li className="hover:text-white cursor-pointer">About</li>
-              <li className="hover:text-white cursor-pointer">Privacy Policy</li>
-              <li className="hover:text-white cursor-pointer">Terms</li>
-              <li className="hover:text-white cursor-pointer">Contact</li>
+            <ul className="space-y-3">
+              {popularCategories.map((item) => (
+                <li key={item}>
+                  <Link
+                    to={`/search?q=${item.toLowerCase()}`}
+                    className="text-sm text-gray-300 hover:text-green-400 transition"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* CATEGORIES */}
+          {/* QUICK LINKS */}
           <div>
-            <h4 className="text-white font-semibold mb-3">Categories</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li className="hover:text-white cursor-pointer">Mobiles</li>
-              <li className="hover:text-white cursor-pointer">Laptops</li>
-              <li className="hover:text-white cursor-pointer">Accessories</li>
-              <li className="hover:text-white cursor-pointer">Repair</li>
+            <h3 className="font-bold text-lg mb-5 text-white">
+              Quick Links
+            </h3>
+
+            <ul className="space-y-3">
+              {quickLinks.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    to={item.path}
+                    className="text-sm text-gray-300 hover:text-green-400 transition"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
+          </div>
+
+          {/* COMPANY */}
+          <div>
+            <h3 className="font-bold text-lg mb-5 text-white">
+              Company
+            </h3>
+
+            <ul className="space-y-3">
+              {companyLinks.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    to={item.path}
+                    className="text-sm text-gray-300 hover:text-green-400 transition"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      {/* APP SECTION */}
+      <div className="border-t border-white/10 bg-[#01363c]">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-5">
+
+            {/* TEXT */}
+            <div>
+              <h3 className="font-bold text-lg">
+                Download the Techby App
+              </h3>
+
+              <p className="text-sm text-gray-300 mt-1">
+                Buy, sell & chat instantly from your phone.
+              </p>
+            </div>
+
+            {/* STORE BUTTONS */}
+            <div className="flex flex-wrap items-center gap-4">
+
+              <button
+                className="
+                  flex items-center gap-3
+                  bg-black
+                  px-5 py-3
+                  rounded-xl
+                  hover:scale-105
+                  transition
+                "
+              >
+                <FaApple className="text-2xl" />
+
+                <div className="text-left">
+                  <p className="text-[10px] text-gray-300">
+                    Download on the
+                  </p>
+
+                  <p className="font-semibold text-sm">
+                    App Store
+                  </p>
+                </div>
+              </button>
+
+              <button
+                className="
+                  flex items-center gap-3
+                  bg-black
+                  px-5 py-3
+                  rounded-xl
+                  hover:scale-105
+                  transition
+                "
+              >
+                <FaGooglePlay className="text-xl text-green-400" />
+
+                <div className="text-left">
+                  <p className="text-[10px] text-gray-300">
+                    GET IT ON
+                  </p>
+
+                  <p className="font-semibold text-sm">
+                    Google Play
+                  </p>
+                </div>
+              </button>
+
+            </div>
+
           </div>
         </div>
+      </div>
 
+      {/* BOTTOM */}
+      <div className="bg-[#001f22] border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 py-5">
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-gray-400">
+
+            <p>
+              © {new Date().getFullYear()} Techby. All rights reserved.
+            </p>
+
+            <div className="flex items-center gap-5">
+              <Link
+                to="/privacy-policy"
+                className="hover:text-green-400 transition"
+              >
+                Privacy
+              </Link>
+
+              <Link
+                to="/terms"
+                className="hover:text-green-400 transition"
+              >
+                Terms
+              </Link>
+
+              <Link
+                to="/contact"
+                className="hover:text-green-400 transition"
+              >
+                Contact
+              </Link>
+            </div>
+
+          </div>
+        </div>
       </div>
     </footer>
   );
 };
 
 export default Footer;
-
-
-
 
 
 

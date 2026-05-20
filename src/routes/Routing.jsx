@@ -21,6 +21,7 @@ import InboxPage from "../pages/chat/dextop/page";
 import ChatPage from "../pages/chat/dextop/Chat";
 import TermsCondition from "../pages/Account pages/TermsCondition";
 import PrivacyPolicy from "../pages/Account pages/PrivacyPolicy";
+import WalletJackpotPage from "../components/WalletJackpotPage";
 
 
 const Routing = () => {
@@ -29,6 +30,7 @@ const Routing = () => {
 
       {/* Home */}
       <Route path="/" element={<Home />} />
+       <Route path="/jackpot" element={<WalletJackpotPage />} />
 
       {/* Products */}
       <Route path="/product/:id" element={<ProductDetails />} />
