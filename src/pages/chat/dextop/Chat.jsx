@@ -612,7 +612,7 @@ import {
 import Navbar from "../../../components/Navbar";
 import MobileBottomNavbar from "../../../components/MobileBottomNavbar";
 import { useLocation } from "react-router-dom";
-import API from "../../../api/chatApi";
+import API from "../../../Api/chatApi";
 import socket from "../../../socket";
 
 const ChatPage = () => {
