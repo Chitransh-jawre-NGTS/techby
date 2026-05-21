@@ -9,12 +9,14 @@ import {
   FaCog,
   FaSignOutAlt,
   FaQuestionCircle,
+  FaWallet 
 } from "react-icons/fa";
 
 import { MapPin } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo/logo.png";
 import LocationModal from "./LocationModal";
+import CategoryBar from "./CategoryBar";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,7 +27,10 @@ const Navbar = () => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
   }, []);
 
   // ================= LOCATION =================
@@ -33,11 +38,16 @@ const Navbar = () => {
     localStorage.getItem("selectedCity") || "Indore"
   );
 
-  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showLocationModal, setShowLocationModal] =
+    useState(false);
+
+  // ================= WALLET =================
+  const [walletCoins] = useState(1250);
 
   // ================= SEARCH =================
   const [searchTerm, setSearchTerm] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] =
+    useState(false);
 
   const products = [
     "Mobile",
@@ -56,8 +66,10 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+
     setUser(null);
     setShowProfileMenu(false);
+
     navigate("/");
   };
 
@@ -65,6 +77,7 @@ const Navbar = () => {
   const handleSearch = (value) => {
     if (value.trim()) {
       navigate(`/search?q=${value}`);
+
       setSearchTerm("");
       setShowSuggestions(false);
     }
@@ -73,28 +86,47 @@ const Navbar = () => {
   // ================= LOCATION =================
   const handleLocationChange = (city) => {
     setLocation(city);
+
     localStorage.setItem("selectedCity", city);
+
     window.location.reload();
   };
 
   return (
+  <>
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-
       <div className="max-w-7xl mx-auto px-4 py-3">
-
         {/* ================= DESKTOP ================= */}
         <div className="hidden lg:flex items-center justify-between gap-4">
-
           {/* LOGO */}
           <Link to="/">
             <img src={logo} alt="logo" className="h-14" />
           </Link>
 
+          {/* LOCATION */}
+            <button
+              onClick={() => setShowLocationModal(true)}
+              className="
+                flex items-center gap-2
+                border border-green-500
+                px-4 py-2 rounded-full
+                hover:bg-green-50
+                transition
+              "
+            >
+              <MapPin
+                className="text-green-600"
+                size={18}
+              />
+
+              <span className="font-medium text-sm">
+                {location}
+              </span>
+            </button>
+
           {/* SEARCH */}
           <div className="flex-1 relative">
-
             <div className="flex items-center border-2 border-green-700 rounded-full px-4 py-2">
-
               <FaSearch
                 className="text-gray-400 cursor-pointer"
                 onClick={() => handleSearch(searchTerm)}
@@ -115,13 +147,11 @@ const Navbar = () => {
                 }}
                 className="flex-1 px-3 outline-none"
               />
-
             </div>
 
             {/* SEARCH SUGGESTIONS */}
             {showSuggestions && searchTerm && (
               <div className="absolute top-14 bg-white border border-green-400 rounded-xl shadow-xl w-full z-50">
-
                 {filteredSuggestions.map((item) => (
                   <div
                     key={item}
@@ -131,35 +161,41 @@ const Navbar = () => {
                     {item}
                   </div>
                 ))}
-
               </div>
             )}
-
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="flex items-center gap-5">
+        {/* RIGHT SIDE */}
+<div className="flex items-center gap-5">
 
-            {/* LOCATION */}
-            <button
-              onClick={() => setShowLocationModal(true)}
-              className="flex items-center border border-green-500 px-4 py-2 rounded-full"
-            >
-              <MapPin className="text-green-600 mr-1" size={18} />
-              {location}
-            </button>
+  {user && (
+    <div
+      className="
+        flex items-center gap-2
+        bg-green-50
+        border border-green-300
+        px-3 py-1.5
+        rounded-full
+      "
+    >
+      <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center">
+        <FaWallet className="text-green-700 text-sm" />
+      </div>
 
-            {/* WISHLIST */}
-            {/* <button className="flex flex-col items-center text-sm">
-              <FaHeart className="text-xl text-gray-700" />
-              Wishlist
-            </button> */}
+      <span className="font-bold text-green-700 text-sm">
+        {walletCoins}
+      </span>
+    </div>
+  )}
+
+
+        
 
             {/* CHAT */}
-            <button className="flex flex-col items-center text-sm">
+            <Link to={"/inbox"} className="flex flex-col items-center text-sm">
               <FaComments className="text-xl text-green-700" />
               Chat
-            </button>
+            </Link>
 
             {/* SELL BUTTON */}
             {user && (
@@ -167,8 +203,7 @@ const Navbar = () => {
                 onClick={() => navigate("/sell")}
                 className="
                   flex items-center gap-2
-                  hidden
-                  md:flex
+                  hidden md:flex
                   border-[5px]
                   border-green-500
                   px-6 py-2
@@ -184,7 +219,7 @@ const Navbar = () => {
               </button>
             )}
 
-            {/* LOGIN */}
+            {/* LOGIN / PROFILE */}
             {!user ? (
               <button
                 onClick={() => navigate("/login")}
@@ -194,294 +229,172 @@ const Navbar = () => {
               </button>
             ) : (
               <div className="relative">
-
                 {/* PROFILE BUTTON */}
                 <button
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  onClick={() =>
+                    setShowProfileMenu(!showProfileMenu)
+                  }
                   className="flex items-center gap-2"
                 >
                   <FaUserCircle className="text-4xl text-green-700" />
                 </button>
 
-                {/* PROFILE OVERLAY */}
+                {/* PROFILE MENU */}
                 {showProfileMenu && (
-                 <div
-  className="
-    absolute right-0 mt-4 w-[340px]
-    bg-white rounded-2xl shadow-xl
-    border border-gray-100 overflow-hidden z-50
-  "
->
+                  <div
+                    className="
+                      absolute right-0 mt-4 w-[340px]
+                      bg-white rounded-2xl shadow-xl
+                      border border-gray-100 overflow-hidden z-50
+                    "
+                  >
+                    {/* TOP */}
+                    <div className="p-5 bg-gradient-to-r from-green-50 to-white border-b">
+                      <div className="flex items-center gap-4">
+                        <FaUserCircle className="text-5xl text-green-700" />
 
-  {/* ================= TOP SECTION ================= */}
-  <div className="p-5 bg-gradient-to-r from-green-50 to-white border-b">
+                        <div className="min-w-0">
+                          <h2 className="font-bold text-lg text-gray-800 truncate">
+                            {user.name}
+                          </h2>
 
-    <div className="flex items-center gap-4">
+                          <p className="text-sm text-gray-500">
+                            Manage your account & listings
+                          </p>
+                        </div>
+                      </div>
 
-      <FaUserCircle className="text-5xl text-green-700" />
+                      <button
+                        onClick={() => navigate("/profile")}
+                        className="
+                          w-full mt-4
+                          bg-green-600 hover:bg-green-700
+                          text-white py-2.5
+                          rounded-xl font-semibold
+                          transition
+                        "
+                      >
+                        View Profile
+                      </button>
+                    </div>
 
-      <div className="min-w-0">
-        <h2 className="font-bold text-lg text-gray-800 truncate">
-          {user.name}
-        </h2>
+                    {/* MENU */}
+                    <div className="py-2">
+                      <MenuItem
+                        icon={<FaClipboardList />}
+                        text="My Listings"
+                        onClick={() =>
+                          navigate("/my-listings")
+                        }
+                      />
 
-        <p className="text-sm text-gray-500">
-          Manage your account & listings
-        </p>
-      </div>
+                      <MenuItem
+                        icon={<FaHeart />}
+                        text="Wishlist"
+                        onClick={() => navigate("/wishlist")}
+                      />
 
-    </div>
+                      <MenuItem
+                        icon={<FaComments />}
+                        text="Messages"
+                        onClick={() => navigate("/chat")}
+                      />
 
-    <button
-      onClick={() => navigate("/profile")}
-      className="
-        w-full mt-4
-        bg-green-600 hover:bg-green-700
-        text-white py-2.5
-        rounded-xl font-semibold
-        transition
-      "
-    >
-      View Profile
-    </button>
+                      <MenuItem
+                        icon={<FaQuestionCircle />}
+                        text="Help & Support"
+                        onClick={() => navigate("/help")}
+                      />
 
-  </div>
+                      <MenuItem
+                        icon={<FaCog />}
+                        text="Settings"
+                        onClick={() => navigate("/settings")}
+                      />
 
-  {/* ================= MENU ================= */}
-  <div className="py-2">
+                      <div className="my-2 border-t border-gray-100"></div>
 
-    <MenuItem
-      icon={<FaClipboardList />}
-      text="My Listings"
-      onClick={() => navigate("/my-listings")}
-    />
-
-    <MenuItem
-      icon={<FaHeart />}
-      text="Wishlist"
-      onClick={() => navigate("/wishlist")}
-    />
-
-    <MenuItem
-      icon={<FaComments />}
-      text="Messages"
-      onClick={() => navigate("/chat")}
-    />
-
-    <MenuItem
-      icon={<FaQuestionCircle />}
-      text="Help & Support"
-      onClick={() => navigate("/help")}
-    />
-
-    <MenuItem
-      icon={<FaCog />}
-      text="Settings"
-      onClick={() => navigate("/settings")}
-    />
-
-    {/* Divider */}
-    <div className="my-2 border-t border-gray-100"></div>
-
-    <MenuItem
-      icon={<FaSignOutAlt />}
-      text="Logout"
-      danger
-      onClick={handleLogout}
-    />
-
-  </div>
-</div>
+                      <MenuItem
+                        icon={<FaSignOutAlt />}
+                        text="Logout"
+                        danger
+                        onClick={handleLogout}
+                      />
+                    </div>
+                  </div>
                 )}
-
               </div>
             )}
-
           </div>
-
         </div>
 
         {/* ================= MOBILE ================= */}
         <div className="lg:hidden flex flex-col">
-
           {/* TOP */}
           <div className="flex items-center justify-between">
-
             <Link to="/">
               <img src={logo} alt="logo" className="h-10" />
             </Link>
 
             <div className="flex items-center gap-3">
+               {/* LOCATION */}
+            <button
+              onClick={() => setShowLocationModal(true)}
+              className="flex items-center gap-1 border px-3 py-2 rounded-full"
+            >
+              <MapPin
+                className="text-green-600"
+                size={18}
+              />
 
-         
+              <span className="text-xs">
+                {location}
+              </span>
+            </button>
+             
 
-              {!user ? (
-                <button
-                  onClick={() => navigate("/login")}
-                  className="bg-green-600 text-white px-4 py-1.5 rounded-full text-sm"
-                >
-                  Login
-                </button>
-              ) : (
-                <div className="relative">
-
-                  <button
-                    onClick={() =>
-                      setShowProfileMenu(!showProfileMenu)
-                    }
-                  >
-                    <FaUserCircle className="text-3xl text-green-700" />
-                  </button>
-
-                  {/* MOBILE PROFILE MENU */}
-                  {showProfileMenu && (
-                    <div
-                      className="
-                        fixed
-                        inset-0
-                        bg-black/40
-                        z-50
-                      "
-                      onClick={() => setShowProfileMenu(false)}
-                    >
-
-                      <div
-                        className="
-                          absolute
-                          top-14
-                          right-2
-                          w-[320px]
-                          bg-white
-                          rounded-xl
-                          shadow-2xl
-                          overflow-hidden
-                        "
-                        onClick={(e) => e.stopPropagation()}
-                      >
-
-                        {/* TOP */}
-                        <div className="p-4 border-b">
-
-                          <div className="flex items-center gap-3">
-
-                            <FaUserCircle className="text-5xl text-green-700" />
-
-                            <div>
-                              <h2 className="font-bold">
-                                {user.name}
-                              </h2>
-
-                              <p className="text-sm text-gray-500">
-                                Techby User
-                              </p>
-                            </div>
-
-                          </div>
-
-                          <button
-                            onClick={() => navigate("/profile")}
-                            className="
-                              w-full
-                              mt-4
-                              bg-blue-700
-                              text-white
-                              py-3
-                              rounded-md
-                              font-semibold
-                            "
-                          >
-                            View and edit profile
-                          </button>
-
-                        </div>
-
-                        {/* MENU */}
-                        <div className="py-2">
-
-                          <MenuItem
-                            icon={<FaClipboardList />}
-                            text="My ADS"
-                            onClick={() =>
-                              navigate("/my-listings")
-                            }
-                          />
-
-                          <MenuItem
-                            icon={<FaHeart />}
-                            text="Wishlist"
-                          />
-
-                          <MenuItem
-                            icon={<FaComments />}
-                            text="Chat"
-                          />
-
-                          <MenuItem
-                            icon={<FaCog />}
-                            text="Settings"
-                          />
-
-                          <MenuItem
-                            icon={<FaQuestionCircle />}
-                            text="Help"
-                          />
-
-                          <div className="border-t my-2"></div>
-
-                          <MenuItem
-                            icon={<FaSignOutAlt />}
-                            text="Logout"
-                            danger
-                            onClick={handleLogout}
-                          />
-
-                        </div>
-
-                      </div>
-
-                    </div>
-                  )}
-
-                </div>
-              )}
-
+          
             </div>
-
           </div>
 
           {/* SEARCH */}
           <div className="flex items-center gap-2 mt-3">
-
             <div className="flex-1 flex items-center border-2 border-green-700 rounded-full px-3 py-2">
-
               <FaSearch className="text-gray-400" />
 
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) =>
+                  setSearchTerm(e.target.value)
+                }
                 className="flex-1 px-2 outline-none text-sm"
               />
-
             </div>
+             
 
-            <button
-              onClick={() => setShowLocationModal(true)}
-              className="flex items-center gap-1 border px-3 py-2 rounded-full"
-            >
-              <MapPin className="text-green-600" size={18} />
+{/* WALLET */}
+<div
+  className="
+    flex items-center gap-2
+    bg-green-50
+    border border-green-300
+    px-3 py-1.5
+    rounded-full
+  "
+>
+  <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center">
+    <FaWallet className="text-green-700 text-sm" />
+  </div>
 
-              <span className="text-xs">
-                {location}
-              </span>
-
-            </button>
-
+  <span className="font-bold text-green-700 text-sm">
+    {walletCoins}
+  </span>
+</div>
+           
           </div>
-
         </div>
-
       </div>
 
       {/* LOCATION MODAL */}
@@ -491,13 +404,19 @@ const Navbar = () => {
         selectedCity={location}
         onSelectCity={handleLocationChange}
       />
-
     </header>
+    <CategoryBar/>
+    </>
   );
 };
 
 /* ================= MENU ITEM ================= */
-const MenuItem = ({ icon, text, onClick, danger }) => {
+const MenuItem = ({
+  icon,
+  text,
+  onClick,
+  danger,
+}) => {
   return (
     <button
       onClick={onClick}
@@ -524,6 +443,79 @@ const MenuItem = ({ icon, text, onClick, danger }) => {
 };
 
 export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

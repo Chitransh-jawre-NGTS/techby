@@ -12,12 +12,18 @@ import BlogPage from '../../components/Blog'
 import RecentlyViewed from '../../components/RecentlyViewd'
 import BannerPage from '../../components/Banner'
 import CategoryBar from '../../components/CategoryBar'
+import AdBanner from '../../components/AdBanner'
+import TrendingArticles from '../../components/TrendingArticles'
+import AboutWebsite from '../../components/AboutWebsite'
+import PricingPage from '../../components/PricingPage'
+import TrendingNews from '../../components/TrendingNews'
 
 const Home = () => {
   return (
                <>
                <Navbar/>
-               <CategoryBar/>
+               {/* <CategoryBar/> */}
+               <AdBanner place="top-banner" />
                <BannerPage/>
                <CategoryMenu/>
             {/* <HeroSection /> */}
@@ -30,8 +36,12 @@ const Home = () => {
             {/* <BlogPage/>  */}
             {/* <FullImageCover imageUrl={coverImage}/> */}
             {/* <FeaturesSection /> */}
+            {/* <TrendingArticles/> */}
+            <TrendingNews/>
+            <AboutWebsite/>
             <Footer/>
             <MobileBottomNavbar/>
+            {/* <PricingPage/> */}
     </>
   )
 }

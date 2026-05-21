@@ -7,31 +7,39 @@ import {
   getAllProducts,
   getSellerProducts,
   getProductById,
+  getMyProducts,
 } from "../../Api/ProductApi";
 
 // ======================================================
 // FETCH ALL PRODUCTS
 // ======================================================
-export const fetchProducts = createAsyncThunk(
-  "products/fetchProducts",
 
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await getAllProducts();
+export const fetchProducts =
+  createAsyncThunk(
+    "products/fetchProducts",
 
-      return res.data?.products || [];
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message ||
-          "Failed to fetch products"
-      );
+    async (_, { rejectWithValue }) => {
+      try {
+        const res =
+          await getAllProducts();
+
+        return (
+          res.data?.products || []
+        );
+      } catch (error) {
+        return rejectWithValue(
+          error.response?.data
+            ?.message ||
+            "Failed to fetch products"
+        );
+      }
     }
-  }
-);
+  );
 
 // ======================================================
 // FETCH SELLER PRODUCTS
 // ======================================================
+
 export const fetchSellerProducts =
   createAsyncThunk(
     "products/fetchSellerProducts",
@@ -55,8 +63,35 @@ export const fetchSellerProducts =
   );
 
 // ======================================================
+// FETCH MY PRODUCTS
+// ======================================================
+
+export const fetchMyProducts =
+  createAsyncThunk(
+    "products/fetchMyProducts",
+
+    async (_, { rejectWithValue }) => {
+      try {
+        const res =
+          await getMyProducts();
+
+        return (
+          res.data?.products || []
+        );
+      } catch (error) {
+        return rejectWithValue(
+          error.response?.data
+            ?.message ||
+            "Failed to fetch my products"
+        );
+      }
+    }
+  );
+
+// ======================================================
 // FETCH PRODUCT BY ID
 // ======================================================
+
 export const fetchProductById =
   createAsyncThunk(
     "products/fetchProductById",
@@ -87,12 +122,16 @@ export const fetchProductById =
 // ======================================================
 // INITIAL STATE
 // ======================================================
+
 const initialState = {
   // all products
   products: [],
 
   // seller products
   sellerProducts: [],
+
+  // logged in user products
+  myProducts: [],
 
   // single product
   product: null,
@@ -110,22 +149,35 @@ const initialState = {
 // ======================================================
 // SLICE
 // ======================================================
+
 const productSlice = createSlice({
   name: "products",
 
   initialState,
 
   reducers: {
-    // CLEAR PRODUCTS
+    // ======================================================
+    // CLEAR ALL
+    // ======================================================
+
     clearProducts: (state) => {
       state.products = [];
+
       state.sellerProducts = [];
+
+      state.myProducts = [];
+
       state.product = null;
+
       state.lastFetched = null;
+
       state.error = null;
     },
 
+    // ======================================================
     // CLEAR SINGLE PRODUCT
+    // ======================================================
+
     clearSingleProduct: (state) => {
       state.product = null;
     },
@@ -137,10 +189,12 @@ const productSlice = createSlice({
       // ======================================================
       // FETCH ALL PRODUCTS
       // ======================================================
+
       .addCase(
         fetchProducts.pending,
         (state) => {
           state.loading = true;
+
           state.error = null;
         }
       )
@@ -171,10 +225,12 @@ const productSlice = createSlice({
       // ======================================================
       // FETCH SELLER PRODUCTS
       // ======================================================
+
       .addCase(
         fetchSellerProducts.pending,
         (state) => {
           state.loading = true;
+
           state.error = null;
         }
       )
@@ -200,12 +256,47 @@ const productSlice = createSlice({
       )
 
       // ======================================================
+      // FETCH MY PRODUCTS
+      // ======================================================
+
+      .addCase(
+        fetchMyProducts.pending,
+        (state) => {
+          state.loading = true;
+
+          state.error = null;
+        }
+      )
+
+      .addCase(
+        fetchMyProducts.fulfilled,
+        (state, action) => {
+          state.loading = false;
+
+          state.myProducts =
+            action.payload;
+        }
+      )
+
+      .addCase(
+        fetchMyProducts.rejected,
+        (state, action) => {
+          state.loading = false;
+
+          state.error =
+            action.payload;
+        }
+      )
+
+      // ======================================================
       // FETCH PRODUCT BY ID
       // ======================================================
+
       .addCase(
         fetchProductById.pending,
         (state) => {
           state.loading = true;
+
           state.error = null;
         }
       )
@@ -235,6 +326,7 @@ const productSlice = createSlice({
 // ======================================================
 // EXPORT ACTIONS
 // ======================================================
+
 export const {
   clearProducts,
   clearSingleProduct,
@@ -243,4 +335,5 @@ export const {
 // ======================================================
 // EXPORT REDUCER
 // ======================================================
+
 export default productSlice.reducer;

@@ -27,6 +27,7 @@ import sellerlogo from "../assets/logo/shop logo.jpg";
 import ProductsPage from "./ProductPage";
 import Footer from "./Footer";
 import MobileNavbar from "./MobileNavbar";
+import IndianNews from "./TrendingNews";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -270,7 +271,7 @@ Is this product still available?`;
   };
 
 
- const handleChatWithSeller = async () => {
+const handleChatWithSeller = async () => {
   try {
     const sellerId = product?.userId?._id;
 
@@ -279,26 +280,40 @@ Is this product still available?`;
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    const currentUserId = user?.id;
+    const token = localStorage.getItem("token");
 
-    if (!currentUserId) {
+    if (!token) {
       alert("Please login first");
       return;
     }
 
-    const res = await API.post("/chat/create", {
-      senderId: currentUserId,
-      receiverId: sellerId,
-    });
+    // ✅ CREATE CONVERSATION
+    const res = await API.post(
+      "/chat/conversation",
+      {
+        receiverId: sellerId,
+        productId: product?._id, // IMPORTANT
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    const conversation = res.data;
-
+    // ✅ OPEN CHAT PAGE
     navigate("/chat", {
-      state: { conversation },
+      state: {
+        conversation: res.data,
+      },
     });
   } catch (err) {
     console.log("Chat error:", err);
+
+    alert(
+      err?.response?.data?.message ||
+        "Failed to create chat"
+    );
   }
 };
 
@@ -702,9 +717,10 @@ Is this product still available?`;
         {/* <ProductsPage heading="You May Also Like" /> */}
 
       </div>
+      {/* <IndianNews/> */}
       
 
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 };

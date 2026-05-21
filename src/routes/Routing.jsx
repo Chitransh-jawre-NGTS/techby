@@ -78,7 +78,7 @@ const Routing = () => {
       <Route path="/account" element={<AccountDashboard />} />
       <Route path="/about" element={<AboutUs />} />
       <Route path="/terms-condition" element={<TermsCondition />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/search" element={<SearchPage />} />
 
 

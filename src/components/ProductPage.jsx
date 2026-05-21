@@ -395,7 +395,7 @@ ${productUrl}
           skeletonArray.map((_, index) => (
             <div
               key={index}
-              className="bg-white border shadow animate-pulse"
+              className="bg-white border border-gray-400 shadow animate-pulse"
             >
               <div className="h-48 bg-gray-200"></div>
               <div className="p-4 space-y-2">

@@ -36,6 +36,7 @@ export const ENDPOINTS = {
     GET_ONE: (id) => `/products/${id}`,
     GET_SELLER_PRODUCTS: "/products/seller",
     LIMIT: "/products/limit",
+    MY_PRODUCTS: "/products/my-products",
   },
 
   // 🆕 ADD THIS SECTION
