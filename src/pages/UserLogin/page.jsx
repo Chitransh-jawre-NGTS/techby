@@ -52,6 +52,7 @@ const UserAuthPage = () => {
     email: "",
     phone: "",
     password: "",
+    referralCode: "", 
   });
 
   // ================= HANDLE INPUT =================
@@ -109,6 +110,7 @@ const UserAuthPage = () => {
           email: formData.email,
           phone: formData.phone,
           password: formData.password,
+          referralCode: formData.referralCode, 
         })
       ).unwrap();
 
@@ -529,6 +531,25 @@ const UserAuthPage = () => {
                   )}
                 </button>
               </div>
+              {/* REFERRAL CODE */}
+{!isLogin && (
+  <div>
+    <label className="text-sm font-semibold text-gray-700">
+      Referral Code (Optional)
+    </label>
+
+    <div className="mt-2 flex items-center border border-gray-200 rounded-2xl px-4 bg-gray-50">
+      <input
+        type="text"
+        name="referralCode"
+        value={formData.referralCode}
+        onChange={handleChange}
+        placeholder="Enter referral code"
+        className="w-full px-3 py-4 bg-transparent outline-none"
+      />
+    </div>
+  </div>
+)}
             </div>
 
             {/* SUBMIT */}

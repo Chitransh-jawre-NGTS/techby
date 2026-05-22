@@ -117,7 +117,13 @@ export default function SellPage() {
 
       data.append("totalPrice", formData.price);
 
-      data.append("city", formData.location);
+      const storedLocation =
+  JSON.parse(localStorage.getItem("location"));
+
+data.append(
+  "city",
+  storedLocation?.city || storedLocation || "Unknown"
+);
 
       // ================= DYNAMIC FIELDS =================
       Object.keys(formData.dynamicFields).forEach((key) => {
@@ -399,60 +405,62 @@ export default function SellPage() {
           </div>
         )}
 
-        {/* STEP 5 */}
-        {step === 5 && (
-          <div className="bg-white rounded-3xl p-5 shadow-sm border">
-            <h2 className="text-2xl font-bold mb-6">Pricing & Location</h2>
+       {/* STEP 5 */}
+{step === 5 && (
+  <div className="bg-white rounded-3xl p-5 shadow-sm border">
+    <h2 className="text-2xl font-bold mb-6">
+      Pricing & Location
+    </h2>
 
-            <div className="relative mb-4">
-              <IndianRupee
-                size={18}
-                className="absolute left-4 top-4 text-green-600"
-              />
+    {/* PRICE INPUT (UNCHANGED) */}
+    <div className="relative mb-4">
+      <IndianRupee
+        size={18}
+        className="absolute left-4 top-4 text-green-600"
+      />
 
-              <input
-                name="price"
-                type="number"
-                placeholder="Enter price"
-                value={formData.price}
-                onChange={handleChange}
-                className="w-full pl-10 p-4 border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
+      <input
+        name="price"
+        type="number"
+        placeholder="Enter price"
+        value={formData.price}
+        onChange={handleChange}
+        className="w-full pl-10 p-4 border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-green-500"
+      />
+    </div>
 
-            <div className="relative mb-4">
-              <MapPin
-                size={18}
-                className="absolute left-4 top-4 text-green-600"
-              />
+    {/* LOCATION (AUTO FROM LOCALSTORAGE - READ ONLY) */}
+    <div className="relative mb-4">
+      <MapPin
+        size={18}
+        className="absolute left-4 top-4 text-green-600"
+      />
 
-              <input
-                name="location"
-                placeholder="Enter location"
-                value={formData.location}
-                onChange={handleChange}
-                className="w-full pl-10 p-4 border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
+      <div className="w-full pl-10 p-4 border border-gray-200 rounded-2xl bg-gray-100 text-gray-700">
+        {JSON.parse(localStorage.getItem("location"))?.city ||
+          JSON.parse(localStorage.getItem("location")) ||
+          "Location not available"}
+      </div>
+    </div>
 
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={() => setStep(4)}
-                className="w-full bg-gray-100 hover:bg-gray-200 py-3 rounded-2xl font-semibold"
-              >
-                Back
-              </button>
+    <div className="flex gap-3 mt-6">
+      <button
+        onClick={() => setStep(4)}
+        className="w-full bg-gray-100 hover:bg-gray-200 py-3 rounded-2xl font-semibold"
+      >
+        Back
+      </button>
 
-              <button
-                onClick={handleFinalSubmit}
-                disabled={loading}
-                className="w-full bg-green-600 text-white py-3 rounded-2xl font-semibold disabled:opacity-50"
-              >
-                {loading ? "Uploading..." : "Submit Product"}
-              </button>
-            </div>
-          </div>
-        )}
+      <button
+        onClick={handleFinalSubmit}
+        disabled={loading}
+        className="w-full bg-green-600 text-white py-3 rounded-2xl font-semibold disabled:opacity-50"
+      >
+        {loading ? "Uploading..." : "Submit Product"}
+      </button>
+    </div>
+  </div>
+)}
       </div>
     </div>
   );

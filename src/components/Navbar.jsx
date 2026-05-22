@@ -405,7 +405,7 @@ const Navbar = () => {
         onSelectCity={handleLocationChange}
       />
     </header>
-    <CategoryBar/>
+    {/* <CategoryBar/> */}
     </>
   );
 };

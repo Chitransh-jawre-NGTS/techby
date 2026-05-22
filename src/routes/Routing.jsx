@@ -22,6 +22,7 @@ import ChatPage from "../pages/chat/dextop/Chat";
 import TermsCondition from "../pages/Account pages/TermsCondition";
 import PrivacyPolicy from "../pages/Account pages/PrivacyPolicy";
 import WalletJackpotPage from "../components/WalletJackpotPage";
+import ReferEarnPage from "../components/ReferEarn";
 
 
 const Routing = () => {
@@ -77,6 +78,7 @@ const Routing = () => {
       {/* <Route path="/becomeseller" element={<BecomeSeller />} /> */}
       <Route path="/account" element={<AccountDashboard />} />
       <Route path="/about" element={<AboutUs />} />
+       <Route path="/refer-earn" element={<ReferEarnPage />} />
       <Route path="/terms-condition" element={<TermsCondition />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/search" element={<SearchPage />} />

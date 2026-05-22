@@ -109,4 +109,39 @@ const locationSlice = createSlice({
 
 export const { clearLocationState } = locationSlice.actions;
 
-export default locationSlice.reducer;
+export default locationSlice.reducer; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,7 +22,7 @@ const Home = () => {
   return (
                <>
                <Navbar/>
-               {/* <CategoryBar/> */}
+               <CategoryBar/>
                <AdBanner place="top-banner" />
                <BannerPage/>
                <CategoryMenu/>

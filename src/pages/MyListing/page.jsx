@@ -89,16 +89,6 @@ const MyListingsPage = () => {
       <div className="min-h-screen bg-[#f4f7f4] pb-28">
         <div className="max-w-7xl mx-auto px-3 sm:px-5 py-5">
 
-          {/* HEADER */}
-          <div className="mb-5">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
-              My Listings
-            </h1>
-
-            <p className="text-gray-500 mt-1 text-sm sm:text-base">
-              Manage your ads and boost your sales
-            </p>
-          </div>
 
           {/* SEARCH */}
           <div className="relative mb-5">
