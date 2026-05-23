@@ -17,13 +17,15 @@ import TrendingArticles from '../../components/TrendingArticles'
 import AboutWebsite from '../../components/AboutWebsite'
 import PricingPage from '../../components/PricingPage'
 import TrendingNews from '../../components/TrendingNews'
+import PromoBar from '../../components/PromoBar'
 
 const Home = () => {
   return (
                <>
                <Navbar/>
                <CategoryBar/>
-               <AdBanner place="top-banner" />
+               <PromoBar/>
+               {/* <AdBanner place="top-banner" /> */}
                <BannerPage/>
                <CategoryMenu/>
             {/* <HeroSection /> */}

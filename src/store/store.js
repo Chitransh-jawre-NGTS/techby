@@ -4,6 +4,7 @@ import  adminReducer  from "./slices/adminSlice";
 import locationReducer from "./slices/locationSlice";
 import userReducer from "./slices/userSlice";
 import productReducer from "./slices/productSlice";
+import chatReducer from "./slices/chatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
       location: locationReducer,
         user: userReducer,
         products: productReducer,
+        chat: chatReducer,
   },
 });

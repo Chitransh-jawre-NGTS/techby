@@ -117,13 +117,17 @@ export default function SellPage() {
 
       data.append("totalPrice", formData.price);
 
-      const storedLocation =
-  JSON.parse(localStorage.getItem("location"));
+    // const storedLocation = JSON.parse(localStorage.getItem("selectedCity"));
 
-data.append(
-  "city",
-  storedLocation?.city || storedLocation || "Unknown"
-);
+const storedLocation = JSON.parse(localStorage.getItem("selectedCity"));
+
+data.append("city", storedLocation?.city || "");
+data.append("state", storedLocation?.state || "");
+data.append("district", storedLocation?.district || "");
+data.append("country", storedLocation?.country || "");
+data.append("postalCode", storedLocation?.postalCode || "");
+data.append("lat", storedLocation?.lat || "");
+data.append("lng", storedLocation?.lng || "");
 
       // ================= DYNAMIC FIELDS =================
       Object.keys(formData.dynamicFields).forEach((key) => {

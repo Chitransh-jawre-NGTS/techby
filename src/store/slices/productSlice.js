@@ -14,27 +14,22 @@ import {
 // FETCH ALL PRODUCTS
 // ======================================================
 
-export const fetchProducts =
-  createAsyncThunk(
-    "products/fetchProducts",
+export const fetchProducts = createAsyncThunk(
+  "products/fetchProducts",
 
-    async (_, { rejectWithValue }) => {
-      try {
-        const res =
-          await getAllProducts();
+  async ({ lat, lng } = {}, { rejectWithValue }) => {
+    try {
+      const res = await getAllProducts(lat, lng);
 
-        return (
-          res.data?.products || []
-        );
-      } catch (error) {
-        return rejectWithValue(
-          error.response?.data
-            ?.message ||
-            "Failed to fetch products"
-        );
-      }
+      return res.data?.products || [];
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Failed to fetch products"
+      );
     }
-  );
+  }
+);
 
 // ======================================================
 // FETCH SELLER PRODUCTS

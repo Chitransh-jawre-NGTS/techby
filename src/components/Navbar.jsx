@@ -1,4 +1,663 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+// import {
+//   FaSearch,
+//   FaUserCircle,
+//   FaHeart,
+//   FaComments,
+//   FaPlus,
+//   FaClipboardList,
+//   FaCog,
+//   FaSignOutAlt,
+//   FaQuestionCircle,
+//   FaWallet,
+// } from "react-icons/fa";
+
+// import { MapPin } from "lucide-react";
+// import { Link, useNavigate } from "react-router-dom";
+// import logo from "../assets/logo/logo.png";
+// import LocationModal from "./LocationModal";
+// import CategoryBar from "./CategoryBar";
+
+// const Navbar = () => {
+//   const navigate = useNavigate();
+
+//   // ================= USER =================
+//   const [user, setUser] = useState(null);
+//   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+//   useEffect(() => {
+//     const storedUser = localStorage.getItem("user");
+
+//     if (storedUser) {
+//       setUser(JSON.parse(storedUser));
+//     }
+//   }, []);
+
+//   // ================= LOCATION =================
+//   const [location, setLocation] = useState(
+//     localStorage.getItem("selectedCity") || "Indore",
+//   );
+
+//   const [showLocationModal, setShowLocationModal] = useState(false);
+
+//   // ================= WALLET =================
+//   const [walletCoins] = useState(1250);
+
+//   // ================= SEARCH =================
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [showSuggestions, setShowSuggestions] = useState(false);
+
+//   const products = ["Mobile", "Laptop", "PS5", "Gaming Console", "Car", "Bike"];
+
+//   const filteredSuggestions = products.filter((p) =>
+//     p.toLowerCase().includes(searchTerm.toLowerCase()),
+//   );
+
+//   // ================= LOGOUT =================
+//   const handleLogout = () => {
+//     localStorage.removeItem("user");
+//     localStorage.removeItem("token");
+
+//     setUser(null);
+//     setShowProfileMenu(false);
+
+//     navigate("/");
+//   };
+
+//   // ================= SEARCH =================
+//   const handleSearch = (value) => {
+//     if (value.trim()) {
+//       navigate(`/search?q=${value}`);
+
+//       setSearchTerm("");
+//       setShowSuggestions(false);
+//     }
+//   };
+
+//   // ================= LOCATION =================
+//   const handleLocationChange = (city) => {
+//     setLocation(city);
+
+//     localStorage.setItem("selectedCity", city);
+
+//     window.location.reload();
+//   };
+
+//   return (
+//     <>
+//       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+//         <div className="max-w-7xl mx-auto px-4 py-3">
+//           {/* ================= DESKTOP ================= */}
+//           <div className="hidden lg:flex items-center justify-between gap-4">
+//             {/* LOGO */}
+//             <Link to="/">
+//               <img src={logo} alt="logo" className="h-14" />
+//             </Link>
+
+//             {/* LOCATION */}
+//             <button
+//               onClick={() => setShowLocationModal(true)}
+//               className="
+//                 flex items-center gap-2
+//                 border border-green-500
+//                 px-4 py-2 rounded-full
+//                 hover:bg-green-50
+//                 transition
+//               "
+//             >
+//               <MapPin className="text-green-600" size={18} />
+
+//               <span className="font-medium text-sm">{location}</span>
+//             </button>
+
+//             {/* SEARCH */}
+//             <div className="flex-1 relative">
+//               <div className="flex items-center border-2 border-green-700 rounded-full px-4 py-2">
+//                 <FaSearch
+//                   className="text-gray-400 cursor-pointer"
+//                   onClick={() => handleSearch(searchTerm)}
+//                 />
+
+//                 <input
+//                   type="text"
+//                   placeholder="Search products..."
+//                   value={searchTerm}
+//                   onChange={(e) => {
+//                     setSearchTerm(e.target.value);
+//                     setShowSuggestions(true);
+//                   }}
+//                   onKeyDown={(e) => {
+//                     if (e.key === "Enter") {
+//                       handleSearch(searchTerm);
+//                     }
+//                   }}
+//                   className="flex-1 px-3 outline-none"
+//                 />
+//               </div>
+
+//               {/* SEARCH SUGGESTIONS */}
+//               {showSuggestions && searchTerm && (
+//                 <div className="absolute top-14 bg-white border border-green-400 rounded-xl shadow-xl w-full z-50">
+//                   {filteredSuggestions.map((item) => (
+//                     <div
+//                       key={item}
+//                       onClick={() => handleSearch(item)}
+//                       className="px-4 py-3 hover:bg-green-50 cursor-pointer"
+//                     >
+//                       {item}
+//                     </div>
+//                   ))}
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* RIGHT SIDE */}
+//             <div className="flex items-center gap-5">
+//               {user && (
+//                 <div
+//                   className="
+//         flex items-center gap-2
+//         bg-green-50
+//         border border-green-300
+//         px-3 py-1.5
+//         rounded-full
+//       "
+//                 >
+//                   <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center">
+//                     <FaWallet className="text-green-700 text-sm" />
+//                   </div>
+
+//                   <span className="font-bold text-green-700 text-sm">
+//                     {walletCoins}
+//                   </span>
+//                 </div>
+//               )}
+
+//               {/* CHAT */}
+//               <Link
+//                 to={"/inbox"}
+//                 className="flex flex-col items-center text-sm"
+//               >
+//                 <FaComments className="text-xl text-green-700" />
+//                 Chat
+//               </Link>
+
+//               {/* SELL BUTTON */}
+//               {user && (
+//                 <button
+//                   onClick={() => navigate("/sell")}
+//                   className="
+//                   flex items-center gap-2
+//                   hidden md:flex
+//                   border-[5px]
+//                   border-green-500
+//                   px-6 py-2
+//                   rounded-full
+//                   font-bold
+//                   shadow-lg
+//                   hover:scale-105
+//                   transition
+//                 "
+//                 >
+//                   <FaPlus />
+//                   SELL
+//                 </button>
+//               )}
+
+//               {/* LOGIN / PROFILE */}
+//               {!user ? (
+//                 <button
+//                   onClick={() => navigate("/login")}
+//                   className="bg-green-600 text-white px-5 py-2 rounded-full"
+//                 >
+//                   Login
+//                 </button>
+//               ) : (
+//                 <div className="relative">
+//                   {/* PROFILE BUTTON */}
+//                   <button
+//                     onClick={() => setShowProfileMenu(!showProfileMenu)}
+//                     className="flex items-center gap-2"
+//                   >
+//                     <FaUserCircle className="text-4xl text-green-700" />
+//                   </button>
+
+//                   {/* PROFILE MENU */}
+//                   {showProfileMenu && (
+//                     <div
+//                       className="
+//                       absolute right-0 mt-4 w-[340px]
+//                       bg-white rounded-2xl shadow-xl
+//                       border border-gray-100 overflow-hidden z-50
+//                     "
+//                     >
+//                       {/* TOP */}
+//                       <div className="p-5 bg-gradient-to-r from-green-50 to-white border-b">
+//                         <div className="flex items-center gap-4">
+//                           <FaUserCircle className="text-5xl text-green-700" />
+
+//                           <div className="min-w-0">
+//                             <h2 className="font-bold text-lg text-gray-800 truncate">
+//                               {user.name}
+//                             </h2>
+
+//                             <p className="text-sm text-gray-500">
+//                               Manage your account & listings
+//                             </p>
+//                           </div>
+//                         </div>
+
+//                         <button
+//                           onClick={() => navigate("/profile")}
+//                           className="
+//                           w-full mt-4
+//                           bg-green-600 hover:bg-green-700
+//                           text-white py-2.5
+//                           rounded-xl font-semibold
+//                           transition
+//                         "
+//                         >
+//                           View Profile
+//                         </button>
+//                       </div>
+
+//                       {/* MENU */}
+//                       <div className="py-2">
+//                         <MenuItem
+//                           icon={<FaClipboardList />}
+//                           text="My Listings"
+//                           onClick={() => navigate("/my-listings")}
+//                         />
+
+//                         <MenuItem
+//                           icon={<FaHeart />}
+//                           text="Wishlist"
+//                           onClick={() => navigate("/wishlist")}
+//                         />
+
+//                         <MenuItem
+//                           icon={<FaComments />}
+//                           text="Messages"
+//                           onClick={() => navigate("/chat")}
+//                         />
+
+//                         <MenuItem
+//                           icon={<FaQuestionCircle />}
+//                           text="Help & Support"
+//                           onClick={() => navigate("/help")}
+//                         />
+
+//                         <MenuItem
+//                           icon={<FaCog />}
+//                           text="Settings"
+//                           onClick={() => navigate("/settings")}
+//                         />
+
+//                         <div className="my-2 border-t border-gray-100"></div>
+
+//                         <MenuItem
+//                           icon={<FaSignOutAlt />}
+//                           text="Logout"
+//                           danger
+//                           onClick={handleLogout}
+//                         />
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+
+//           {/* ================= MOBILE ================= */}
+//           <div className="lg:hidden flex flex-col">
+//             {/* TOP */}
+//             <div className="flex items-center justify-between">
+//               <Link to="/">
+//                 <img src={logo} alt="logo" className="h-10" />
+//               </Link>
+
+//               <div className="flex items-center gap-3">
+//                 {/* LOCATION */}
+//                 <button
+//                   onClick={() => setShowLocationModal(true)}
+//                   className="flex items-center gap-1 border px-3 py-2 rounded-full"
+//                 >
+//                   <MapPin className="text-green-600" size={18} />
+
+//                   <span className="text-xs">{location}</span>
+//                 </button>
+//               </div>
+//             </div>
+
+//             {/* SEARCH */}
+//             <div className="flex items-center gap-2 mt-3">
+//               <div className="flex-1 flex items-center border-2 border-green-700 rounded-full px-3 py-2">
+//                 <FaSearch className="text-gray-400" />
+
+//                 <input
+//                   type="text"
+//                   placeholder="Search products..."
+//                   value={searchTerm}
+//                   onChange={(e) => setSearchTerm(e.target.value)}
+//                   className="flex-1 px-2 outline-none text-sm"
+//                 />
+//               </div>
+
+//               {/* WALLET */}
+//               <div
+//                 className="
+//     flex items-center gap-2
+//     bg-green-50
+//     border border-green-300
+//     px-3 py-1.5
+//     rounded-full
+//   "
+//               >
+//                 <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center">
+//                   <FaWallet className="text-green-700 text-sm" />
+//                 </div>
+
+//                 <span className="font-bold text-green-700 text-sm">
+//                   {walletCoins}
+//                 </span>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* LOCATION MODAL */}
+//         <LocationModal
+//           open={showLocationModal}
+//           onClose={() => setShowLocationModal(false)}
+//           selectedCity={location}
+//           onSelectCity={handleLocationChange}
+//         />
+//       </header>
+//       {/* <CategoryBar/> */}
+//     </>
+//   );
+// };
+
+// /* ================= MENU ITEM ================= */
+// const MenuItem = ({ icon, text, onClick, danger }) => {
+//   return (
+//     <button
+//       onClick={onClick}
+//       className={`
+//         w-full
+//         flex
+//         items-center
+//         gap-4
+//         px-5
+//         py-3
+//         hover:bg-gray-100
+//         transition
+
+//         ${danger ? "text-red-500" : "text-gray-700"}
+//       `}
+//     >
+//       <span className="text-lg">{icon}</span>
+
+//       <span className="font-medium">{text}</span>
+//     </button>
+//   );
+// };
+
+// export default Navbar;
+
+
+
+
+
+// import React, { useState } from "react";
+// import {
+//   FaSearch,
+//   FaUserCircle,
+//   FaHeart,
+//   FaComments,
+//   FaPlus,
+//   FaClipboardList,
+//   FaCog,
+//   FaSignOutAlt,
+//   FaQuestionCircle,
+//   FaWallet,
+// } from "react-icons/fa";
+
+// import { MapPin } from "lucide-react";
+// import { Link, useNavigate } from "react-router-dom";
+
+// import logo from "../assets/logo/logo.png";
+// import LocationModal from "./LocationModal";
+
+// import { useSelector, useDispatch } from "react-redux";
+// import { logoutUser } from "../store/slices/userSlice";
+
+// const Navbar = () => {
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+
+//   const { user } = useSelector((state) => state.user);
+
+//   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+//   // ================= SAFE LOCATION INIT =================
+//   const [location, setLocation] = useState(() => {
+//     try {
+//       const saved = localStorage.getItem("selectedCity");
+//       return saved ? JSON.parse(saved) : null;
+//     } catch (err) {
+//       return null;
+//     }
+//   });
+
+//   const [showLocationModal, setShowLocationModal] = useState(false);
+
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [showSuggestions, setShowSuggestions] = useState(false);
+
+//   const products = ["Mobile", "Laptop", "PS5", "Gaming Console", "Car", "Bike"];
+
+//   const filteredSuggestions = products.filter((p) =>
+//     p.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
+
+//   const handleLogout = () => {
+//     dispatch(logoutUser());
+//     navigate("/login");
+//   };
+
+//   const handleSearch = (value) => {
+//     if (value.trim()) {
+//       navigate(`/search?q=${value}`);
+//       setSearchTerm("");
+//       setShowSuggestions(false);
+//     }
+//   };
+
+//   // ================= SAVE FULL OBJECT =================
+//   const handleLocationChange = (cityObj) => {
+//     setLocation(cityObj);
+
+//     // IMPORTANT: store object properly
+//     localStorage.setItem("selectedCity", JSON.stringify(cityObj));
+
+//     window.location.reload();
+//   };
+
+//   // ================= SAFE DISPLAY =================
+//   const getLocationText = () => {
+//     if (!location) return "Select City";
+
+//     if (typeof location === "string") return location;
+
+//     return (
+//       location.district||
+//       location.display_place ||
+//       location.display_name ||
+//       "Select City"
+//     );
+//   };
+
+//   return (
+//     <>
+//       <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
+//         <div className="max-w-7xl mx-auto px-4 py-3">
+
+//           {/* DESKTOP */}
+//           <div className="hidden lg:flex items-center justify-between gap-4">
+
+//             <Link to="/">
+//               <img src={logo} alt="logo" className="h-14" />
+//             </Link>
+
+//             {/* LOCATION */}
+//             <button
+//               onClick={() => setShowLocationModal(true)}
+//               className="flex items-center gap-2 border px-4 py-2 rounded-full"
+//             >
+//               <MapPin className="text-green-600" size={18} />
+//               <span className="text-sm font-medium">
+//                 {getLocationText()}
+//               </span>
+//             </button>
+
+//             {/* SEARCH */}
+//             <div className="flex-1 relative">
+//               <div className="flex items-center border-2 border-green-700 rounded-full px-4 py-2">
+//                 <FaSearch
+//                   className="text-gray-400 cursor-pointer"
+//                   onClick={() => handleSearch(searchTerm)}
+//                 />
+
+//                 <input
+//                   value={searchTerm}
+//                   onChange={(e) => {
+//                     setSearchTerm(e.target.value);
+//                     setShowSuggestions(true);
+//                   }}
+//                   onKeyDown={(e) =>
+//                     e.key === "Enter" && handleSearch(searchTerm)
+//                   }
+//                   className="flex-1 px-3 outline-none"
+//                   placeholder="Search products..."
+//                 />
+//               </div>
+
+//               {showSuggestions && searchTerm && (
+//                 <div className="absolute top-14 bg-white border rounded-xl shadow w-full z-50">
+//                   {filteredSuggestions.map((item) => (
+//                     <div
+//                       key={item}
+//                       onClick={() => handleSearch(item)}
+//                       className="px-4 py-3 hover:bg-green-50 cursor-pointer"
+//                     >
+//                       {item}
+//                     </div>
+//                   ))}
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* USER */}
+//             <div className="flex items-center gap-5">
+
+//               {user && (
+//                 <div className="flex items-center gap-2 bg-green-50 px-3 py-1 rounded-full">
+//                   <FaWallet className="text-green-700" />
+//                   <span className="text-green-700 font-bold">
+//                     {user?.coins || 0}
+//                   </span>
+//                 </div>
+//               )}
+
+//               {!user ? (
+//                 <button
+//                   onClick={() => navigate("/login")}
+//                   className="bg-green-600 text-white px-5 py-2 rounded-full"
+//                 >
+//                   Login
+//                 </button>
+//               ) : (
+//                 <FaUserCircle
+//                   className="text-4xl text-green-700 cursor-pointer"
+//                   onClick={() => setShowProfileMenu(!showProfileMenu)}
+//                 />
+//               )}
+//             </div>
+//           </div>
+
+//           {/* MOBILE */}
+//           <div className="lg:hidden flex flex-col">
+
+//             <div className="flex justify-between items-center">
+//               <img src={logo} className="h-10" />
+
+//               <button
+//                 onClick={() => setShowLocationModal(true)}
+//                 className="border px-3 py-2 rounded-full flex items-center gap-1"
+//               >
+//                 <MapPin size={16} />
+//                 <span className="text-xs">{getLocationText()}</span>
+//               </button>
+//             </div>
+
+//             <div className="flex gap-2 mt-3">
+//               <div className="flex-1 border rounded-full px-3 py-2 flex items-center">
+//                 <FaSearch />
+//                 <input
+//                   className="flex-1 px-2 outline-none"
+//                   value={searchTerm}
+//                   onChange={(e) => setSearchTerm(e.target.value)}
+//                   placeholder="Search..."
+//                 />
+//               </div>
+
+//               {user && (
+//                 <div className="bg-green-50 px-3 py-1 rounded-full flex items-center gap-2">
+//                   <FaWallet className="text-green-700" />
+//                   <span className="text-green-700 font-bold">
+//                     {user?.coins || 0}
+//                   </span>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* LOCATION MODAL */}
+//         <LocationModal
+//           open={showLocationModal}
+//           onClose={() => setShowLocationModal(false)}
+//           selectedCity={location}
+//           onSelectCity={handleLocationChange}
+//         />
+//       </header>
+//     </>
+//   );
+// };
+
+// export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState } from "react";
+
 import {
   FaSearch,
   FaUserCircle,
@@ -9,54 +668,45 @@ import {
   FaCog,
   FaSignOutAlt,
   FaQuestionCircle,
-  FaWallet 
+  FaWallet,
 } from "react-icons/fa";
 
 import { MapPin } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+
 import logo from "../assets/logo/logo.png";
 import LocationModal from "./LocationModal";
-import CategoryBar from "./CategoryBar";
+
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../store/slices/userSlice";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // ================= USER =================
-  const [user, setUser] = useState(null);
+  // ================= REDUX USER =================
+  const { user } = useSelector((state) => state.user);
+
+  // ================= UI STATE =================
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
   // ================= LOCATION =================
-  const [location, setLocation] = useState(
-    localStorage.getItem("selectedCity") || "Indore"
-  );
+  const [location, setLocation] = useState(() => {
+    try {
+      const saved = localStorage.getItem("selectedCity");
+      return saved ? JSON.parse(saved) : null;
+    } catch (err) {
+      return null;
+    }
+  });
 
-  const [showLocationModal, setShowLocationModal] =
-    useState(false);
-
-  // ================= WALLET =================
-  const [walletCoins] = useState(1250);
+  const [showLocationModal, setShowLocationModal] = useState(false);
 
   // ================= SEARCH =================
   const [searchTerm, setSearchTerm] = useState("");
-  const [showSuggestions, setShowSuggestions] =
-    useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const products = [
-    "Mobile",
-    "Laptop",
-    "PS5",
-    "Gaming Console",
-    "Car",
-    "Bike",
-  ];
+  const products = ["Mobile", "Laptop", "PS5", "Gaming Console", "Car", "Bike"];
 
   const filteredSuggestions = products.filter((p) =>
     p.toLowerCase().includes(searchTerm.toLowerCase())
@@ -64,460 +714,310 @@ const Navbar = () => {
 
   // ================= LOGOUT =================
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
-    setUser(null);
-    setShowProfileMenu(false);
-
-    navigate("/");
+    dispatch(logoutUser());
+    navigate("/login");
   };
 
-  // ================= SEARCH =================
   const handleSearch = (value) => {
     if (value.trim()) {
       navigate(`/search?q=${value}`);
-
       setSearchTerm("");
       setShowSuggestions(false);
     }
   };
 
-  // ================= LOCATION =================
-  const handleLocationChange = (city) => {
-    setLocation(city);
+   // ================= SAVE FULL OBJECT =================
+  const handleLocationChange = (cityObj) => {
+    setLocation(cityObj);
 
-    localStorage.setItem("selectedCity", city);
+    // IMPORTANT: store object properly
+    localStorage.setItem("selectedCity", JSON.stringify(cityObj));
 
     window.location.reload();
   };
 
-  return (
-  <>
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 py-3">
-        {/* ================= DESKTOP ================= */}
-        <div className="hidden lg:flex items-center justify-between gap-4">
-          {/* LOGO */}
-          <Link to="/">
-            <img src={logo} alt="logo" className="h-14" />
-          </Link>
+  // ================= SAFE DISPLAY =================
+  const getLocationText = () => {
+    if (!location) return "Select City";
 
-          {/* LOCATION */}
+    if (typeof location === "string") return location;
+
+    return (
+      location.district||
+      location.display_place ||
+      location.display_name ||
+      "Select City"
+    );
+  };
+
+  return (
+    <>
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+
+          {/* ================= DESKTOP ================= */}
+          <div className="hidden lg:flex items-center justify-between gap-4">
+
+            {/* LOGO */}
+            <Link to="/">
+              <img src={logo} alt="logo" className="h-14" />
+            </Link>
+
+            {/* LOCATION */}
             <button
               onClick={() => setShowLocationModal(true)}
-              className="
-                flex items-center gap-2
-                border border-green-500
-                px-4 py-2 rounded-full
-                hover:bg-green-50
-                transition
-              "
+              className="flex items-center gap-2 border border-green-500 px-4 py-2 rounded-full hover:bg-green-50 transition"
             >
-              <MapPin
-                className="text-green-600"
-                size={18}
-              />
-
-              <span className="font-medium text-sm">
-                {location}
-              </span>
+              <MapPin className="text-green-600" size={18} />
+              <span className="font-medium text-sm">{getLocationText()}</span>
             </button>
 
-          {/* SEARCH */}
-          <div className="flex-1 relative">
-            <div className="flex items-center border-2 border-green-700 rounded-full px-4 py-2">
-              <FaSearch
-                className="text-gray-400 cursor-pointer"
-                onClick={() => handleSearch(searchTerm)}
-              />
+            {/* SEARCH */}
+            <div className="flex-1 relative">
+              <div className="flex items-center border-2 border-green-700 rounded-full px-4 py-2">
+                <FaSearch
+                  className="text-gray-400 cursor-pointer"
+                  onClick={() => handleSearch(searchTerm)}
+                />
 
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setShowSuggestions(true);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSearch(searchTerm);
-                  }
-                }}
-                className="flex-1 px-3 outline-none"
-              />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSearch(searchTerm);
+                  }}
+                  className="flex-1 px-3 outline-none"
+                />
+              </div>
+
+              {showSuggestions && searchTerm && (
+                <div className="absolute top-14 bg-white border border-green-400 rounded-xl shadow-xl w-full z-50">
+                  {filteredSuggestions.map((item) => (
+                    <div
+                      key={item}
+                      onClick={() => handleSearch(item)}
+                      className="px-4 py-3 hover:bg-green-50 cursor-pointer"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* SEARCH SUGGESTIONS */}
-            {showSuggestions && searchTerm && (
-              <div className="absolute top-14 bg-white border border-green-400 rounded-xl shadow-xl w-full z-50">
-                {filteredSuggestions.map((item) => (
-                  <div
-                    key={item}
-                    onClick={() => handleSearch(item)}
-                    className="px-4 py-3 hover:bg-green-50 cursor-pointer"
-                  >
-                    {item}
+            {/* RIGHT SIDE */}
+            <div className="flex items-center gap-5">
+
+              {/* WALLET (FROM REDUX USER) */}
+              {user && (
+                <Link to={"/jackpot"} className="flex items-center gap-2 bg-green-50 border border-green-300 px-3 py-1.5 rounded-full">
+                  <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center">
+                    <FaWallet className="text-green-700 text-sm" />
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
 
-        {/* RIGHT SIDE */}
-<div className="flex items-center gap-5">
+                  <span className="font-bold text-green-700 text-sm">
+                    {user?.coins || 0}
+                  </span>
+                </Link>
+              )}
 
-  {user && (
-    <div
-      className="
-        flex items-center gap-2
-        bg-green-50
-        border border-green-300
-        px-3 py-1.5
-        rounded-full
-      "
-    >
-      <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center">
-        <FaWallet className="text-green-700 text-sm" />
+              {/* CHAT */}
+              <Link to="/inbox" className="flex flex-col items-center text-sm">
+                <FaComments className="text-xl text-green-700" />
+                Chat
+              </Link>
+
+              {/* SELL */}
+              {user && (
+                <button
+                  onClick={() => navigate("/sell")}
+                  className="hidden md:flex items-center gap-2 border-[5px] border-green-500 px-6 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
+                >
+                  <FaPlus />
+                  SELL
+                </button>
+              )}
+
+              {/* LOGIN / PROFILE */}
+              {!user ? (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-green-600 text-white px-5 py-2 rounded-full"
+                >
+                  Login
+                </button>
+              ) : (
+              <div className="relative">
+
+  {/* PROFILE BUTTON */}
+<button
+  onClick={() => setShowProfileMenu(!showProfileMenu)}
+  className="flex border-4 border-green-500 px-2 rounded-full items-center gap-2 hover:opacity-80 transition"
+>
+  <span className="text-sm font-semibold text-gray-700 hidden sm:block">
+    {user?.name}
+  </span>
+  <FaUserCircle className="text-4xl text-green-700" />
+
+</button>
+
+  {/* DROPDOWN */}
+  {showProfileMenu && (
+    <div className="absolute right-0 mt-4 w-80 bg-white  shadow-2xl border border-gray-300 overflow-hidden z-50 animate-fadeIn">
+
+      {/* HEADER */}
+      <div className="p-5 bg-gradient-to-r from-green-600 to-emerald-500 text-white">
+        <h2 className="font-semibold text-lg truncate">
+          {user?.name}
+        </h2>
+        <p className="text-sm opacity-90 truncate">
+          {user?.email}
+        </p>
+
+        {/* COINS */}
+        <div className="mt-3 bg-white/20 px-3 py-1 rounded-full inline-block text-sm font-medium">
+          🪙 {user?.coins || 0} Coins
+        </div>
       </div>
 
-      <span className="font-bold text-green-700 text-sm">
-        {walletCoins}
-      </span>
+      {/* QUICK ACTION */}
+      <div className="p-4">
+        <button
+          onClick={() => navigate("/profile")}
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl font-medium transition"
+        >
+          View Profile
+        </button>
+      </div>
+
+      <hr className="border-gray-100" />
+
+      {/* MENU SECTION */}
+      <div className="py-2">
+
+        <MenuItem
+          icon={<FaClipboardList />}
+          text="My Listings"
+          onClick={() => navigate("/my-listings")}
+        />
+
+        <MenuItem
+          icon={<FaHeart />}
+          text="Wishlist"
+          onClick={() => navigate("/wishlist")}
+        />
+
+        <MenuItem
+          icon={<FaComments />}
+          text="Messages"
+          onClick={() => navigate("/chat")}
+        />
+      </div>
+
+      <hr className="border-gray-100" />
+
+      {/* SUPPORT SECTION */}
+      <div className="py-2">
+        <MenuItem
+          icon={<FaQuestionCircle />}
+          text="Help & Support"
+          onClick={() => navigate("/help")}
+        />
+
+        <MenuItem
+          icon={<FaCog />}
+          text="Settings"
+          onClick={() => navigate("/settings")}
+        />
+      </div>
+
+      <hr className="border-gray-100" />
+
+      {/* LOGOUT */}
+      <div className="p-2">
+        <MenuItem
+          icon={<FaSignOutAlt />}
+          text="Logout"
+          danger
+          onClick={handleLogout}
+        />
+      </div>
     </div>
   )}
-
-
-        
-
-            {/* CHAT */}
-            <Link to={"/inbox"} className="flex flex-col items-center text-sm">
-              <FaComments className="text-xl text-green-700" />
-              Chat
-            </Link>
-
-            {/* SELL BUTTON */}
-            {user && (
-              <button
-                onClick={() => navigate("/sell")}
-                className="
-                  flex items-center gap-2
-                  hidden md:flex
-                  border-[5px]
-                  border-green-500
-                  px-6 py-2
-                  rounded-full
-                  font-bold
-                  shadow-lg
-                  hover:scale-105
-                  transition
-                "
-              >
-                <FaPlus />
-                SELL
-              </button>
-            )}
-
-            {/* LOGIN / PROFILE */}
-            {!user ? (
-              <button
-                onClick={() => navigate("/login")}
-                className="bg-green-600 text-white px-5 py-2 rounded-full"
-              >
-                Login
-              </button>
-            ) : (
-              <div className="relative">
-                {/* PROFILE BUTTON */}
-                <button
-                  onClick={() =>
-                    setShowProfileMenu(!showProfileMenu)
-                  }
-                  className="flex items-center gap-2"
-                >
-                  <FaUserCircle className="text-4xl text-green-700" />
-                </button>
-
-                {/* PROFILE MENU */}
-                {showProfileMenu && (
-                  <div
-                    className="
-                      absolute right-0 mt-4 w-[340px]
-                      bg-white rounded-2xl shadow-xl
-                      border border-gray-100 overflow-hidden z-50
-                    "
-                  >
-                    {/* TOP */}
-                    <div className="p-5 bg-gradient-to-r from-green-50 to-white border-b">
-                      <div className="flex items-center gap-4">
-                        <FaUserCircle className="text-5xl text-green-700" />
-
-                        <div className="min-w-0">
-                          <h2 className="font-bold text-lg text-gray-800 truncate">
-                            {user.name}
-                          </h2>
-
-                          <p className="text-sm text-gray-500">
-                            Manage your account & listings
-                          </p>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => navigate("/profile")}
-                        className="
-                          w-full mt-4
-                          bg-green-600 hover:bg-green-700
-                          text-white py-2.5
-                          rounded-xl font-semibold
-                          transition
-                        "
-                      >
-                        View Profile
-                      </button>
-                    </div>
-
-                    {/* MENU */}
-                    <div className="py-2">
-                      <MenuItem
-                        icon={<FaClipboardList />}
-                        text="My Listings"
-                        onClick={() =>
-                          navigate("/my-listings")
-                        }
-                      />
-
-                      <MenuItem
-                        icon={<FaHeart />}
-                        text="Wishlist"
-                        onClick={() => navigate("/wishlist")}
-                      />
-
-                      <MenuItem
-                        icon={<FaComments />}
-                        text="Messages"
-                        onClick={() => navigate("/chat")}
-                      />
-
-                      <MenuItem
-                        icon={<FaQuestionCircle />}
-                        text="Help & Support"
-                        onClick={() => navigate("/help")}
-                      />
-
-                      <MenuItem
-                        icon={<FaCog />}
-                        text="Settings"
-                        onClick={() => navigate("/settings")}
-                      />
-
-                      <div className="my-2 border-t border-gray-100"></div>
-
-                      <MenuItem
-                        icon={<FaSignOutAlt />}
-                        text="Logout"
-                        danger
-                        onClick={handleLogout}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ================= MOBILE ================= */}
-        <div className="lg:hidden flex flex-col">
-          {/* TOP */}
-          <div className="flex items-center justify-between">
-            <Link to="/">
-              <img src={logo} alt="logo" className="h-10" />
-            </Link>
-
-            <div className="flex items-center gap-3">
-               {/* LOCATION */}
-            <button
-              onClick={() => setShowLocationModal(true)}
-              className="flex items-center gap-1 border px-3 py-2 rounded-full"
-            >
-              <MapPin
-                className="text-green-600"
-                size={18}
-              />
-
-              <span className="text-xs">
-                {location}
-              </span>
-            </button>
-             
-
-          
-            </div>
-          </div>
-
-          {/* SEARCH */}
-          <div className="flex items-center gap-2 mt-3">
-            <div className="flex-1 flex items-center border-2 border-green-700 rounded-full px-3 py-2">
-              <FaSearch className="text-gray-400" />
-
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) =>
-                  setSearchTerm(e.target.value)
-                }
-                className="flex-1 px-2 outline-none text-sm"
-              />
-            </div>
-             
-
-{/* WALLET */}
-<div
-  className="
-    flex items-center gap-2
-    bg-green-50
-    border border-green-300
-    px-3 py-1.5
-    rounded-full
-  "
->
-  <div className="w-7 h-7 rounded-full bg-green-200 flex items-center justify-center">
-    <FaWallet className="text-green-700 text-sm" />
-  </div>
-
-  <span className="font-bold text-green-700 text-sm">
-    {walletCoins}
-  </span>
 </div>
-           
+              )}
+            </div>
+          </div>
+
+          {/* ================= MOBILE ================= */}
+          <div className="lg:hidden flex flex-col">
+            <div className="flex items-center justify-between">
+              <Link to="/">
+                <img src={logo} className="h-10" />
+              </Link>
+
+              <button
+                onClick={() => setShowLocationModal(true)}
+                className="border px-3 py-2 rounded-full flex items-center gap-1"
+              >
+                <MapPin size={16} className="text-green-600" />
+                <span className="text-xs">{getLocationText()}</span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 mt-3">
+              <div className="flex-1 border-2 border-green-700 rounded-full px-3 py-2 flex items-center">
+                <FaSearch />
+                <input
+                  className="flex-1 px-2 outline-none text-sm"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              {user && (
+                <div className="bg-green-50 px-3 py-1 rounded-full flex items-center gap-2">
+                  <FaWallet className="text-green-700" />
+                  <span className="text-green-700 font-bold">
+                    {user?.coins || 0}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* LOCATION MODAL */}
-      <LocationModal
-        open={showLocationModal}
-        onClose={() => setShowLocationModal(false)}
-        selectedCity={location}
-        onSelectCity={handleLocationChange}
-      />
-    </header>
-    {/* <CategoryBar/> */}
+        <LocationModal
+          open={showLocationModal}
+          onClose={() => setShowLocationModal(false)}
+          selectedCity={location}
+          onSelectCity={handleLocationChange}
+        />
+      </header>
     </>
   );
 };
 
-/* ================= MENU ITEM ================= */
-const MenuItem = ({
-  icon,
-  text,
-  onClick,
-  danger,
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`
-        w-full
-        flex
-        items-center
-        gap-4
-        px-5
-        py-3
-        hover:bg-gray-100
-        transition
-
-        ${danger ? "text-red-500" : "text-gray-700"}
-      `}
-    >
-      <span className="text-lg">{icon}</span>
-
-      <span className="font-medium">
-        {text}
-      </span>
-    </button>
-  );
-};
+/* MENU */
+const MenuItem = ({ icon, text, onClick, danger }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100 ${
+      danger ? "text-red-500" : "text-gray-700"
+    }`}
+  >
+    <span>{icon}</span>
+    <span>{text}</span>
+  </button>
+);
 
 export default Navbar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

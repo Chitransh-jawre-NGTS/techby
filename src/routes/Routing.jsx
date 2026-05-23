@@ -23,6 +23,7 @@ import TermsCondition from "../pages/Account pages/TermsCondition";
 import PrivacyPolicy from "../pages/Account pages/PrivacyPolicy";
 import WalletJackpotPage from "../components/WalletJackpotPage";
 import ReferEarnPage from "../components/ReferEarn";
+import ProfilePage from "../pages/Account pages/Profile";
 
 
 const Routing = () => {
@@ -78,6 +79,8 @@ const Routing = () => {
       {/* <Route path="/becomeseller" element={<BecomeSeller />} /> */}
       <Route path="/account" element={<AccountDashboard />} />
       <Route path="/about" element={<AboutUs />} />
+       <Route path="/price" element={<PricingPage/>} />
+       <Route path="/profile" element={<ProfilePage/>} />
        <Route path="/refer-earn" element={<ReferEarnPage />} />
       <Route path="/terms-condition" element={<TermsCondition />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />

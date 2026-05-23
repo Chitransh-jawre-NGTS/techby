@@ -1,4 +1,6 @@
+// ================= IMPORTS =================
 import React from "react";
+
 import {
   MdArrowBack,
   MdKeyboardArrowRight,
@@ -13,165 +15,142 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import logo from "../../assets/logo/logo.png";
+import { logoutUser } from "../../store/slices/userSlice";
 
 const AccountPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useSelector((state) => state.user);
 
+  // ================= MENU =================
   const menuItems = [
-    {
-      title: "My Listings",
-      icon: <FaBoxOpen />,
-      path: "/my-listings",
-      protected: true,
-    },
-
-    {
-      title: "Help & Support",
-      icon: <FaHeadset />,
-      path: "/support",
-    },
-
-    {
-      title: "Privacy Policy",
-      icon: <FaShieldAlt />,
-      path: "/privacy-policy",
-    },
-
-    {
-      title: "Terms & Conditions",
-      icon: <FaFileContract />,
-      path: "/terms-condition",
-    },
-
-    {
-      title: "About Us",
-      icon: <FaInfoCircle />,
-      path: "/about",
-    },
+    { title: "My Listings", icon: <FaBoxOpen />, path: "/my-listings", protected: true },
+    { title: "Help & Support", icon: <FaHeadset />, path: "/support" },
+    { title: "Privacy Policy", icon: <FaShieldAlt />, path: "/privacy-policy" },
+    { title: "Refer & Earn", icon: <FaShieldAlt />, path: "/refer-earn" },
+    { title: "Terms & Conditions", icon: <FaFileContract />, path: "/terms-condition" },
+    { title: "About Us", icon: <FaInfoCircle />, path: "/about" },
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
+    dispatch(logoutUser());
     navigate("/login");
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f7f6]">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
 
       {/* ================= HEADER ================= */}
-      <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
-
+      <div className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
 
-          {/* BACK */}
           <button
             onClick={() => window.history.back()}
-            className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center"
+            className="w-11 h-11 rounded-2xl bg-white shadow-md flex items-center justify-center border border-gray-100 hover:scale-105 transition"
           >
             <MdArrowBack className="text-2xl text-gray-700" />
           </button>
 
-          {/* LOGO */}
-          <Link to="/">
-            <img
-              src={logo}
-              alt="logo"
-              className="h-12 object-contain"
-            />
-          </Link>
+          <div className="flex flex-col items-center">
+            <img src={logo} alt="logo" className="h-10" />
+            <span className="text-[11px] text-gray-400 -mt-1">
+              Account
+            </span>
+          </div>
 
-          <div className="w-11"></div>
-
+          <div className="w-11 h-11" />
         </div>
       </div>
 
       {/* ================= CONTENT ================= */}
-      <div className="max-w-md mx-auto pb-32">
+      <div className="max-w-md mx-auto pb-28">
 
-        {/* ================= PROFILE CARD ================= */}
-        <div className="relative px-4 pt-5">
+        {/* ================= PROFILE ================= */}
+        <div className="px-4 pt-6">
 
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-[32px] p-6 shadow-lg overflow-hidden relative">
+          <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 shadow-xl p-6">
 
-            {/* BG CIRCLES */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full"></div>
-
-            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full"></div>
+            <div className="absolute -top-10 -right-10 w-52 h-52 bg-white/10 rounded-full blur-2xl"></div>
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
 
             {user ? (
-              <div className="relative z-10">
+              <>
+                {/* PROFILE CARD */}
+                <div className="relative z-10 flex items-center gap-6">
 
-                <div className="flex flex-col items-center text-center">
-
-                  {/* PROFILE IMAGE */}
-                  <div className="relative">
-
+                  {/* IMAGE */}
+                  <div className="relative flex-shrink-0">
                     <img
-                      src={
-                        user?.profileImage ||
-                        "https://i.pravatar.cc/150"
-                      }
+                      src={user?.profileImage || "https://i.pravatar.cc/150"}
+                      onError={(e) => {
+                        e.target.src = "https://i.pravatar.cc/150";
+                      }}
+                      className="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover"
                       alt="profile"
-                      className="w-28 h-28 rounded-full border-4 border-white object-cover shadow-xl"
                     />
 
-                    <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-300 border-2 border-white rounded-full"></div>
+                    <div className="absolute bottom-2 right-2 w-5 h-5 bg-lime-400 border-2 border-white rounded-full"></div>
                   </div>
 
-                  {/* NAME */}
-                  <h2 className="text-white text-2xl font-bold mt-4">
-                    {user?.name}
-                  </h2>
+                  {/* DETAILS */}
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-white text-2xl font-bold truncate">
+                      {user?.name || "User"}
+                    </h2>
 
-                  {/* EMAIL */}
-                  <p className="text-green-100 text-sm mt-1 break-all">
-                    {user?.email}
-                  </p>
+                    <p className="text-green-100 text-sm mt-1 break-all">
+                      {user?.email || "No email"}
+                    </p>
 
-                  {/* EDIT BUTTON */}
+                    <div className="mt-3 inline-flex items-center bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-semibold border border-white/20">
+                      🪙 {user?.coins ?? 0} Coins
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* BUTTON */}
+                <div className="mt-6">
                   <button
                     onClick={() => navigate("/edit-profile")}
-                    className="mt-5 bg-white text-green-600 px-6 py-3 rounded-2xl font-semibold shadow-md hover:scale-105 transition"
+                    className="w-full bg-white text-green-600 px-6 py-3 rounded-2xl font-bold shadow-lg hover:scale-105 transition"
                   >
                     Edit Profile
                   </button>
-
                 </div>
-              </div>
+              </>
             ) : (
-              <div className="relative z-10 flex flex-col items-center text-center">
+              <div className="relative z-10 flex flex-col items-center text-center py-6">
 
-                <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-4xl text-white">
+                <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center text-4xl">
                   👋
                 </div>
 
-                <h2 className="text-white text-3xl font-bold mt-5">
+                <h2 className="text-white text-2xl font-bold mt-4">
                   Welcome to Techby
                 </h2>
 
-                <p className="text-green-100 mt-2 text-sm">
-                  Login to manage your listings & account
+                <p className="text-green-100 text-xs mt-2">
+                  Login to manage your account
                 </p>
 
                 <button
                   onClick={() => navigate("/login")}
-                  className="mt-6 bg-white text-green-600 px-8 py-3 rounded-2xl font-semibold shadow-md"
+                  className="mt-5 bg-white text-green-600 px-7 py-3 rounded-2xl font-bold shadow-md"
                 >
                   Login / Register
                 </button>
-
               </div>
             )}
           </div>
         </div>
 
-        {/* ================= MENU SECTION ================= */}
+        {/* ================= MENU ================= */}
         <div className="px-4 mt-6">
 
           <h3 className="text-gray-800 text-lg font-bold mb-4 px-1">
@@ -180,18 +159,17 @@ const AccountPage = () => {
 
           <div className="space-y-4">
 
-            {menuItems.map((item, index) => (
+            {menuItems.map((item, i) => (
               <button
-                key={index}
+                key={i}
                 onClick={() =>
                   item.protected && !user
                     ? navigate("/login")
-                    : navigate(item.path)
+                    : navigate(item.path || "/")
                 }
-                className="w-full bg-white rounded-3xl px-5 py-5 flex items-center justify-between shadow-sm border border-gray-100 hover:shadow-md transition-all"
+                className="w-full bg-white rounded-3xl px-5 py-5 flex items-center justify-between shadow-sm border border-gray-100 hover:shadow-md transition"
               >
 
-                {/* LEFT */}
                 <div className="flex items-center gap-4">
 
                   <div className="w-12 h-12 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center text-lg">
@@ -199,7 +177,6 @@ const AccountPage = () => {
                   </div>
 
                   <div className="text-left">
-
                     <h4 className="font-semibold text-gray-800">
                       {item.title}
                     </h4>
@@ -207,28 +184,26 @@ const AccountPage = () => {
                     <p className="text-xs text-gray-500 mt-1">
                       Manage your {item.title.toLowerCase()}
                     </p>
-
                   </div>
+
                 </div>
 
-                {/* RIGHT */}
                 <MdKeyboardArrowRight className="text-3xl text-gray-300" />
               </button>
             ))}
           </div>
 
-          {/* ================= LOGOUT ================= */}
+          {/* LOGOUT */}
           {user && (
             <button
               onClick={handleLogout}
-              className="w-full mt-8 bg-red-500 hover:bg-red-600 text-white rounded-3xl py-4 flex items-center justify-center gap-3 font-semibold shadow-lg transition"
+              className="w-full mt-8 bg-red-500 hover:bg-red-600 text-white rounded-3xl py-4 flex items-center justify-center gap-3 font-semibold shadow-lg"
             >
-
-              <FaSignOutAlt className="text-lg" />
-
+              <FaSignOutAlt />
               Logout
             </button>
           )}
+
         </div>
       </div>
     </div>

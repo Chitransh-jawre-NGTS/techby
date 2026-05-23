@@ -14,7 +14,13 @@ import {
 } from "react-icons/fa";
 
 import { useParams } from "react-router-dom";
-import API from "../Api/chatApi"; // ✅ FIXED IMPORT
+import {
+  useDispatch,
+} from "react-redux";
+
+import {
+  createConversation,
+} from "../store/slices/chatSlice";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -48,6 +54,8 @@ const ProductDetails = () => {
 
     const navigate = useNavigate();
 
+
+    const dispatch = useDispatch();
   // ================= FETCH PRODUCT =================
   useEffect(() => {
     window.scrollTo({
@@ -271,51 +279,59 @@ Is this product still available?`;
   };
 
 
-const handleChatWithSeller = async () => {
-  try {
-    const sellerId = product?.userId?._id;
+const handleChatWithSeller =
+  async () => {
+    try {
+      const sellerId =
+        product?.userId?._id;
 
-    if (!sellerId) {
-      alert("Seller not available");
-      return;
-    }
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Please login first");
-      return;
-    }
-
-    // ✅ CREATE CONVERSATION
-    const res = await API.post(
-      "/chat/conversation",
-      {
-        receiverId: sellerId,
-        productId: product?._id, // IMPORTANT
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      if (!sellerId) {
+        alert("Seller not available");
+        return;
       }
-    );
 
-    // ✅ OPEN CHAT PAGE
-    navigate("/chat", {
-      state: {
-        conversation: res.data,
-      },
-    });
-  } catch (err) {
-    console.log("Chat error:", err);
+      const token =
+        localStorage.getItem(
+          "token"
+        );
 
-    alert(
-      err?.response?.data?.message ||
-        "Failed to create chat"
-    );
-  }
-};
+      if (!token) {
+        alert("Please login first");
+        return;
+      }
+
+      // ================= CREATE CHAT =================
+      const result =
+        await dispatch(
+          createConversation({
+            receiverId: sellerId,
+            productId: product?._id,
+          })
+        );
+
+      if (
+        createConversation.fulfilled.match(
+          result
+        )
+      ) {
+        navigate("/chat", {
+          state: {
+            conversation:
+              result.payload,
+          },
+        });
+      } else {
+        alert(
+          result.payload?.message ||
+            "Failed to create chat"
+        );
+      }
+    } catch (err) {
+      console.log(err);
+
+      alert("Something went wrong");
+    }
+  };
 
   // ================= SERVICES =================
   const services = [
@@ -450,21 +466,32 @@ const handleChatWithSeller = async () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-y-5 text-sm">
 
                 {product.attributes &&
-                  Object.entries(
-                    product.attributes
-                  ).map(
-                    ([key, value]) => (
-                      <div key={key}>
-                        <p className="text-gray-500 capitalize">
-                          {key}
-                        </p>
+  Object.entries(product.attributes).map(([key, value]) => {
+    
+    // ✅ SKIP LOCATION (we will handle separately)
+    if (key === "location") return null;
 
-                        <p className="font-semibold">
-                          {value}
-                        </p>
-                      </div>
-                    )
-                  )}
+    return (
+      <div key={key}>
+        <p className="text-gray-500 capitalize">{key}</p>
+
+        <p className="font-semibold">{String(value)}</p>
+      </div>
+    );
+  })}
+  {product.attributes?.location && (
+  <div className="col-span-2 md:col-span-4 mt-2">
+    <p className="text-gray-500">Location</p>
+
+    <p className="font-semibold">
+      {typeof product.attributes.location === "string"
+        ? JSON.parse(product.attributes.location)?.city +
+          ", " +
+          JSON.parse(product.attributes.location)?.state
+        : `${product.attributes.location.city}, ${product.attributes.location.state}`}
+    </p>
+  </div>
+)}
 
                 <div>
                   <p className="text-gray-500">

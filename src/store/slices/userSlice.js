@@ -15,7 +15,10 @@ import {
   logoutUserApi,
 } from "../../Api/authApi";
 
-// ================= LOGIN =================
+// ======================================================
+// LOGIN
+// ======================================================
+
 export const loginUser = createAsyncThunk(
   "user/loginUser",
 
@@ -25,9 +28,7 @@ export const loginUser = createAsyncThunk(
         await loginUserApi(data);
 
       return response.data;
-
     } catch (error) {
-
       return thunkAPI.rejectWithValue(
         error.response?.data?.message ||
           error.message
@@ -36,7 +37,10 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// ================= REGISTER =================
+// ======================================================
+// REGISTER
+// ======================================================
+
 export const registerUser =
   createAsyncThunk(
     "user/registerUser",
@@ -47,9 +51,7 @@ export const registerUser =
           await registerUserApi(data);
 
         return response.data;
-
       } catch (error) {
-
         return thunkAPI.rejectWithValue(
           error.response?.data?.message ||
             error.message
@@ -58,7 +60,10 @@ export const registerUser =
     }
   );
 
-// ================= GOOGLE LOGIN =================
+// ======================================================
+// GOOGLE LOGIN
+// ======================================================
+
 export const googleLogin =
   createAsyncThunk(
     "user/googleLogin",
@@ -69,9 +74,7 @@ export const googleLogin =
           await googleLoginApi(data);
 
         return response.data;
-
       } catch (error) {
-
         return thunkAPI.rejectWithValue(
           error.response?.data?.message ||
             error.message
@@ -80,7 +83,10 @@ export const googleLogin =
     }
   );
 
-// ================= VERIFY USER =================
+// ======================================================
+// VERIFY USER
+// ======================================================
+
 export const verifyUser =
   createAsyncThunk(
     "user/verifyUser",
@@ -91,9 +97,7 @@ export const verifyUser =
           await verifyUserApi();
 
         return response.data;
-
       } catch (error) {
-
         return thunkAPI.rejectWithValue(
           error.response?.data?.message ||
             error.message
@@ -102,7 +106,10 @@ export const verifyUser =
     }
   );
 
-// ================= GET PROFILE =================
+// ======================================================
+// GET USER PROFILE
+// ======================================================
+
 export const getUserProfile =
   createAsyncThunk(
     "user/getUserProfile",
@@ -113,9 +120,7 @@ export const getUserProfile =
           await getUserProfileApi();
 
         return response.data;
-
       } catch (error) {
-
         return thunkAPI.rejectWithValue(
           error.response?.data?.message ||
             error.message
@@ -124,7 +129,10 @@ export const getUserProfile =
     }
   );
 
-// ================= UPDATE PROFILE =================
+// ======================================================
+// UPDATE USER PROFILE
+// ======================================================
+
 export const updateUserProfile =
   createAsyncThunk(
     "user/updateUserProfile",
@@ -135,9 +143,7 @@ export const updateUserProfile =
           await updateUserProfileApi(data);
 
         return response.data;
-
       } catch (error) {
-
         return thunkAPI.rejectWithValue(
           error.response?.data?.message ||
             error.message
@@ -146,15 +152,18 @@ export const updateUserProfile =
     }
   );
 
+// ======================================================
+// SLICE
+// ======================================================
+
 const userSlice = createSlice({
   name: "user",
 
   initialState: {
-    user:
-      JSON.parse(
-        localStorage.getItem("user")
-      ) || null,
+    // USER ONLY IN REDUX
+    user: null,
 
+    // TOKEN IN LOCAL STORAGE
     token:
       localStorage.getItem("token") ||
       null,
@@ -165,27 +174,36 @@ const userSlice = createSlice({
   },
 
   reducers: {
+    // ======================================================
+    // LOGOUT
+    // ======================================================
 
-    // ================= LOGOUT =================
     logoutUser: (state) => {
-
       state.user = null;
+
       state.token = null;
+
       state.error = null;
+
+      // REMOVE TOKEN
+      localStorage.removeItem("token");
 
       logoutUserApi();
     },
   },
 
   extraReducers: (builder) => {
-
     builder
 
-      // ================= LOGIN =================
+      // ======================================================
+      // LOGIN
+      // ======================================================
+
       .addCase(
         loginUser.pending,
         (state) => {
           state.loading = true;
+
           state.error = null;
         }
       )
@@ -193,7 +211,6 @@ const userSlice = createSlice({
       .addCase(
         loginUser.fulfilled,
         (state, action) => {
-
           state.loading = false;
 
           state.user =
@@ -202,16 +219,10 @@ const userSlice = createSlice({
           state.token =
             action.payload.token;
 
+          // STORE ONLY TOKEN
           localStorage.setItem(
             "token",
             action.payload.token
-          );
-
-          localStorage.setItem(
-            "user",
-            JSON.stringify(
-              action.payload.user
-            )
           );
         }
       )
@@ -219,7 +230,6 @@ const userSlice = createSlice({
       .addCase(
         loginUser.rejected,
         (state, action) => {
-
           state.loading = false;
 
           state.error =
@@ -227,11 +237,15 @@ const userSlice = createSlice({
         }
       )
 
-      // ================= REGISTER =================
+      // ======================================================
+      // REGISTER
+      // ======================================================
+
       .addCase(
         registerUser.pending,
         (state) => {
           state.loading = true;
+
           state.error = null;
         }
       )
@@ -239,7 +253,6 @@ const userSlice = createSlice({
       .addCase(
         registerUser.fulfilled,
         (state, action) => {
-
           state.loading = false;
 
           state.user =
@@ -248,16 +261,10 @@ const userSlice = createSlice({
           state.token =
             action.payload.token;
 
+          // STORE ONLY TOKEN
           localStorage.setItem(
             "token",
             action.payload.token
-          );
-
-          localStorage.setItem(
-            "user",
-            JSON.stringify(
-              action.payload.user
-            )
           );
         }
       )
@@ -265,7 +272,6 @@ const userSlice = createSlice({
       .addCase(
         registerUser.rejected,
         (state, action) => {
-
           state.loading = false;
 
           state.error =
@@ -273,11 +279,15 @@ const userSlice = createSlice({
         }
       )
 
-      // ================= GOOGLE LOGIN =================
+      // ======================================================
+      // GOOGLE LOGIN
+      // ======================================================
+
       .addCase(
         googleLogin.pending,
         (state) => {
           state.loading = true;
+
           state.error = null;
         }
       )
@@ -285,7 +295,6 @@ const userSlice = createSlice({
       .addCase(
         googleLogin.fulfilled,
         (state, action) => {
-
           state.loading = false;
 
           state.user =
@@ -294,16 +303,10 @@ const userSlice = createSlice({
           state.token =
             action.payload.token;
 
+          // STORE ONLY TOKEN
           localStorage.setItem(
             "token",
             action.payload.token
-          );
-
-          localStorage.setItem(
-            "user",
-            JSON.stringify(
-              action.payload.user
-            )
           );
         }
       )
@@ -311,7 +314,6 @@ const userSlice = createSlice({
       .addCase(
         googleLogin.rejected,
         (state, action) => {
-
           state.loading = false;
 
           state.error =
@@ -319,40 +321,96 @@ const userSlice = createSlice({
         }
       )
 
-      // ================= VERIFY USER =================
+      // ======================================================
+      // VERIFY USER
+      // ======================================================
+
+      .addCase(
+        verifyUser.pending,
+        (state) => {
+          state.loading = true;
+        }
+      )
+
       .addCase(
         verifyUser.fulfilled,
         (state, action) => {
+          state.loading = false;
 
           state.user =
             action.payload.user;
         }
       )
 
-      // ================= GET PROFILE =================
+      .addCase(
+        verifyUser.rejected,
+        (state, action) => {
+          state.loading = false;
+
+          state.error =
+            action.payload;
+        }
+      )
+
+      // ======================================================
+      // GET USER PROFILE
+      // ======================================================
+
+      .addCase(
+        getUserProfile.pending,
+        (state) => {
+          state.loading = true;
+        }
+      )
+
       .addCase(
         getUserProfile.fulfilled,
         (state, action) => {
+          state.loading = false;
 
           state.user =
             action.payload.user;
         }
       )
 
-      // ================= UPDATE PROFILE =================
+      .addCase(
+        getUserProfile.rejected,
+        (state, action) => {
+          state.loading = false;
+
+          state.error =
+            action.payload;
+        }
+      )
+
+      // ======================================================
+      // UPDATE PROFILE
+      // ======================================================
+
+      .addCase(
+        updateUserProfile.pending,
+        (state) => {
+          state.loading = true;
+        }
+      )
+
       .addCase(
         updateUserProfile.fulfilled,
         (state, action) => {
+          state.loading = false;
 
           state.user =
             action.payload.user;
+        }
+      )
 
-          localStorage.setItem(
-            "user",
-            JSON.stringify(
-              action.payload.user
-            )
-          );
+      .addCase(
+        updateUserProfile.rejected,
+        (state, action) => {
+          state.loading = false;
+
+          state.error =
+            action.payload;
         }
       );
   },

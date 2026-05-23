@@ -1,17 +1,81 @@
 import axios from "axios";
 
-const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
-  withCredentials: true,
+const API =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:5000/api";
+
+// ================= TOKEN =================
+const getToken = () =>
+  localStorage.getItem("token");
+
+// ================= AUTH CONFIG =================
+const authConfig = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`,
+  },
 });
 
-// attach token (if using JWT)
-API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
-  }
-  return req;
+// ================= AXIOS INSTANCE =================
+const axiosInstance = axios.create({
+  baseURL: API,
 });
 
-export default API;
+// ======================================================
+// CREATE CONVERSATION
+// ======================================================
+
+export const createConversationApi =
+  async (data) => {
+    const res = await axiosInstance.post(
+      "/chat/conversation",
+      data,
+      authConfig()
+    );
+
+    return res.data;
+  };
+
+// ======================================================
+// GET ALL CHATS
+// ======================================================
+
+export const fetchChatsApi =
+  async () => {
+    const res = await axiosInstance.get(
+      "/chat/conversation",
+      authConfig()
+    );
+
+    return res.data;
+  };
+
+// ======================================================
+// GET MESSAGES
+// ======================================================
+
+export const fetchMessagesApi =
+  async (conversationId) => {
+    const res = await axiosInstance.get(
+      `/chat/messages/${conversationId}`,
+      authConfig()
+    );
+
+    return res.data;
+  };
+
+// ======================================================
+// SEND MESSAGE
+// ======================================================
+
+export const sendMessageApi =
+  async (data) => {
+    const res = await axiosInstance.post(
+      "/chat/message",
+      data,
+      authConfig()
+    );
+
+    return res.data;
+  };
+
+export default axiosInstance;

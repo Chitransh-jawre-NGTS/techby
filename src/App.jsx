@@ -5,11 +5,14 @@ import AppRoutes from "./routes/Routing";
 import { useAutoLogout } from "../hooks/TokenExpire";
 import ScrollToTop from "./components/ScrollToTop";
 import { Toaster } from "react-hot-toast";
+import AppInitializer from "./Initializers/AppInitializer";
+
 
 
 function App() {
   return (
     <Router>
+       <AppInitializer />
       {/* hook must run inside Router context */}
        <Toaster position="top-right" />
       <AutoLogout />

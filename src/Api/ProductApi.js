@@ -40,8 +40,13 @@ export const deleteProduct = (id) => {
   return httpClient.delete(ENDPOINTS.PRODUCTS.DELETE(id));
 };
 
-export const getAllProducts = () => {
-  return httpClient.get(ENDPOINTS.PRODUCTS.GET_ALL);
+export const getAllProducts = (lat, lng) => {
+  return httpClient.get(ENDPOINTS.PRODUCTS.GET_ALL, {
+    params: {
+      lat,
+      lng,
+    }
+  });
 };
 
 
