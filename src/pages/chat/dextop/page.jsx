@@ -491,6 +491,39 @@
 // export default InboxPage; 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, {
   useEffect,
   useState,
@@ -560,19 +593,20 @@ const InboxPage = () => {
 
   useEffect(() => {
 
-    if (!selectedChat?._id)
-      return;
+  if (!selectedChat?._id)
+    return;
 
-    // FIRST FETCH
-    dispatch(
-      fetchMessages(
-        selectedChat._id
-      )
-    );
+  let interval;
 
-    // AUTO REFRESH
-    const interval =
-      setInterval(() => {
+  const startPolling = () => {
+
+    interval = setInterval(() => {
+
+      // ONLY WHEN TAB ACTIVE
+      if (
+        document.visibilityState ===
+        "visible"
+      ) {
 
         dispatch(
           fetchMessages(
@@ -581,16 +615,28 @@ const InboxPage = () => {
         );
 
         dispatch(fetchChats());
+      }
 
-      }, 2000);
+    }, 2000); // 5 sec
+  };
 
-    return () =>
-      clearInterval(interval);
+  // FIRST FETCH
+  dispatch(
+    fetchMessages(
+      selectedChat._id
+    )
+  );
 
-  }, [
-    selectedChat?._id,
-    dispatch,
-  ]);
+  startPolling();
+
+  return () => {
+    clearInterval(interval);
+  };
+
+}, [
+  selectedChat?._id,
+  dispatch,
+]);
 
   // =====================================
   // AUTO SCROLL
