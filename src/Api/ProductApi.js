@@ -28,7 +28,7 @@ export const increaseProductView = (productId, data) => {
 };
 
 
-export const updateProduct = (id, formData) => {
+export const updateProductApi = (id, formData) => {
   return httpClient.put(ENDPOINTS.PRODUCTS.UPDATE(id), formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -37,6 +37,9 @@ export const updateProduct = (id, formData) => {
 };
 
 export const deleteProduct = (id) => {
+  return httpClient.delete(ENDPOINTS.PRODUCTS.DELETE(id));
+};
+export const deleteProductApi = (id) => {
   return httpClient.delete(ENDPOINTS.PRODUCTS.DELETE(id));
 };
 

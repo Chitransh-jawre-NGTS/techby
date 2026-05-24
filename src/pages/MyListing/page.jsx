@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -6,15 +10,27 @@ import {
   FaHeart,
   FaEllipsisV,
   FaSearch,
+  FaTrash,
+  FaEdit,
+  FaTimes,
 } from "react-icons/fa";
 
 import Navbar from "../../components/Navbar";
+
 import MobileBottomNavbar from "../../components/MobileBottomNavbar";
 
-import { fetchMyProducts } from "../../store/slices/productSlice";
+import {
+  fetchMyProducts,
+  deleteProduct,
+  updateProduct,
+} from "../../store/slices/productSlice";
+
+import { useNavigate } from "react-router-dom";
 
 const MyListingsPage = () => {
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const {
     myProducts,
@@ -29,17 +45,41 @@ const MyListingsPage = () => {
   const [search, setSearch] =
     useState("");
 
-  // ======================================================
+  // =====================================
+  // EDIT MODAL
+  // =====================================
+
+  const [
+    showEditModal,
+    setShowEditModal,
+  ] = useState(false);
+
+  const [editingProduct, setEditingProduct] =
+    useState(null);
+
+  const [formData, setFormData] =
+    useState({
+      name: "",
+      desc: "",
+      category: "",
+      totalPrice: "",
+      discountPrice: "",
+    });
+
+  const [images, setImages] =
+    useState([]);
+
+  // =====================================
   // FETCH PRODUCTS
-  // ======================================================
+  // =====================================
 
   useEffect(() => {
     dispatch(fetchMyProducts());
   }, [dispatch]);
 
-  // ======================================================
+  // =====================================
   // FILTER PRODUCTS
-  // ======================================================
+  // =====================================
 
   const filteredListings =
     myProducts
@@ -82,16 +122,127 @@ const MyListingsPage = () => {
           )
       );
 
+  // =====================================
+  // DELETE PRODUCT
+  // =====================================
+
+  const handleDelete = async (
+    id
+  ) => {
+
+    const confirmDelete =
+      window.confirm(
+        "Are you sure you want to delete this product?"
+      );
+
+    if (!confirmDelete) return;
+
+    await dispatch(
+      deleteProduct(id)
+    );
+
+    dispatch(fetchMyProducts());
+  };
+
+  // =====================================
+  // OPEN EDIT
+  // =====================================
+
+  const openEditModal = (
+    product
+  ) => {
+
+    setEditingProduct(product);
+
+    setFormData({
+      name:
+        product?.name || "",
+      desc:
+        product?.desc || "",
+      category:
+        product?.category || "",
+      totalPrice:
+        product?.totalPrice ||
+        "",
+      discountPrice:
+        product?.discountPrice ||
+        "",
+    });
+
+    setShowEditModal(true);
+  };
+
+  // =====================================
+  // UPDATE PRODUCT
+  // =====================================
+
+  const handleUpdateProduct =
+    async () => {
+
+      const data =
+        new FormData();
+
+      data.append(
+        "name",
+        formData.name
+      );
+
+      data.append(
+        "desc",
+        formData.desc
+      );
+
+      data.append(
+        "category",
+        formData.category
+      );
+
+      data.append(
+        "totalPrice",
+        formData.totalPrice
+      );
+
+      data.append(
+        "discountPrice",
+        formData.discountPrice
+      );
+
+      // IMAGES
+      for (
+        let i = 0;
+        i < images.length;
+        i++
+      ) {
+        data.append(
+          "images",
+          images[i]
+        );
+      }
+
+      await dispatch(
+        updateProduct({
+          id: editingProduct._id,
+          data,
+        })
+      );
+
+      dispatch(fetchMyProducts());
+
+      setShowEditModal(false);
+    };
+
   return (
     <>
       <Navbar />
 
       <div className="min-h-screen bg-[#f4f7f4] pb-28">
+
         <div className="max-w-7xl mx-auto px-3 sm:px-5 py-5">
 
-
           {/* SEARCH */}
+
           <div className="relative mb-5">
+
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
 
             <input
@@ -108,6 +259,7 @@ const MyListingsPage = () => {
           </div>
 
           {/* FILTERS */}
+
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 mb-5">
 
             {[
@@ -157,6 +309,7 @@ const MyListingsPage = () => {
           </div>
 
           {/* LOADING */}
+
           {loading && (
             <div className="bg-white rounded-3xl p-10 text-center shadow-sm border border-gray-200">
 
@@ -166,12 +319,14 @@ const MyListingsPage = () => {
             </div>
           )}
 
-          {/* LISTINGS */}
+          {/* PRODUCTS */}
+
           {!loading && (
             <div className="space-y-4">
 
               {filteredListings?.map(
                 (item) => {
+
                   const isActive =
                     item.status ===
                     "active";
@@ -182,16 +337,16 @@ const MyListingsPage = () => {
                       className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden"
                     >
 
-                      {/* MAIN CARD */}
                       <div className="p-4">
 
                         {/* TOP */}
+
                         <div className="flex items-start justify-between gap-3">
 
-                          {/* LEFT */}
                           <div className="flex gap-3 flex-1 min-w-0">
 
                             {/* IMAGE */}
+
                             <img
                               src={
                                 item
@@ -204,24 +359,27 @@ const MyListingsPage = () => {
                             />
 
                             {/* CONTENT */}
+
                             <div className="flex-1 min-w-0">
 
-                              {/* TITLE */}
                               <h2 className="font-bold text-base sm:text-xl text-gray-800 truncate">
+
                                 {
                                   item.name
                                 }
+
                               </h2>
 
-                              {/* PRICE */}
                               <p className="text-xl sm:text-2xl font-bold text-green-700 mt-1">
+
                                 ₹
                                 {item.discountPrice ||
                                   item.totalPrice}
+
                               </p>
 
-                              {/* STATUS */}
                               <div className="mt-2">
+
                                 <span
                                   className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                     isActive
@@ -229,32 +387,64 @@ const MyListingsPage = () => {
                                       : "bg-red-100 text-red-700"
                                   }`}
                                 >
+
                                   {item.status?.toUpperCase()}
+
                                 </span>
                               </div>
 
-                              {/* MESSAGE */}
                               <div className="mt-3 border-l-4 border-green-500 pl-3 text-sm text-gray-600 leading-6">
 
                                 {isActive
                                   ? "This ad is currently live"
                                   : "This ad is currently inactive"}
+
                               </div>
                             </div>
                           </div>
 
-                          {/* MENU */}
-                          <button className="text-gray-500 mt-1">
-                            <FaEllipsisV />
-                          </button>
+                          {/* ACTIONS */}
+
+                          <div className="flex items-center gap-3">
+
+                            <button
+                              onClick={() =>
+                                openEditModal(
+                                  item
+                                )
+                              }
+                              className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100"
+                            >
+
+                              <FaEdit />
+
+                            </button>
+
+                            <button
+                              onClick={() =>
+                                handleDelete(
+                                  item._id
+                                )
+                              }
+                              className="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100"
+                            >
+
+                              <FaTrash />
+
+                            </button>
+                          </div>
                         </div>
 
                         {/* DATE */}
+
                         <div className="mt-4 flex items-center gap-5 text-xs sm:text-sm text-gray-500 font-medium overflow-x-auto">
 
                           <span className="whitespace-nowrap">
+
                             FROM:{" "}
+
                             <b className="text-gray-800">
+
                               {new Date(
                                 item.createdAt
                               ).toLocaleDateString(
@@ -267,34 +457,17 @@ const MyListingsPage = () => {
                                     "2-digit",
                                 }
                               )}
+
                             </b>
                           </span>
-
-                          {item.expiresAt && (
-                            <span className="whitespace-nowrap">
-                              TO:{" "}
-                              <b className="text-gray-800">
-                                {new Date(
-                                  item.expiresAt
-                                ).toLocaleDateString(
-                                  "en-IN",
-                                  {
-                                    day: "2-digit",
-                                    month:
-                                      "short",
-                                    year:
-                                      "2-digit",
-                                  }
-                                )}
-                              </b>
-                            </span>
-                          )}
                         </div>
 
                         {/* STATS */}
+
                         <div className="mt-4 flex items-center gap-6 text-sm text-gray-700">
 
                           <div className="flex items-center gap-2">
+
                             <FaEye className="text-green-600" />
 
                             <span>
@@ -307,6 +480,7 @@ const MyListingsPage = () => {
                           </div>
 
                           <div className="flex items-center gap-2">
+
                             <FaHeart className="text-green-600" />
 
                             <span>
@@ -318,22 +492,6 @@ const MyListingsPage = () => {
                             </span>
                           </div>
                         </div>
-
-                        {/* BUTTONS */}
-                        <div className="mt-5 flex items-center gap-3 overflow-x-auto scrollbar-hide">
-
-                          {isActive && (
-                            <button className="whitespace-nowrap border-2 border-green-600 text-green-700 px-5 py-2.5 rounded-xl font-semibold hover:bg-green-50 transition">
-                              Mark as sold
-                            </button>
-                          )}
-
-                          <button className="whitespace-nowrap bg-green-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-green-700 transition">
-                            {isActive
-                              ? "Sell faster now"
-                              : "Post now"}
-                          </button>
-                        </div>
                       </div>
                     </div>
                   );
@@ -342,30 +500,195 @@ const MyListingsPage = () => {
             </div>
           )}
 
-          {/* EMPTY STATE */}
+          {/* EMPTY */}
+
           {!loading &&
             filteredListings?.length ===
               0 && (
               <div className="bg-white rounded-3xl p-10 text-center shadow-sm border border-gray-200 mt-10">
 
                 <h2 className="text-2xl font-bold text-gray-800">
+
                   No Listings Found
+
                 </h2>
 
                 <p className="text-gray-500 mt-2">
+
                   Start selling by posting
                   your first ad
+
                 </p>
 
-                <button className="mt-5 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl font-semibold">
+                <button
+                  onClick={() =>
+                    navigate("/sell")
+                  }
+                  className="mt-5 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl font-semibold"
+                >
+
                   Create Listing
+
                 </button>
               </div>
             )}
         </div>
       </div>
 
+      {/* ===================================== */}
+      {/* EDIT MODAL */}
+      {/* ===================================== */}
+
+      {showEditModal && (
+
+        <div className="fixed inset-0 z-[999] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+
+          <div className="w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl">
+
+            {/* HEADER */}
+
+            <div className="bg-green-600 text-white p-5 flex items-center justify-between">
+
+              <h2 className="text-2xl font-bold">
+                Update Product
+              </h2>
+
+              <button
+                onClick={() =>
+                  setShowEditModal(
+                    false
+                  )
+                }
+                className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
+              >
+
+                <FaTimes />
+
+              </button>
+            </div>
+
+            {/* BODY */}
+
+            <div className="p-5 space-y-4 max-h-[80vh] overflow-y-auto">
+
+              <input
+                type="text"
+                placeholder="Product Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    name:
+                      e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-green-500"
+              />
+
+              <textarea
+                rows={4}
+                placeholder="Description"
+                value={formData.desc}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    desc:
+                      e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-green-500"
+              />
+
+              <input
+                type="text"
+                placeholder="Category"
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    category:
+                      e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-green-500"
+              />
+
+              <input
+                type="number"
+                placeholder="Total Price"
+                value={formData.totalPrice}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    totalPrice:
+                      e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-green-500"
+              />
+
+              <input
+                type="number"
+                placeholder="Discount Price"
+                value={formData.discountPrice}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    discountPrice:
+                      e.target.value,
+                  })
+                }
+                className="w-full border border-gray-300 rounded-2xl px-4 py-3 outline-none focus:border-green-500"
+              />
+
+              {/* IMAGE */}
+
+              <input
+                type="file"
+                multiple
+                onChange={(e) =>
+                  setImages(
+                    e.target.files
+                  )
+                }
+                className="w-full border border-gray-300 rounded-2xl px-4 py-3"
+              />
+
+              {/* BUTTONS */}
+
+              <div className="flex gap-3 pt-3">
+
+                <button
+                  onClick={() =>
+                    setShowEditModal(
+                      false
+                    )
+                  }
+                  className="flex-1 border border-gray-300 py-3 rounded-2xl font-semibold"
+                >
+
+                  Cancel
+
+                </button>
+
+                <button
+                  onClick={
+                    handleUpdateProduct
+                  }
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-2xl font-semibold"
+                >
+
+                  Update Product
+
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MOBILE NAVBAR */}
+
       <div className="lg:hidden">
         <MobileBottomNavbar />
       </div>
@@ -374,9 +697,6 @@ const MyListingsPage = () => {
 };
 
 export default MyListingsPage;
-
-
-
 
 
 // import React, {

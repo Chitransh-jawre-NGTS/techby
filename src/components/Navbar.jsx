@@ -827,7 +827,7 @@ const Navbar = () => {
               )}
 
               {/* CHAT */}
-              <Link to="/inbox" className="flex flex-col items-center text-sm">
+              <Link to="/chat" className="flex flex-col items-center text-sm">
                 <FaComments className="text-xl text-green-700" />
                 Chat
               </Link>

@@ -43,9 +43,7 @@ const AccountPage = () => {
     user?.name || ""
   );
 
-  const [image, setImage] = useState(
-    user?.profileImage || ""
-  );
+  const [image, setImage] = useState("");
 
   const [imageFile, setImageFile] =
     useState(null);
@@ -102,11 +100,13 @@ const AccountPage = () => {
   // ================= SAVE PROFILE =================
 
   const handleSaveProfile = async () => {
+    let profileImage =
+      user?.profileImage || "";
 
-    let profileImage = image;
-
-    // LATER YOU CAN UPLOAD IMAGE
-    // TO CLOUDINARY HERE
+    // NEW IMAGE SELECTED
+    if (image) {
+      profileImage = image;
+    }
 
     const updatedUser = {
       ...user,
@@ -114,6 +114,7 @@ const AccountPage = () => {
       profileImage,
     };
 
+    // SAVE LOCAL
     localStorage.setItem(
       "user",
       JSON.stringify(updatedUser)
@@ -183,9 +184,14 @@ const AccountPage = () => {
 
                   <div className="relative flex-shrink-0">
 
-                    {image ? (
+                    {user?.profileImage ||
+                    image ? (
                       <img
-                        src={image}
+                        src={
+                          image ||
+                          user?.profileImage
+                        }
+                        alt="profile"
                         onError={(e) => {
                           e.target.style.display =
                             "none";
@@ -194,7 +200,6 @@ const AccountPage = () => {
                             "flex";
                         }}
                         className="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover"
-                        alt="profile"
                       />
                     ) : null}
 
@@ -202,6 +207,7 @@ const AccountPage = () => {
 
                     <div
                       className={`w-28 h-28 rounded-full border-4 border-white shadow-lg bg-white/20 backdrop-blur-md items-center justify-center ${
+                        user?.profileImage ||
                         image
                           ? "hidden"
                           : "flex"
@@ -230,8 +236,7 @@ const AccountPage = () => {
 
                     <div className="mt-3 inline-flex items-center bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white font-semibold border border-white/20">
                       🪙{" "}
-                      {user?.coins ??
-                        0}{" "}
+                      {user?.coins ?? 0}{" "}
                       Coins
                     </div>
                   </div>
@@ -399,10 +404,14 @@ const AccountPage = () => {
 
                 <div className="relative">
 
-                  {image ? (
+                  {image ||
+                  user?.profileImage ? (
                     <img
-                      src={image}
-                      alt=""
+                      src={
+                        image ||
+                        user?.profileImage
+                      }
+                      alt="profile"
                       onError={(
                         e
                       ) => {
@@ -418,7 +427,8 @@ const AccountPage = () => {
 
                   <div
                     className={`w-28 h-28 rounded-full bg-green-100 items-center justify-center ${
-                      image
+                      image ||
+                      user?.profileImage
                         ? "hidden"
                         : "flex"
                     }`}

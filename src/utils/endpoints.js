@@ -10,7 +10,7 @@ export const ENDPOINTS = {
   USER: {
     LOGIN: "/user/login",
     REGISTER: "/user/signup",
-    GOOGLE_LOGIN: "/user/google-login",
+    GOOGLE_LOGIN: "/user/login",
 
     VERIFY: "/user/verify",
     PROFILE: "/user/profile",

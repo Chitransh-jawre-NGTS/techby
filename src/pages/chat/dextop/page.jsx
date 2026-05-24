@@ -517,13 +517,7 @@
 
 
 
-
-
-
-
-
-
-
+// ================= IMPORTS =================
 import React, {
   useEffect,
   useState,
@@ -536,6 +530,7 @@ import {
   FaCheckCircle,
   FaPaperPlane,
   FaArrowLeft,
+  FaCircle,
 } from "react-icons/fa";
 
 import {
@@ -554,8 +549,8 @@ import {
 
 import MobileBottomNavbar from "../../../components/MobileBottomNavbar";
 
+// ================= COMPONENT =================
 const InboxPage = () => {
-
   const dispatch = useDispatch();
 
   const {
@@ -573,77 +568,62 @@ const InboxPage = () => {
   const [mobileView, setMobileView] =
     useState(false);
 
+  const [search, setSearch] =
+    useState("");
+
   const bottomRef = useRef(null);
 
   const currentUser = JSON.parse(
     localStorage.getItem("user")
   );
 
-  // =====================================
-  // LOAD CHATS
-  // =====================================
-
+  // ================= LOAD CHATS =================
   useEffect(() => {
     dispatch(fetchChats());
   }, [dispatch]);
 
-  // =====================================
-  // AUTO FETCH MESSAGES
-  // =====================================
-
+  // ================= AUTO FETCH =================
   useEffect(() => {
+    if (!selectedChat?._id)
+      return;
 
-  if (!selectedChat?._id)
-    return;
+    let interval;
 
-  let interval;
+    const startPolling = () => {
+      interval = setInterval(() => {
+        if (
+          document.visibilityState ===
+          "visible"
+        ) {
+          dispatch(
+            fetchMessages(
+              selectedChat._id
+            )
+          );
 
-  const startPolling = () => {
+          dispatch(fetchChats());
+        }
+      }, 5000);
+    };
 
-    interval = setInterval(() => {
+    dispatch(
+      fetchMessages(
+        selectedChat._id
+      )
+    );
 
-      // ONLY WHEN TAB ACTIVE
-      if (
-        document.visibilityState ===
-        "visible"
-      ) {
+    startPolling();
 
-        dispatch(
-          fetchMessages(
-            selectedChat._id
-          )
-        );
+    return () => {
+      clearInterval(interval);
+    };
+  }, [
+    selectedChat?._id,
+    dispatch,
+  ]);
 
-        dispatch(fetchChats());
-      }
-
-    }, 5000); // 5 sec
-  };
-
-  // FIRST FETCH
-  dispatch(
-    fetchMessages(
-      selectedChat._id
-    )
-  );
-
-  startPolling();
-
-  return () => {
-    clearInterval(interval);
-  };
-
-}, [
-  selectedChat?._id,
-  dispatch,
-]);
-
-  // =====================================
-  // AUTO SCROLL
-  // =====================================
-
+  // ================= AUTO SCROLL =================
   useEffect(() => {
-
     bottomRef.current?.scrollIntoView(
       {
         behavior:
@@ -652,17 +632,12 @@ const InboxPage = () => {
             : "auto",
       }
     );
-
   }, [messages]);
 
-  // =====================================
-  // GET OTHER USER
-  // =====================================
-
+  // ================= GET OTHER USER =================
   const getOtherUser = (
     participants
   ) => {
-
     return participants?.find(
       (p) =>
         p._id !==
@@ -671,12 +646,8 @@ const InboxPage = () => {
     );
   };
 
-  // =====================================
-  // OPEN CHAT
-  // =====================================
-
+  // ================= OPEN CHAT =================
   const openChat = (chat) => {
-
     dispatch(
       setSelectedChat(chat)
     );
@@ -684,19 +655,14 @@ const InboxPage = () => {
     setMobileView(true);
   };
 
-  // =====================================
-  // SEND MESSAGE
-  // =====================================
-
+  // ================= SEND MESSAGE =================
   const handleSendMessage =
     async () => {
-
       if (!text.trim())
         return;
 
       const messageText = text;
 
-      // CLEAR INPUT
       setText("");
 
       await dispatch(
@@ -707,7 +673,6 @@ const InboxPage = () => {
         })
       );
 
-      // INSTANT REFRESH
       dispatch(
         fetchMessages(
           selectedChat._id
@@ -717,31 +682,23 @@ const InboxPage = () => {
       dispatch(fetchChats());
     };
 
-  // =====================================
-  // CHECK MY MESSAGE
-  // =====================================
-
+  // ================= CHECK MY MESSAGE =================
   const isMyMessage = (
     msg
   ) => {
-
     const currentUserId =
       currentUser?.id ||
       currentUser?._id;
 
     let senderId = null;
 
-    // OBJECT
     if (
       typeof msg.senderId ===
       "object"
     ) {
       senderId =
         msg.senderId?._id;
-    }
-
-    // STRING
-    else {
+    } else {
       senderId = msg.senderId;
     }
 
@@ -751,266 +708,303 @@ const InboxPage = () => {
     );
   };
 
+  // ================= FILTER CHATS =================
+  const filteredChats =
+    chats?.filter((chat) => {
+      const otherUser =
+        getOtherUser(
+          chat.participants
+        );
+
+      return (
+        otherUser?.name
+          ?.toLowerCase()
+          ?.includes(
+            search.toLowerCase()
+          ) ||
+        chat?.productId?.name
+          ?.toLowerCase()
+          ?.includes(
+            search.toLowerCase()
+          )
+      );
+    });
+
   return (
     <>
-      {/* DESKTOP NAVBAR */}
+      {/* ================= NAVBAR ================= */}
 
       <div className="hidden md:block">
         <Navbar />
       </div>
 
-      {/* MAIN */}
+      {/* ================= MAIN ================= */}
 
-      <div className="h-[100dvh] md:h-[calc(100vh-72px)] bg-[#f3f4f6] flex overflow-hidden">
+      <div className="h-[100dvh] md:h-[calc(100vh-72px)] bg-[#eef1f5] flex overflow-hidden">
 
-        {/* ================================= */}
+        {/* ================================================= */}
         {/* SIDEBAR */}
-        {/* ================================= */}
+        {/* ================================================= */}
 
         <div
           className={`${
             mobileView
               ? "hidden md:flex"
               : "flex"
-          } w-full md:w-[400px] bg-white border-r border-gray-200 flex-col`}
+          } w-full md:w-[390px] bg-white border-r border-gray-200 flex-col`}
         >
 
-          {/* HEADER */}
+          {/* ================= HEADER ================= */}
 
-          <div className="p-5 border-b border-gray-200 bg-white sticky top-0 z-10">
+          <div className="p-5 bg-white border-b border-gray-100 sticky top-0 z-20">
 
             <div className="flex items-center justify-between">
 
-              <div className="flex items-center gap-3">
+              <div>
 
-                <h1 className="text-3xl font-black text-gray-800">
+                <h1 className="text-3xl font-black text-gray-800 tracking-tight">
                   Inbox
                 </h1>
 
-                <span className="bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                  {chats?.length ||
-                    0}
-                </span>
+                <p className="text-sm text-gray-500 mt-1">
+                  {
+                    chats?.length
+                  }{" "}
+                  Conversations
+                </p>
               </div>
 
-              <button className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center">
+              <button className="w-11 h-11 rounded-2xl bg-gray-100 hover:bg-gray-200 transition flex items-center justify-center">
 
-                <FaEllipsisV />
+                <FaEllipsisV className="text-gray-600" />
 
               </button>
             </div>
 
-            {/* SEARCH */}
+            {/* ================= SEARCH ================= */}
 
-            <div className="mt-5">
+            <div className="mt-5 relative">
 
-              <div className="bg-gray-100 rounded-2xl px-4 py-3 flex items-center gap-3 border border-transparent focus-within:border-green-500">
+              <FaSearch className="absolute left-4 top-4 text-gray-400 text-sm" />
 
-                <FaSearch className="text-gray-500" />
-
-                <input
-                  type="text"
-                  placeholder="Search conversation..."
-                  className="bg-transparent outline-none flex-1 text-sm"
-                />
-              </div>
+              <input
+                type="text"
+                placeholder="Search chats..."
+                value={search}
+                onChange={(e) =>
+                  setSearch(
+                    e.target.value
+                  )
+                }
+                className="w-full bg-gray-100 rounded-2xl py-3.5 pl-11 pr-4 outline-none border-2 border-transparent focus:border-green-500 transition"
+              />
             </div>
           </div>
 
-          {/* CHAT LIST */}
+          {/* ================= CHAT LIST ================= */}
 
-          <div className="flex-1 overflow-y-auto pb-20 md:pb-0">
+          <div className="flex-1 overflow-y-auto pb-24 md:pb-0">
 
             {loading ? (
-
               <div className="h-full flex items-center justify-center">
 
-                <p>
-                  Loading...
-                </p>
+                <div className="text-center">
 
+                  <div className="w-14 h-14 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+
+                  <p className="mt-4 text-gray-500">
+                    Loading chats...
+                  </p>
+                </div>
               </div>
-
-            ) : chats?.length ===
+            ) : filteredChats?.length ===
               0 ? (
+              <div className="h-full flex items-center justify-center text-center px-6">
 
-              <div className="h-full flex items-center justify-center text-gray-500">
+                <div>
 
-                No Conversations
+                  <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
 
+                    💬
+
+                  </div>
+
+                  <h2 className="mt-5 font-bold text-xl text-gray-700">
+                    No Conversations
+                  </h2>
+
+                  <p className="text-gray-500 text-sm mt-2">
+                    Start chatting with
+                    buyers and sellers
+                  </p>
+                </div>
               </div>
-
             ) : (
+              filteredChats?.map(
+                (chat) => {
+                  const otherUser =
+                    getOtherUser(
+                      chat.participants
+                    );
 
-              chats.map((chat) => {
+                  return (
+                    <div
+                      key={chat._id}
+                      onClick={() =>
+                        openChat(
+                          chat
+                        )
+                      }
+                      className={`mx-3 mt-3 p-4 rounded-3xl cursor-pointer transition-all duration-300 border ${
+                        selectedChat?._id ===
+                        chat._id
+                          ? "bg-gradient-to-r from-green-50 to-green-100 border-green-200 shadow-md"
+                          : "bg-white hover:bg-gray-50 border-gray-100"
+                      }`}
+                    >
 
-                const otherUser =
-                  getOtherUser(
-                    chat.participants
-                  );
+                      <div className="flex gap-4">
 
-                return (
-                  <div
-                    key={chat._id}
-                    onClick={() =>
-                      openChat(
-                        chat
-                      )
-                    }
-                    className={`p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 ${
-                      selectedChat?._id ===
-                      chat._id
-                        ? "bg-gradient-to-r from-green-50 to-green-100"
-                        : "hover:bg-gray-50"
-                    }`}
-                  >
+                        {/* PRODUCT */}
 
-                    <div className="flex gap-4">
+                        <div className="relative">
 
-                      {/* PRODUCT IMAGE */}
+                          <img
+                            src={
+                              chat
+                                ?.productId
+                                ?.imageUrls?.[0]
+                                ?.url
+                            }
+                            alt=""
+                            className="w-16 h-16 rounded-2xl object-cover shadow-md"
+                          />
 
-                      <div className="relative">
+                          {/* USER */}
 
-                        <img
-                          src={
-                            chat
-                              .productId
-                              ?.imageUrls?.[0]
-                              ?.url
-                          }
-                          alt=""
-                          className="w-16 h-16 rounded-2xl object-cover shadow-md"
-                        />
+                          <img
+                            src={
+                              otherUser?.profileImage ||
+                              `https://ui-avatars.com/api/?name=${otherUser?.name}&background=16a34a&color=fff`
+                            }
+                            alt=""
+                            className="w-7 h-7 rounded-full absolute -bottom-1 -right-1 border-2 border-white object-cover"
+                          />
+                        </div>
 
-                        {/* USER AVATAR */}
+                        {/* INFO */}
 
-                        <img
-                          src={`https://ui-avatars.com/api/?name=${otherUser?.name}&background=16a34a&color=fff`}
-                          alt=""
-                          className="w-7 h-7 rounded-full absolute -bottom-1 -right-1 border-2 border-white"
-                        />
-                      </div>
+                        <div className="flex-1 min-w-0">
 
-                      {/* INFO */}
+                          <div className="flex justify-between items-start">
 
-                      <div className="flex-1 min-w-0">
+                            <div className="min-w-0">
 
-                        <div className="flex justify-between">
+                              <h2 className="font-bold text-gray-800 truncate">
 
-                          <div>
+                                {
+                                  otherUser?.name
+                                }
 
-                            <h2 className="font-bold text-gray-800 truncate">
+                              </h2>
 
-                              {
-                                otherUser?.name
-                              }
+                              <p className="text-sm text-green-600 truncate mt-1 font-medium">
 
-                            </h2>
+                                {
+                                  chat
+                                    ?.productId
+                                    ?.name
+                                }
 
-                            <p className="text-sm text-green-600 truncate mt-1">
+                              </p>
+                            </div>
+
+                            <span className="text-[11px] text-gray-400 whitespace-nowrap ml-2">
+
+                              {new Date(
+                                chat.updatedAt
+                              ).toLocaleDateString()}
+
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between mt-3">
+
+                            <p className="text-sm text-gray-500 truncate max-w-[180px]">
 
                               {
                                 chat
-                                  ?.productId
-                                  ?.name
+                                  ?.lastMessage
+                                  ?.text
                               }
 
                             </p>
+
+                            {chat.unreadCount >
+                              0 && (
+                              <div className="min-w-[24px] h-[24px] bg-green-600 rounded-full flex items-center justify-center text-white text-xs font-bold px-1 shadow-lg">
+
+                                {
+                                  chat.unreadCount
+                                }
+
+                              </div>
+                            )}
                           </div>
-
-                          <span className="text-xs text-gray-400 whitespace-nowrap">
-
-                            {new Date(
-                              chat.updatedAt
-                            ).toLocaleDateString()}
-
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between mt-3">
-
-                          <p className="text-sm text-gray-500 truncate">
-
-                            {
-                              chat
-                                ?.lastMessage
-                                ?.text
-                            }
-
-                          </p>
-
-                          {chat.unreadCount >
-                            0 && (
-
-                            <span className="bg-green-600 text-white min-w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs font-bold px-1">
-
-                              {
-                                chat.unreadCount
-                              }
-
-                            </span>
-                          )}
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
+                  );
+                }
+              )
             )}
           </div>
 
-          {/* MOBILE BOTTOM NAV */}
+          {/* MOBILE NAV */}
 
           <MobileBottomNavbar />
         </div>
 
-        {/* ================================= */}
+        {/* ================================================= */}
         {/* CHAT AREA */}
-        {/* ================================= */}
+        {/* ================================================= */}
 
         <div
           className={`${
             mobileView
               ? "flex"
               : "hidden md:flex"
-          } flex-1 flex-col bg-[#efeae2]`}
+          } flex-1 flex-col bg-[#e5ddd5]`}
         >
 
           {!selectedChat ? (
-
             <div className="flex-1 flex items-center justify-center">
 
-              <div className="text-center">
+              <div className="text-center px-6">
 
-                <div className="w-24 h-24 rounded-full bg-green-100 mx-auto flex items-center justify-center">
+                <div className="w-28 h-28 rounded-full bg-green-100 flex items-center justify-center mx-auto shadow-lg">
 
-                  <div className="w-12 h-12 rounded-2xl bg-green-600"></div>
+                  <div className="w-14 h-14 rounded-3xl bg-green-600"></div>
 
                 </div>
 
-                <h2 className="text-3xl font-black text-gray-700 mt-6">
-
+                <h2 className="text-4xl font-black text-gray-700 mt-8">
                   TechBy Chat
-
                 </h2>
 
-                <p className="text-gray-500 mt-2">
-
+                <p className="text-gray-500 mt-3 text-lg">
                   Select a conversation
-
+                  to start messaging
                 </p>
               </div>
             </div>
-
           ) : (
             <>
-              {/* HEADER */}
+              {/* ================= HEADER ================= */}
 
-              <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm">
+              <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm backdrop-blur-xl">
 
-                <div className="flex items-center gap-3">
-
-                  {/* BACK */}
+                <div className="flex items-center gap-3 min-w-0">
 
                   <button
                     onClick={() =>
@@ -1018,30 +1012,39 @@ const InboxPage = () => {
                         false
                       )
                     }
-                    className="md:hidden w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center"
+                    className="md:hidden w-11 h-11 rounded-2xl hover:bg-gray-100 flex items-center justify-center transition"
                   >
 
                     <FaArrowLeft />
 
                   </button>
 
-                  {/* USER */}
+                  <div className="relative">
 
-                  <img
-                    src={`https://ui-avatars.com/api/?name=${
-                      getOtherUser(
-                        selectedChat.participants
-                      )?.name
-                    }&background=16a34a&color=fff`}
-                    alt=""
-                    className="w-12 h-12 rounded-full"
-                  />
+                    <img
+                      src={
+                        getOtherUser(
+                          selectedChat.participants
+                        )
+                          ?.profileImage ||
+                        `https://ui-avatars.com/api/?name=${
+                          getOtherUser(
+                            selectedChat.participants
+                          )?.name
+                        }&background=16a34a&color=fff`
+                      }
+                      alt=""
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
 
-                  <div>
+                    <FaCircle className="absolute bottom-0 right-0 text-green-500 text-[10px] border-2 border-white rounded-full" />
+                  </div>
+
+                  <div className="min-w-0">
 
                     <div className="flex items-center gap-2">
 
-                      <h2 className="font-bold text-lg">
+                      <h2 className="font-bold text-gray-800 truncate text-lg">
 
                         {
                           getOtherUser(
@@ -1051,10 +1054,10 @@ const InboxPage = () => {
 
                       </h2>
 
-                      <FaCheckCircle className="text-green-600 text-sm" />
+                      <FaCheckCircle className="text-green-600 text-sm flex-shrink-0" />
                     </div>
 
-                    <p className="text-sm text-gray-500 truncate max-w-[180px]">
+                    <p className="text-sm text-gray-500 truncate">
 
                       {
                         selectedChat
@@ -1066,20 +1069,19 @@ const InboxPage = () => {
                   </div>
                 </div>
 
-                <button className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                <button className="w-11 h-11 rounded-2xl hover:bg-gray-100 flex items-center justify-center transition">
 
-                  <FaEllipsisV />
+                  <FaEllipsisV className="text-gray-600" />
 
                 </button>
               </div>
 
-              {/* MESSAGES */}
+              {/* ================= MESSAGES ================= */}
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+              <div className="flex-1 overflow-y-auto px-4 py-5 space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
 
                 {messages?.map(
                   (msg) => (
-
                     <div
                       key={msg._id}
                       className={`flex ${
@@ -1092,12 +1094,12 @@ const InboxPage = () => {
                     >
 
                       <div
-                        className={`max-w-[85%] md:max-w-md px-4 py-3 rounded-3xl shadow-sm relative ${
+                        className={`relative max-w-[85%] md:max-w-md px-5 py-3 rounded-[28px] shadow-sm ${
                           isMyMessage(
                             msg
                           )
-                            ? "bg-green-600 text-white rounded-br-sm"
-                            : "bg-white text-gray-800 rounded-bl-sm"
+                            ? "bg-gradient-to-r from-green-500 to-green-600 text-white rounded-br-md"
+                            : "bg-white text-gray-800 rounded-bl-md"
                         }`}
                       >
 
@@ -1107,8 +1109,8 @@ const InboxPage = () => {
 
                         </p>
 
-                        <span
-                          className={`text-[11px] mt-2 block text-right ${
+                        <div
+                          className={`text-[11px] mt-2 flex items-center justify-end gap-1 ${
                             isMyMessage(
                               msg
                             )
@@ -1129,7 +1131,7 @@ const InboxPage = () => {
                             }
                           )}
 
-                        </span>
+                        </div>
                       </div>
                     </div>
                   )
@@ -1138,11 +1140,11 @@ const InboxPage = () => {
                 <div ref={bottomRef}></div>
               </div>
 
-              {/* INPUT */}
+              {/* ================= INPUT ================= */}
 
-              <div className="bg-white border-t border-gray-200 p-3 md:p-4">
+              <div className="bg-white border-t border-gray-200 px-4 py-3">
 
-                <div className="flex items-center gap-3 bg-gray-100 rounded-full px-3 py-2">
+                <div className="flex items-center gap-3 bg-gray-100 rounded-full px-3 py-2 shadow-inner">
 
                   <input
                     type="text"
@@ -1153,7 +1155,6 @@ const InboxPage = () => {
                       )
                     }
                     onKeyDown={(e) => {
-
                       if (
                         e.key ===
                         "Enter"
@@ -1162,17 +1163,17 @@ const InboxPage = () => {
                       }
                     }}
                     placeholder="Type your message..."
-                    className="flex-1 bg-transparent outline-none px-3 py-2"
+                    className="flex-1 bg-transparent outline-none px-3 py-2 text-sm"
                   />
 
                   <button
                     onClick={
                       handleSendMessage
                     }
-                    className="w-12 h-12 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center text-white transition-all duration-200 active:scale-95"
+                    className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 hover:scale-105 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-200 active:scale-95"
                   >
 
-                    <FaPaperPlane />
+                    <FaPaperPlane className="text-sm ml-0.5" />
 
                   </button>
                 </div>
