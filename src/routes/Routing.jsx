@@ -43,8 +43,8 @@ const Routing = () => {
 
       <Route path="/login" element={<UserLoginPage/>} />
       <Route path="/my-listings" element={<MyListingsPage/>} />
-      <Route path="/inbox" element={<InboxPage/>} />
-      <Route path="/chat" element={<ChatPage/>} />
+      <Route path="/chat" element={<InboxPage/>} />
+      {/* <Route path="/chat" element={<ChatPage/>} /> */}
       <Route
           path="/admin-dashboard"
           element={

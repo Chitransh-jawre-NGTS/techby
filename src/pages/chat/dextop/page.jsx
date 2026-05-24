@@ -1,331 +1,3 @@
-// import React, { useState } from "react";
-// import {
-//   FaSearch,
-//   FaEllipsisV,
-//   FaShieldAlt,
-//   FaCheckCircle,
-// } from "react-icons/fa";
-
-// import Navbar from "../../../components/Navbar";
-
-// const InboxPage = () => {
-//   const [selectedChat, setSelectedChat] = useState(null);
-
-//   const chats = [
-//     {
-//       id: 1,
-//       name: "Rahul Sharma",
-//       product: "Samsung Galaxy S22 available in good condition",
-//       message: "Bhai final price kya h ?",
-//       time: "YESTERDAY",
-//       unread: 2,
-//       image:
-//         "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=1000",
-//       avatar:
-//         "https://randomuser.me/api/portraits/men/32.jpg",
-//     },
-
-//     {
-//       id: 2,
-//       name: "Aman Verma",
-//       product: "iPhone 13 Pro Max 128GB",
-//       message: "Available h kya ?",
-//       time: "2 DAYS AGO",
-//       unread: 1,
-//       image:
-//         "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000",
-//       avatar:
-//         "https://randomuser.me/api/portraits/men/45.jpg",
-//     },
-
-//     {
-//       id: 3,
-//       name: "Priya Jain",
-//       product: "MacBook Air M1 Chip",
-//       message: "Can you share more images?",
-//       time: "3 DAYS AGO",
-//       unread: 3,
-//       image:
-//         "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=1000",
-//       avatar:
-//         "https://randomuser.me/api/portraits/women/65.jpg",
-//     },
-//   ];
-
-//   return (
-//     <>
-//       <Navbar />
-
-//       {/* ONLY BIG DEVICES */}
-//       <div className="hidden max-w-7xl mx-auto border border-gray-200 lg:flex h-[calc(100vh-72px)] bg-[#f2f4f5]">
-
-//         {/* LEFT SIDEBAR */}
-//         <div className="w-[420px] bg-white border-r border-gray-300 flex flex-col">
-
-//           {/* HEADER */}
-//           <div className="p-5 border-b border-gray-200">
-
-//             <div className="flex items-center justify-between">
-
-//               <div className="flex items-center gap-3">
-//                 <h1 className="text-3xl font-bold text-gray-900">
-//                   INBOX
-//                 </h1>
-
-//                 <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full font-semibold">
-//                   21
-//                 </span>
-//               </div>
-
-//               <button className="text-xl">
-//                 <FaSearch />
-//               </button>
-//             </div>
-
-//             {/* FILTERS */}
-//             <div className="mt-5">
-//               <p className="text-sm text-gray-500 mb-3">
-//                 Quick Filters
-//               </p>
-
-//               <div className="flex gap-3 flex-wrap">
-
-//                 <button className="bg-green-100 text-green-700 px-5 py-2 rounded-full text-sm font-medium">
-//                   All
-//                 </button>
-
-//                 <button className="border border-gray-400 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-100">
-//                   Unread
-//                 </button>
-
-//                 <button className="border border-gray-400 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-100">
-//                   Important
-//                 </button>
-
-//                 <button className="border border-gray-400 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-100">
-//                   Buyers
-//                 </button>
-
-//                 <button className="border border-gray-400 px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-100">
-//                   Sellers
-//                 </button>
-//               </div>
-//             </div>
-
-         
-//           </div>
-
-//           {/* CHAT LIST */}
-//           <div className="flex-1 overflow-y-auto">
-
-//             {chats.map((chat) => (
-//               <div
-//                 key={chat.id}
-//                 onClick={() => setSelectedChat(chat)}
-//                 className={`cursor-pointer border-b border-gray-200 px-5 py-4 hover:bg-green-50 transition ${
-//                   selectedChat?.id === chat.id
-//                     ? "bg-green-50"
-//                     : "bg-white"
-//                 }`}
-//               >
-
-//                 <div className="flex gap-4">
-
-//                   {/* PRODUCT IMAGE */}
-//                   <div className="relative">
-
-//                     <img
-//                       src={chat.image}
-//                       alt=""
-//                       className="w-16 h-16 rounded-xl object-cover"
-//                     />
-
-//                     <img
-//                       src={chat.avatar}
-//                       alt=""
-//                       className="w-6 h-6 rounded-full border-2 border-white absolute -bottom-1 -right-1"
-//                     />
-//                   </div>
-
-//                   {/* CONTENT */}
-//                   <div className="flex-1 min-w-0">
-
-//                     <div className="flex justify-between items-start">
-
-//                       <div>
-//                         <h2 className="font-bold text-gray-900 text-lg">
-//                           {chat.name}
-//                         </h2>
-
-//                         <p className="text-sm text-gray-700 truncate mt-1">
-//                           {chat.product}
-//                         </p>
-//                       </div>
-
-//                       <span className="text-xs text-green-600 font-medium whitespace-nowrap">
-//                         {chat.time}
-//                       </span>
-//                     </div>
-
-//                     <div className="flex items-center justify-between mt-3">
-
-//                       <p className="text-gray-500 text-sm truncate">
-//                         {chat.message}
-//                       </p>
-
-//                       <div className="flex items-center gap-3">
-
-//                         <span className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">
-//                           {chat.unread}
-//                         </span>
-
-//                         <button>
-//                           <FaEllipsisV className="text-gray-500" />
-//                         </button>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-
-//           {/* PAGINATION */}
-//           <div className="p-4 border-t border-gray-200 flex items-center justify-center gap-3">
-
-//             <button className="w-10 h-10 border rounded-xl hover:bg-gray-100">
-//               ‹
-//             </button>
-
-//             <button className="w-10 h-10 bg-green-600 text-white rounded-xl font-bold">
-//               1
-//             </button>
-
-//             <button className="w-10 h-10 border rounded-xl hover:bg-gray-100">
-//               2
-//             </button>
-
-//             <button className="w-10 h-10 border rounded-xl hover:bg-gray-100">
-//               ›
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* RIGHT CHAT AREA */}
-//         <div className="flex-1 bg-[#f7f8f9] flex items-center justify-center">
-
-//           {!selectedChat ? (
-//             <div className="text-center">
-
-//               <div className="w-28 h-28 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-
-//                 <div className="relative">
-//                   <div className="w-14 h-14 bg-green-600 rounded-2xl"></div>
-
-//                   <div className="w-14 h-14 bg-green-200 rounded-2xl absolute -top-5 -left-5"></div>
-//                 </div>
-//               </div>
-
-//               <h2 className="text-2xl font-semibold text-gray-800 mt-8">
-//                 Select a chat to view conversation
-//               </h2>
-
-//               <p className="text-gray-500 mt-2">
-//                 Your messages will appear here
-//               </p>
-//             </div>
-//           ) : (
-//             <div className="w-full h-full flex flex-col">
-
-//               {/* CHAT HEADER */}
-//               <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-
-//                 <div className="flex items-center gap-4">
-
-//                   <img
-//                     src={selectedChat.avatar}
-//                     alt=""
-//                     className="w-14 h-14 rounded-full object-cover"
-//                   />
-
-//                   <div>
-//                     <div className="flex items-center gap-2">
-
-//                       <h2 className="text-xl font-bold">
-//                         {selectedChat.name}
-//                       </h2>
-
-//                       <FaCheckCircle className="text-green-600" />
-//                     </div>
-
-//                     <p className="text-gray-500">
-//                       Active now
-//                     </p>
-//                   </div>
-//                 </div>
-
-//                 <button>
-//                   <FaEllipsisV className="text-gray-600 text-lg" />
-//                 </button>
-//               </div>
-
-//               {/* CHAT BODY */}
-//               <div className="flex-1 p-6 overflow-y-auto">
-
-//                 <div className="max-w-md bg-white rounded-3xl p-4 shadow-sm border border-gray-200">
-
-//                   <p className="text-gray-800">
-//                     Hello, is this product still available?
-//                   </p>
-
-//                   <span className="text-xs text-gray-400 mt-2 block">
-//                     10:42 AM
-//                   </span>
-//                 </div>
-
-//                 <div className="max-w-md bg-green-600 text-white rounded-3xl p-4 shadow-sm ml-auto mt-5">
-
-//                   <p>
-//                     Yes available 👍
-//                   </p>
-
-//                   <span className="text-xs text-green-100 mt-2 block">
-//                     10:45 AM
-//                   </span>
-//                 </div>
-//               </div>
-
-//               {/* INPUT */}
-//               <div className="bg-white border-t border-gray-200 p-5">
-
-//                 <div className="flex items-center gap-4">
-
-//                   <input
-//                     type="text"
-//                     placeholder="Type your message..."
-//                     className="flex-1 border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-green-600"
-//                   />
-
-//                   <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl font-semibold">
-//                     Send
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default InboxPage; 
-
-
-
-
-
-
 import React, {
   useEffect,
   useState,
@@ -349,8 +21,8 @@ import {
   fetchMessages,
   sendMessage,
   setSelectedChat,
-  createConversation,
 } from "../../../store/slices/chatSlice";
+import MobileBottomNavbar from "../../../components/MobileBottomNavbar";
 
 const InboxPage = () => {
   const dispatch = useDispatch();
@@ -372,25 +44,21 @@ const InboxPage = () => {
 
   const bottomRef = useRef(null);
 
-  // ============================================
-  // CURRENT USER
-  // ============================================
-
   const currentUser = JSON.parse(
     localStorage.getItem("user")
   );
 
-  // ============================================
+  // =====================================
   // LOAD CHATS
-  // ============================================
+  // =====================================
 
   useEffect(() => {
     dispatch(fetchChats());
   }, [dispatch]);
 
-  // ============================================
+  // =====================================
   // AUTO SCROLL
-  // ============================================
+  // =====================================
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
@@ -398,21 +66,24 @@ const InboxPage = () => {
     });
   }, [messages]);
 
-  // ============================================
+  // =====================================
   // GET OTHER USER
-  // ============================================
+  // =====================================
 
   const getOtherUser = (
     participants
   ) => {
     return participants?.find(
-      (p) => p._id !== currentUser?.id
+      (p) =>
+        p._id !==
+        (currentUser?.id ||
+          currentUser?._id)
     );
   };
 
-  // ============================================
+  // =====================================
   // OPEN CHAT
-  // ============================================
+  // =====================================
 
   const openChat = (chat) => {
     dispatch(setSelectedChat(chat));
@@ -422,9 +93,9 @@ const InboxPage = () => {
     setMobileView(true);
   };
 
-  // ============================================
+  // =====================================
   // SEND MESSAGE
-  // ============================================
+  // =====================================
 
   const handleSendMessage = async () => {
     if (!text.trim()) return;
@@ -440,18 +111,22 @@ const InboxPage = () => {
     setText("");
   };
 
-  // ============================================
+  // =====================================
   // CHECK MY MESSAGE
-  // ============================================
+  // =====================================
 
   const isMyMessage = (msg) => {
     const senderId =
       typeof msg.senderId ===
       "object"
-        ? msg.senderId._id
+        ? msg.senderId?._id
         : msg.senderId;
 
-    return senderId === currentUser?.id;
+    return (
+      senderId ===
+      (currentUser?.id ||
+        currentUser?._id)
+    );
   };
 
   return (
@@ -460,11 +135,11 @@ const InboxPage = () => {
         <Navbar />
       </div>
 
-      <div className="h-[calc(100vh-72px)] bg-[#f0f2f5] max-w-7xl mx-auto border border-gray-300 flex overflow-hidden">
+      <div className="h-screen md:h-[calc(100vh-72px)] bg-[#f3f4f6] flex overflow-hidden">
 
-        {/* ====================================== */}
+        {/* ================================= */}
         {/* SIDEBAR */}
-        {/* ====================================== */}
+        {/* ================================= */}
 
         <div
           className={`${
@@ -476,49 +151,55 @@ const InboxPage = () => {
 
           {/* HEADER */}
 
-          <div className="p-5 border-b border-gray-200">
+          <div className="p-5 border-b border-gray-200 bg-white sticky top-0 z-10">
 
             <div className="flex items-center justify-between">
 
               <div className="flex items-center gap-3">
 
-                <h1 className="text-2xl font-bold">
+                <h1 className="text-3xl font-black text-gray-800">
                   Inbox
                 </h1>
 
-                <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                <span className="bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
                   {chats?.length || 0}
                 </span>
               </div>
 
-              <FaEllipsisV className="text-gray-600 cursor-pointer" />
+              <button className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                <FaEllipsisV />
+              </button>
             </div>
 
             {/* SEARCH */}
 
-            <div className="mt-5 bg-gray-100 rounded-full px-4 py-3 flex items-center gap-3">
+            <div className="mt-5">
 
-              <FaSearch className="text-gray-500" />
+              <div className="bg-gray-100 rounded-2xl px-4 py-3 flex items-center gap-3 border border-transparent focus-within:border-green-500">
 
-              <input
-                type="text"
-                placeholder="Search chats"
-                className="bg-transparent outline-none flex-1 text-sm"
-              />
+                <FaSearch className="text-gray-500" />
+
+                <input
+                  type="text"
+                  placeholder="Search conversation..."
+                  className="bg-transparent outline-none flex-1 text-sm"
+                />
+              </div>
             </div>
           </div>
+          <MobileBottomNavbar/>
 
           {/* CHAT LIST */}
 
           <div className="flex-1 overflow-y-auto">
 
             {loading ? (
-              <div className="p-5 text-center">
-                Loading...
+              <div className="h-full flex items-center justify-center">
+                <p>Loading...</p>
               </div>
             ) : chats?.length === 0 ? (
-              <div className="p-5 text-center text-gray-500">
-                No conversations yet
+              <div className="h-full flex items-center justify-center text-gray-500">
+                No Conversations
               </div>
             ) : (
               chats.map((chat) => {
@@ -533,17 +214,17 @@ const InboxPage = () => {
                     onClick={() =>
                       openChat(chat)
                     }
-                    className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-green-50 transition ${
+                    className={`p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 ${
                       selectedChat?._id ===
                       chat._id
-                        ? "bg-green-50"
-                        : ""
+                        ? "bg-gradient-to-r from-green-50 to-green-100"
+                        : "hover:bg-gray-50"
                     }`}
                   >
 
-                    <div className="flex gap-3">
+                    <div className="flex gap-4">
 
-                      {/* PRODUCT IMAGE */}
+                      {/* IMAGE */}
 
                       <div className="relative">
 
@@ -554,13 +235,13 @@ const InboxPage = () => {
                               ?.url
                           }
                           alt=""
-                          className="w-16 h-16 rounded-xl object-cover"
+                          className="w-16 h-16 rounded-2xl object-cover shadow-md"
                         />
 
                         <img
-                          src={`https://ui-avatars.com/api/?name=${otherUser?.name}`}
+                          src={`https://ui-avatars.com/api/?name=${otherUser?.name}&background=16a34a&color=fff`}
                           alt=""
-                          className="w-6 h-6 rounded-full absolute -bottom-1 -right-1 border-2 border-white"
+                          className="w-7 h-7 rounded-full absolute -bottom-1 -right-1 border-2 border-white"
                         />
                       </div>
 
@@ -568,20 +249,18 @@ const InboxPage = () => {
 
                       <div className="flex-1 min-w-0">
 
-                        <div className="flex items-start justify-between">
+                        <div className="flex justify-between">
 
                           <div>
 
-                            <h2 className="font-bold text-gray-900">
-                              {
-                                otherUser?.name
-                              }
+                            <h2 className="font-bold text-gray-800 truncate">
+                              {otherUser?.name}
                             </h2>
 
-                            <p className="text-sm text-green-600 truncate">
+                            <p className="text-sm text-green-600 truncate mt-1">
                               {
                                 chat
-                                  .productId
+                                  ?.productId
                                   ?.name
                               }
                             </p>
@@ -594,20 +273,19 @@ const InboxPage = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between mt-2">
+                        <div className="flex items-center justify-between mt-3">
 
                           <p className="text-sm text-gray-500 truncate">
-
                             {
                               chat
-                                .lastMessage
+                                ?.lastMessage
                                 ?.text
                             }
                           </p>
 
                           {chat.unreadCount >
                             0 && (
-                            <span className="bg-green-600 text-white text-xs min-w-[20px] h-5 rounded-full flex items-center justify-center px-1">
+                            <span className="bg-green-600 text-white min-w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs font-bold px-1">
                               {
                                 chat.unreadCount
                               }
@@ -623,9 +301,9 @@ const InboxPage = () => {
           </div>
         </div>
 
-        {/* ====================================== */}
+        {/* ================================= */}
         {/* CHAT AREA */}
-        {/* ====================================== */}
+        {/* ================================= */}
 
         <div
           className={`${
@@ -640,7 +318,12 @@ const InboxPage = () => {
 
               <div className="text-center">
 
-                <h2 className="text-3xl font-bold text-gray-700">
+                <div className="w-24 h-24 rounded-full bg-green-100 mx-auto flex items-center justify-center">
+
+                  <div className="w-12 h-12 rounded-2xl bg-green-600"></div>
+                </div>
+
+                <h2 className="text-3xl font-black text-gray-700 mt-6">
                   TechBy Chat
                 </h2>
 
@@ -653,11 +336,9 @@ const InboxPage = () => {
             <>
               {/* HEADER */}
 
-              <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+              <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm">
 
                 <div className="flex items-center gap-3">
-
-                  {/* MOBILE BACK */}
 
                   <button
                     onClick={() =>
@@ -665,7 +346,7 @@ const InboxPage = () => {
                         false
                       )
                     }
-                    className="md:hidden"
+                    className="md:hidden w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center"
                   >
                     <FaArrowLeft />
                   </button>
@@ -675,7 +356,7 @@ const InboxPage = () => {
                       getOtherUser(
                         selectedChat.participants
                       )?.name
-                    }`}
+                    }&background=16a34a&color=fff`}
                     alt=""
                     className="w-12 h-12 rounded-full"
                   />
@@ -695,7 +376,7 @@ const InboxPage = () => {
                       <FaCheckCircle className="text-green-600 text-sm" />
                     </div>
 
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 truncate max-w-[180px]">
                       {
                         selectedChat
                           ?.productId
@@ -705,12 +386,14 @@ const InboxPage = () => {
                   </div>
                 </div>
 
-                <FaEllipsisV className="text-gray-600 cursor-pointer" />
+                <button className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                  <FaEllipsisV />
+                </button>
               </div>
 
               {/* MESSAGES */}
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
 
                 {messages?.map((msg) => (
                   <div
@@ -723,19 +406,19 @@ const InboxPage = () => {
                   >
 
                     <div
-                      className={`max-w-[80%] md:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                      className={`max-w-[85%] md:max-w-md px-4 py-3 rounded-3xl shadow-sm relative ${
                         isMyMessage(msg)
-                          ? "bg-green-600 text-white rounded-br-sm"
-                          : "bg-white text-gray-800 rounded-bl-sm"
+                          ? "bg-green-600 text-white rounded-br-md"
+                          : "bg-white text-gray-800 rounded-bl-md"
                       }`}
                     >
 
-                      <p className="break-words">
+                      <p className="text-sm leading-relaxed break-words">
                         {msg.text}
                       </p>
 
                       <span
-                        className={`text-[11px] mt-2 block ${
+                        className={`text-[11px] mt-2 block text-right ${
                           isMyMessage(msg)
                             ? "text-green-100"
                             : "text-gray-400"
@@ -764,7 +447,7 @@ const InboxPage = () => {
 
               <div className="bg-white border-t border-gray-200 p-3 md:p-4">
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 bg-gray-100 rounded-full px-3 py-2">
 
                   <input
                     type="text"
@@ -782,15 +465,15 @@ const InboxPage = () => {
                         handleSendMessage();
                       }
                     }}
-                    placeholder="Type message..."
-                    className="flex-1 border border-gray-300 rounded-full px-5 py-3 outline-none focus:border-green-600"
+                    placeholder="Type your message..."
+                    className="flex-1 bg-transparent outline-none px-3 py-2"
                   />
 
                   <button
                     onClick={
                       handleSendMessage
                     }
-                    className="w-12 h-12 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition"
+                    className="w-12 h-12 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center text-white transition-all duration-200 active:scale-95"
                   >
                     <FaPaperPlane />
                   </button>
@@ -800,6 +483,7 @@ const InboxPage = () => {
           )}
         </div>
       </div>
+      
     </>
   );
 };
