@@ -617,7 +617,7 @@ const InboxPage = () => {
         dispatch(fetchChats());
       }
 
-    }, 2000); // 5 sec
+    }, 5000); // 5 sec
   };
 
   // FIRST FETCH
